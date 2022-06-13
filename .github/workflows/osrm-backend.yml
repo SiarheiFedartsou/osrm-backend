@@ -501,8 +501,8 @@ jobs:
         pushd ${OSRM_BUILD_DIR}
         cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
                  -DENABLE_MASON=${ENABLE_MASON:-OFF} \
-                 -DENABLE_ASSERTIONS=${ENABLE_ASSERTIONS:-OFF}} \
-                 -DENABLE_CLANG_TIDY=${ENABLE_CLANG_TIDY:-OFF}} \
+                 -DENABLE_ASSERTIONS=${ENABLE_ASSERTIONS:-OFF} \
+                 -DENABLE_CLANG_TIDY=${ENABLE_CLANG_TIDY:-OFF} \
                  -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS:-OFF} \
                  -DENABLE_COVERAGE=${ENABLE_COVERAGE:-OFF} \
                  -DENABLE_NODE_BINDINGS=${ENABLE_NODE_BINDINGS:-OFF} \
