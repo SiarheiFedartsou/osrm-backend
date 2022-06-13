@@ -13,12 +13,14 @@ Checks: >
     -bugprone-suspicious-missing-comma,
     -bugprone-forward-declaration-namespace,
     -bugprone-sizeof-expression,
+    -bugprone-fold-init-type,
     -clang-analyzer-*,
     -clang-diagnostic-final-dtor-non-final-class,
     google-*,
     -google-build-explicit-make-pair,
     -google-build-using-namespace,
     -google-explicit-constructor,
+    -google-default-arguments,
     -google-readability-braces-around-statements,
     -google-readability-casting,
     -google-readability-namespace-comments,
@@ -67,7 +69,10 @@ Checks: >
     -readability-static-definition-in-anonymous-namespace,
     -readability-use-anyofallof,
     -readability-simplify-boolean-expr,
-    -readability-make-member-function-const
+    -readability-make-member-function-const,
+    -readability-redundant-string-init,
+    -readability-non-const-parameter,
+    -readability-static-accessed-through-instance
     
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
