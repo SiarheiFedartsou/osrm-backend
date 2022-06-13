@@ -461,7 +461,7 @@ include_directories(SYSTEM ${VTZERO_INCLUDE_DIR})
 
 set(FLATBUFFERS_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/flatbuffers")
 set(FLATBUFFERS_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/flatbuffers/include")
-include_directories(${FLATBUFFERS_INCLUDE_DIR})
+include_directories(SYSTEM ${FLATBUFFERS_INCLUDE_DIR})
 add_subdirectory(${FLATBUFFERS_SRC_DIR}
         ${CMAKE_CURRENT_BINARY_DIR}/flatbuffers-build
         EXCLUDE_FROM_ALL)
