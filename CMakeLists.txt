@@ -2,12 +2,6 @@ cmake_minimum_required(VERSION 3.2)
 
 find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
 
-if(NOT CLANG_TIDY_COMMAND)
-  message(FATAL_ERROR "CMake_RUN_CLANG_TIDY is ON but clang-tidy is not found!")
-else()
-  set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND};--warnings-as-errors=*")
-endif()
-
 
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR AND NOT MSVC_IDE)
   message(FATAL_ERROR "In-source builds are not allowed.
@@ -41,6 +35,16 @@ option(ENABLE_FUZZING "Fuzz testing using LLVM's libFuzzer" OFF)
 option(ENABLE_GOLD_LINKER "Use GNU gold linker if available" ON)
 option(ENABLE_NODE_BINDINGS "Build NodeJs bindings" OFF)
 option(ENABLE_GLIBC_WORKAROUND "Workaround GLIBC symbol exports" OFF)
+option(ENABLE_CLANG_TIDY "Enables clang-tidy checks" OFF)
+
+if (ENABLE_CLANG_TIDY)
+  if(NOT CLANG_TIDY_COMMAND)
+    message(FATAL_ERROR "ENABLE_CLANG_TIDY is ON but clang-tidy is not found!")
+  else()
+    set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND};--warnings-as-errors=*")
+  endif()
+endif()
+
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
