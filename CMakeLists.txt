@@ -1,5 +1,14 @@
 cmake_minimum_required(VERSION 3.2)
 
+find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
+
+if(NOT CLANG_TIDY_COMMAND)
+  message(FATAL_ERROR "CMake_RUN_CLANG_TIDY is ON but clang-tidy is not found!")
+else()
+  set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_COMMAND};--warnings-as-errors=*")
+endif()
+
+
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR AND NOT MSVC_IDE)
   message(FATAL_ERROR "In-source builds are not allowed.
 Please create a directory and run cmake from there, passing the path to this source directory as the last argument.
