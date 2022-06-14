@@ -45,6 +45,7 @@ Checks: >
     -misc-misplaced-const,
     -misc-definitions-in-headers,
     -misc-unused-alias-decls,
+    -misc-unused-parameters,
     readability-*,
     -readability-avoid-const-params-in-decls,
     -readability-braces-around-statements,
