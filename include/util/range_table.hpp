@@ -84,6 +84,7 @@ template <unsigned BLOCK_SIZE, storage::Ownership Ownership> class RangeTable
         unsigned block_counter = 0;
         BlockT block;
         unsigned block_sum = 0;
+        (void)block_sum;
         for (const unsigned l : lengths)
         {
             // first entry of a block: encode absolute offset
