@@ -29,6 +29,7 @@ Checks: >
     -google-runtime-int,
     -google-build-namespaces,
     -google-global-names-in-headers,
+    -google-runtime-references,
     llvm-*,
     -llvm-namespace-comment,
     -llvm-qualified-auto,
