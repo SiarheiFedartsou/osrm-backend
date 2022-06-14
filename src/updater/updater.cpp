@@ -112,6 +112,7 @@ void checkWeightsConsistency(
         if (geometry_id.forward)
         {
             auto range = segment_data.GetForwardWeights(geometry_id.id);
+            // NOLINTNEXTLINE(bugprone-fold-init-type)
             EdgeWeight weight = std::accumulate(range.begin(), range.end(), EdgeWeight{0});
             if (weight > edge.data.weight)
             {
@@ -122,6 +123,7 @@ void checkWeightsConsistency(
         else
         {
             auto range = segment_data.GetReverseWeights(geometry_id.id);
+            // NOLINTNEXTLINE(bugprone-fold-init-type)
             EdgeWeight weight = std::accumulate(range.begin(), range.end(), EdgeWeight{0});
             if (weight > edge.data.weight)
             {
