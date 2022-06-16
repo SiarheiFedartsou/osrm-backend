@@ -7,6 +7,7 @@ Checks: >
     -bugprone-misplaced-widening-cast,
     -bugprone-exception-escape,
     -bugprone-implicit-widening-of-multiplication-result,
+    -bugprone-integer-division,
     -bugprone-reserved-identifier,
     -bugprone-macro-parentheses,
     -bugprone-unhandled-self-assignment,
