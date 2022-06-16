@@ -17,6 +17,7 @@ env:
   CASHER_TIME_OUT: 599 # one second less than 10m to avoid 10m timeout error: https://github.com/Project-OSRM/osrm-backend/issues/2742
   CCACHE_VERSION: 3.3.1
   CMAKE_VERSION: 3.21.2
+  ENABLE_NODE_BINDINGS: "ON"
 
 jobs:
   format-taginfo-docs:
