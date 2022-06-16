@@ -305,7 +305,7 @@ InternalRouteResult shortestPathSearch(SearchEngineData<Algorithm> &engine_worki
                     BOOST_ASSERT(target_phantom.IsValidReverseTarget());
                     new_total_weight_to_reverse = new_total_weight_to_forward;
                     // NOLINTNEXTLINE(bugprone-use-after-move)
-                    packed_leg_to_reverse = std::move(packed_leg_to_forward); 
+                    packed_leg_to_reverse = std::move(packed_leg_to_forward);
                     new_total_weight_to_forward = INVALID_EDGE_WEIGHT;
 
                     // (*)
@@ -356,7 +356,7 @@ InternalRouteResult shortestPathSearch(SearchEngineData<Algorithm> &engine_worki
             bool forward_to_forward =
                 (new_total_weight_to_forward != INVALID_EDGE_WEIGHT) &&
                 // NOLINTNEXTLINE(bugprone-use-after-move)
-                packed_leg_to_forward.front() == source_phantom.forward_segment_id.id; 
+                packed_leg_to_forward.front() == source_phantom.forward_segment_id.id;
             bool reverse_to_forward =
                 (new_total_weight_to_forward != INVALID_EDGE_WEIGHT) &&
                 packed_leg_to_forward.front() == source_phantom.reverse_segment_id.id;
