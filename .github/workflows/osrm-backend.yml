@@ -94,6 +94,7 @@ jobs:
             CLANG_VERSION: 11.0.0
             CUCUMBER_TIMEOUT: 60000
             ENABLE_CLANG_TIDY: ON
+            ENABLE_NODE_BINDINGS: OFF
 
           - name: mason-linux-debug-asan
             continue-on-error: false
