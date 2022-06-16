@@ -17,7 +17,6 @@ env:
   CASHER_TIME_OUT: 599 # one second less than 10m to avoid 10m timeout error: https://github.com/Project-OSRM/osrm-backend/issues/2742
   CCACHE_VERSION: 3.3.1
   CMAKE_VERSION: 3.21.2
-  ENABLE_NODE_BINDINGS: "ON"
 
 jobs:
   format-taginfo-docs:
@@ -94,7 +93,6 @@ jobs:
             CLANG_VERSION: 11.0.0
             CUCUMBER_TIMEOUT: 60000
             ENABLE_CLANG_TIDY: ON
-            ENABLE_NODE_BINDINGS: OFF
 
           - name: mason-linux-debug-asan
             continue-on-error: false
