@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE(separate_top_bottom)
 
     auto grid_edges = makeGridEdges(rows, cols, 0);
 
-    std::random_shuffle(grid_edges.begin(), grid_edges.end());
+    std::shuffle(grid_edges.begin(), grid_edges.end());
     groupEdgesBySource(grid_edges.begin(), grid_edges.end());
 
     auto graph = makeBisectionGraph(coordinates, adaptToBisectionEdge(std::move(grid_edges)));
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE(separate_top_bottom_copy)
 
     auto grid_edges = makeGridEdges(rows, cols, 0);
 
-    std::random_shuffle(grid_edges.begin(), grid_edges.end());
+    std::shuffle(grid_edges.begin(), grid_edges.end());
     groupEdgesBySource(grid_edges.begin(), grid_edges.end());
 
     auto graph = makeBisectionGraph(coordinates, adaptToBisectionEdge(std::move(grid_edges)));
@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE(separate_left_right)
 
     auto grid_edges = makeGridEdges(rows, cols, 0);
 
-    std::random_shuffle(grid_edges.begin(), grid_edges.end());
+    std::shuffle(grid_edges.begin(), grid_edges.end());
     groupEdgesBySource(grid_edges.begin(), grid_edges.end());
 
     auto graph = makeBisectionGraph(coordinates, adaptToBisectionEdge(std::move(grid_edges)));
