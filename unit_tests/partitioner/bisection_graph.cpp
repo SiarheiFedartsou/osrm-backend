@@ -90,8 +90,9 @@ BOOST_AUTO_TEST_CASE(access_edges)
     const auto coordinates = makeGridCoordinates(rows, cols, step_size, 0, 0);
 
     auto grid_edges = makeGridEdges(rows, cols, 0);
-
-    std::shuffle(grid_edges.begin(), grid_edges.end());
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::shuffle(grid_edges.begin(), grid_edges.end(), rng);
     groupEdgesBySource(grid_edges.begin(), grid_edges.end());
 
     const auto graph = makeBisectionGraph(coordinates, adaptToBisectionEdge(std::move(grid_edges)));

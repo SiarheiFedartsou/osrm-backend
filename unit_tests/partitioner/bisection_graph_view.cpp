@@ -25,7 +25,9 @@ BOOST_AUTO_TEST_CASE(separate_top_bottom)
 
     auto grid_edges = makeGridEdges(rows, cols, 0);
 
-    std::shuffle(grid_edges.begin(), grid_edges.end());
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::shuffle(grid_edges.begin(), grid_edges.end(), rng);
     groupEdgesBySource(grid_edges.begin(), grid_edges.end());
 
     auto graph = makeBisectionGraph(coordinates, adaptToBisectionEdge(std::move(grid_edges)));
@@ -74,6 +76,8 @@ BOOST_AUTO_TEST_CASE(separate_top_bottom_copy)
 
     auto grid_edges = makeGridEdges(rows, cols, 0);
 
+    std::random_device rd;
+    std::mt19937 rng(rd());
     std::shuffle(grid_edges.begin(), grid_edges.end());
     groupEdgesBySource(grid_edges.begin(), grid_edges.end());
 
