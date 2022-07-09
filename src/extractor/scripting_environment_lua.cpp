@@ -1171,14 +1171,14 @@ void LuaScriptingContext::ProcessNode(const osmium::Node &node,
     {
     case 4:
     case 3:
-        node_function(profile_table, node, result, relations);
+        node_function(profile_table, std::cref(node), result, relations);
         break;
     case 2:
-        node_function(profile_table, node, result);
+        node_function(profile_table, std::cref(node), result);
         break;
     case 1:
     case 0:
-        node_function(node, result);
+        node_function(std::cref(node), result);
         break;
     }
 }
@@ -1193,14 +1193,14 @@ void LuaScriptingContext::ProcessWay(const osmium::Way &way,
     {
     case 4:
     case 3:
-        way_function(profile_table, way, result, relations);
+        way_function(profile_table, std::cref(way), result, relations);
         break;
     case 2:
-        way_function(profile_table, way, result);
+        way_function(profile_table, std::cref(way), result);
         break;
     case 1:
     case 0:
-        way_function(way, result);
+        way_function(std::cref(way), result);
         break;
     }
 }
