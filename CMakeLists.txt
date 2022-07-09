@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.2)
 
+enable_language(CXX)
+enable_language(C)
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR AND NOT MSVC_IDE)
   message(FATAL_ERROR "In-source builds are not allowed.
 Please create a directory and run cmake from there, passing the path to this source directory as the last argument.
@@ -18,7 +24,7 @@ if (NOT WIN32 AND NOT DEFINED ENV{OSRM_BUILD_DIR})
   set(ENV{OSRM_BUILD_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
-option(ENABLE_MASON "Use mason for dependencies" OFF)
+option(ENABLE_CONAN "Use conan for dependencies" OFF)
 option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" ON)
 option(BUILD_TOOLS "Build OSRM tools" OFF)
 option(BUILD_PACKAGE "Build OSRM package" OFF)
@@ -46,24 +52,6 @@ endif()
 
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
-if(ENABLE_MASON)
-  # versions in use
-  set(MASON_BOOST_VERSION "1.73.0")
-  set(MASON_EXPAT_VERSION "2.2.0")
-  set(MASON_LUA_VERSION "5.2.4")
-  set(MASON_BZIP2_VERSION "1.0.6")
-  set(MASON_TBB_VERSION "2017_U7")
-
-  message(STATUS "Enabling mason")
-
-  find_program(CURL_FOUND curl)
-  if(NOT CURL_FOUND)
-    message(FATAL_ERROR "curl command required with -DENABLE_MASON")
-  endif()
-
-  include(mason)
-endif()
 
 # be compatible with version handling before cmake 3.x
 if (POLICY CMP0048)
@@ -217,13 +205,6 @@ if(ENABLE_GOLD_LINKER)
     endif()
 endif()
 
-# Disable LTO when mason+gcc is detected before testing for / setting any flags.
-# Mason builds libraries with Clang, mixing does not work in the context of lto.
-if(ENABLE_MASON AND CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND ENABLE_LTO)
-  set(ENABLE_LTO OFF)
-  message(WARNING "Mason and GCC's LTO not work together. Disabling LTO.")
-endif()
-
 # Explicitly set the build type to Release if no other type is specified
 # on the command line.  Without this, cmake defaults to an unoptimized,
 # non-debug build, which almost nobody wants.
@@ -324,8 +305,8 @@ if(CMAKE_BUILD_TYPE MATCHES Release OR CMAKE_BUILD_TYPE MATCHES MinRelSize OR CM
   endif()
 endif()
 
-if(UNIX AND NOT APPLE AND ENABLE_MASON AND (LTO_WORKS OR ENABLE_GOLD_LINKER))
-  message(WARNING "ENABLE_MASON and ENABLE_LTO/ENABLE_GOLD_LINKER may not work on all linux systems currently")
+if(UNIX AND NOT APPLE AND ENABLE_CONAN AND (LTO_WORKS OR ENABLE_GOLD_LINKER))
+  message(WARNING "ENABLE_CONAN and ENABLE_LTO/ENABLE_GOLD_LINKER may not work on all linux systems currently")
   message(WARNING "For more details see: https://github.com/Project-OSRM/osrm-backend/issues/3202")
 endif()
 
@@ -466,72 +447,39 @@ add_subdirectory(${FLATBUFFERS_SRC_DIR}
         ${CMAKE_CURRENT_BINARY_DIR}/flatbuffers-build
         EXCLUDE_FROM_ALL)
 
-# if mason is enabled no find_package calls are made
+# if conan is enabled no find_package calls are made
 # to ensure that we are only compiling and linking against
-# fully portable mason packages
-if(ENABLE_MASON)
-  message(STATUS "Installing dependencies via mason")
+# fully portable conan packages
+if(ENABLE_CONAN)
+  message(STATUS "Installing dependencies via conan")
 
-  set(Boost_USE_STATIC_LIBS ON)
-  mason_use(boost VERSION ${MASON_BOOST_VERSION} HEADER_ONLY)
-  add_dependency_includes(${MASON_PACKAGE_boost_INCLUDE_DIRS})
-  mason_use(boost_libfilesystem VERSION ${MASON_BOOST_VERSION})
-  set(Boost_FILESYSTEM_LIBRARY ${MASON_PACKAGE_boost_libfilesystem_STATIC_LIBS})
-  mason_use(boost_libiostreams VERSION ${MASON_BOOST_VERSION})
-  set(Boost_IOSTREAMS_LIBRARY ${MASON_PACKAGE_boost_libiostreams_STATIC_LIBS})
-  mason_use(boost_libprogram_options VERSION ${MASON_BOOST_VERSION})
-  set(Boost_PROGRAM_OPTIONS_LIBRARY ${MASON_PACKAGE_boost_libprogram_options_STATIC_LIBS})
-  mason_use(boost_libregex VERSION ${MASON_BOOST_VERSION})
-  set(Boost_REGEX_LIBRARY ${MASON_PACKAGE_boost_libregex_STATIC_LIBS})
-  mason_use(boost_libtest VERSION ${MASON_BOOST_VERSION})
-  set(Boost_UNIT_TEST_FRAMEWORK_LIBRARY ${MASON_PACKAGE_boost_libtest_STATIC_LIBS})
-  mason_use(boost_libdate_time VERSION ${MASON_BOOST_VERSION})
-  set(Boost_DATE_TIME_LIBRARY ${MASON_PACKAGE_boost_libdate_time_STATIC_LIBS})
-  mason_use(boost_libthread VERSION ${MASON_BOOST_VERSION})
-  set(Boost_THREAD_LIBRARY ${MASON_PACKAGE_boost_libthread_STATIC_LIBS})
-  mason_use(boost_libsystem VERSION ${MASON_BOOST_VERSION})
-  set(Boost_SYSTEM_LIBRARY ${MASON_PACKAGE_boost_libsystem_STATIC_LIBS})
-
-  mason_use(expat VERSION ${MASON_EXPAT_VERSION})
-  add_dependency_includes(${MASON_PACKAGE_expat_INCLUDE_DIRS})
-  set(EXPAT_LIBRARIES ${MASON_PACKAGE_expat_STATIC_LIBS})
-
-  mason_use(lua VERSION ${MASON_LUA_VERSION})
-  add_dependency_includes(${MASON_PACKAGE_lua_INCLUDE_DIRS})
-  set(USED_LUA_LIBRARIES ${MASON_PACKAGE_lua_STATIC_LIBS})
-
-  mason_use(bzip2 VERSION ${MASON_BZIP2_VERSION})
-  add_dependency_includes(${MASON_PACKAGE_bzip2_INCLUDE_DIRS})
-  set(BZIP2_LIBRARIES ${MASON_PACKAGE_bzip2_STATIC_LIBS})
-
-  mason_use(tbb VERSION ${MASON_TBB_VERSION})
-  add_dependency_includes(${MASON_PACKAGE_tbb_INCLUDE_DIRS})
-  set(TBB_LIBRARIES ${MASON_PACKAGE_tbb_LDFLAGS})
-
-  if(NOT MASON_PACKAGE_tbb_LIBRARY_DIRS)
-    message(FATAL_ERROR "MASON_PACKAGE_tbb_LIBRARY_DIRS is empty, rpath will not work")
-  endif()
-  set(TBB_LINKER_RPATHS "")
-  foreach(libpath ${MASON_PACKAGE_tbb_LIBRARY_DIRS})
-    set(TBB_LINKER_RPATHS "${TBB_LINKER_RPATHS} -Wl,-rpath -Wl,${libpath}")
-    file(GLOB TBBGlob ${libpath}/*.*)
-    install(FILES ${TBBGlob} DESTINATION lib)
-  endforeach()
-  if(APPLE)
-    set(LINKER_FLAGS "${TBB_LINKER_RPATHS} -Wl,-rpath -Wl,@loader_path")
-  elseif(UNIX)
-    set(LINKER_FLAGS "${TBB_LINKER_RPATHS} '-Wl,-rpath,$ORIGIN' -Wl,-z,origin")
+  if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
+                "${CMAKE_BINARY_DIR}/conan.cmake")
   endif()
 
-  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LINKER_FLAGS}")
-  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${LINKER_FLAGS}")
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${LINKER_FLAGS}")
+  include(${CMAKE_BINARY_DIR}/conan.cmake)
 
-  # current mason packages target -D_GLIBCXX_USE_CXX11_ABI=0
-  add_dependency_defines(-D_GLIBCXX_USE_CXX11_ABI=0)
+  conan_cmake_run(REQUIRES boost/1.79.0 bzip2/1.0.8 expat/2.2.10 lua/5.4.4 tbb/2020.3 BASIC_SETUP BUILD missing CMAKE_TARGETS)
+  
+
+  find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
+  add_dependency_includes(${BOOST_INCLUDE_DIRS})
+
+  find_package(bzip2 REQUIRED)
+  add_dependency_includes(${BZIP2_INCLUDE_DIRS})
+
+  find_package(expat REQUIRED)
+  add_dependency_includes(${EXPAT_INCLUDE_DIRS})
+
+  add_dependency_includes(${LUA_INCLUDE_DIRS})
+
+  find_package(TBB REQUIRED)
+  add_dependency_includes(${TBB_INCLUDE_DIRS})
 
   # note: we avoid calling find_package(Osmium ...) here to ensure that the
-  # expat and bzip2 are used from mason rather than the system
+  # expat and bzip2 are used from conan rather than the system
   include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/third_party/libosmium/include)
 else()
   if (BUILD_ROUTED)
@@ -559,7 +507,6 @@ else()
     message(STATUS "Using Lua ${LUA_VERSION_STRING}")
   endif()
 
-  set(USED_LUA_LIBRARIES ${LUA_LIBRARIES})
   add_dependency_includes(${LUA_INCLUDE_DIR})
 
   # add a target to generate API documentation with Doxygen
@@ -593,7 +540,7 @@ if(ENABLE_CCACHE AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILE
   endif()
 endif()
 
-# even with mason builds we want to link to system zlib
+# even with conan builds we want to link to system zlib
 # to ensure that osrm binaries play well with other binaries like nodejs
 find_package(ZLIB REQUIRED)
 add_dependency_includes(${ZLIB_INCLUDE_DIRS})
@@ -642,7 +589,7 @@ set(EXTRACTOR_LIBRARIES
     ${BOOST_BASE_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     ${EXPAT_LIBRARIES}
-    ${USED_LUA_LIBRARIES}
+    ${LUA_LIBRARIES}
     ${OSMIUM_LIBRARIES}
     ${TBB_LIBRARIES}
     ${ZLIB_LIBRARY}
@@ -650,7 +597,7 @@ set(EXTRACTOR_LIBRARIES
 set(GUIDANCE_LIBRARIES
     ${BOOST_BASE_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
-    ${USED_LUA_LIBRARIES}
+    ${LUA_LIBRARIES}
     ${TBB_LIBRARIES}
     ${MAYBE_COVERAGE_LIBRARIES})
 set(PARTITIONER_LIBRARIES
@@ -676,7 +623,7 @@ set(UPDATER_LIBRARIES
 set(CONTRACTOR_LIBRARIES
     ${BOOST_BASE_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
-    ${USED_LUA_LIBRARIES}
+    ${LUA_LIBRARIES}
     ${TBB_LIBRARIES}
     ${MAYBE_RT_LIBRARY}
     ${MAYBE_COVERAGE_LIBRARIES})
