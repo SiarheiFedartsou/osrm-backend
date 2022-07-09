@@ -462,22 +462,36 @@ if(ENABLE_CONAN)
 
   include(${CMAKE_BINARY_DIR}/conan.cmake)
 
-  conan_cmake_run(REQUIRES boost/1.79.0 bzip2/1.0.8 expat/2.2.10 lua/5.4.4 tbb/2020.3 BASIC_SETUP BUILD missing)
+  set(CONAN_BOOST_VERSION "1.79.0")
+  set(CONAN_BZIP2_VERSION "1.79.0")
+  set(CONAN_EXPAR_VERSION "1.79.0")
+  set(CONAN_LUA_VERSION "1.79.0")
+  set(CONAN_TBB_VERSION "1.79.0")
+  
+  conan_cmake_run(REQUIRES 
+    boost/${CONAN_BOOST_VERSION}
+    bzip2/${CONAN_BZIP2_VERSION}
+    expat/${CONAN_EXPAT_VERSION}
+    lua/${CONAN_LUA_VERSION}
+    tbb/${CONAN_TBB_VERSION}
+    BASIC_SETUP 
+    BUILD missing
+  )
   
 
-  find_package(Boost 1.79.0 EXACT REQUIRED COMPONENTS ${BOOST_COMPONENTS})
+  find_package(Boost ${CONAN_BOOST_VERSION} EXACT REQUIRED COMPONENTS ${BOOST_COMPONENTS})
   add_dependency_includes(${BOOST_INCLUDE_DIRS})
 
-  find_package(bzip2 1.0.8 EXACT REQUIRED)
+  find_package(BZip2 ${CONAN_BZIP2_VERSION} EXACT REQUIRED)
   add_dependency_includes(${BZIP2_INCLUDE_DIRS})
 
-  find_package(expat 2.2.10 EXACT REQUIRED)
+  find_package(Expat ${CONAN_EXPAT_VERSION} EXACT REQUIRED)
   add_dependency_includes(${EXPAT_INCLUDE_DIRS})
 
-  find_package(lua 5.4.4 EXACT REQUIRED)
+  find_package(Lua ${CONAN_LUA_VERSION} EXACT REQUIRED)
   add_dependency_includes(${LUA_INCLUDE_DIRS})
 
-  find_package(TBB 2020.3 EXACT REQUIRED)
+  find_package(TBB ${CONAN_TBB_VERSION} EXACT REQUIRED)
   add_dependency_includes(${TBB_INCLUDE_DIRS})
 
   # note: we avoid calling find_package(Osmium ...) here to ensure that the
