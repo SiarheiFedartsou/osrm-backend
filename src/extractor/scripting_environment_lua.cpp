@@ -1185,14 +1185,14 @@ void LuaScriptingContext::ProcessWay(const osmium::Way &way,
     {
     case 4:
     case 3:
-        way_function(profile_table, std::cref(way), result, relations);
+        way_function(profile_table, std::cref(way), std::ref(result), std::cref(relations));
         break;
     case 2:
-        way_function(profile_table, std::cref(way), result);
+        way_function(profile_table, std::cref(way), std::ref(result));
         break;
     case 1:
     case 0:
-        way_function(std::cref(way), result);
+        way_function(std::cref(way), std::ref(result));
         break;
     }
 }
