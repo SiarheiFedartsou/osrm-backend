@@ -75,14 +75,14 @@ jobs:
             ENABLE_SANITIZER: ON
             TARGET_ARCH: x86_64-asan
 
-          - name: clang-5.0-debug
-            continue-on-error: false
-            node: 12
-            runs-on: ubuntu-20.04
-            BUILD_TOOLS: ON
-            BUILD_TYPE: Debug
-            CLANG_VERSION: 5.0.0
-            CUCUMBER_TIMEOUT: 60000
+          # - name: clang-5.0-debug
+          #   continue-on-error: false
+          #   node: 12
+          #   runs-on: ubuntu-20.04
+          #   BUILD_TOOLS: ON
+          #   BUILD_TYPE: Debug
+          #   CLANG_VERSION: 5.0.0
+          #   CUCUMBER_TIMEOUT: 60000
 
           - name: clang-11.0-debug-clang-tidy
             continue-on-error: false
