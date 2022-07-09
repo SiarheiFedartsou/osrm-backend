@@ -440,8 +440,8 @@ jobs:
 
     - name: Install dev dependencies
       run: |
-        python3 -m pip install conan --user
-        
+        python3 -m pip install conan
+
         # CMake
         mkdir -p ${CMAKE_DIR}
         wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C ${CMAKE_DIR}
