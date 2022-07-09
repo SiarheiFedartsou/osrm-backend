@@ -4,6 +4,7 @@
 #include "util/debug.hpp"
 
 #include <algorithm>
+#include <random>
 #include <vector>
 
 #include <boost/test/unit_test.hpp>

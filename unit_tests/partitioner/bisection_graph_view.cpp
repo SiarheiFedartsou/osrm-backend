@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <climits>
+#include <random>
 #include <vector>
 
 #include <boost/test/unit_test.hpp>
