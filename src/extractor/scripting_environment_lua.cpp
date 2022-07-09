@@ -945,10 +945,6 @@ Sol2ScriptingEnvironment::GetStringListFromTable(const std::string &table_name)
     auto &context = GetSol2Context();
     BOOST_ASSERT(context.state.lua_state() != nullptr);
     std::vector<std::string> strings;
-    if (!context.profile_table[table_name])
-    {
-        return strings;
-    }
     sol::table table = context.profile_table[table_name];
     if (table.valid())
     {
