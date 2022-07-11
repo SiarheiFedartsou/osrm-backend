@@ -468,7 +468,7 @@ if(ENABLE_CONAN)
   find_package(BZip2 REQUIRED)
   add_dependency_includes(${BZIP2_INCLUDE_DIRS})
 
-  find_package(Expat REQUIRED)
+  find_package(EXPAT REQUIRED)
   add_dependency_includes(${EXPAT_INCLUDE_DIRS})
 
   find_package(Lua REQUIRED)
