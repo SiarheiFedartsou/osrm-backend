@@ -474,8 +474,8 @@ if(ENABLE_CONAN)
   find_package(Lua REQUIRED)
   add_dependency_includes(${LUA_INCLUDE_DIRS})
 
-  find_package(TBB REQUIRED)
-  add_dependency_includes(${TBB_INCLUDE_DIRS})
+  set(TBB_LIBRARIES ${CONAN_LIBS_TBB})
+  add_dependency_includes(${CONAN_INCLUDE_DIRS_TBB})
 
   # note: we avoid calling find_package(Osmium ...) here to ensure that the
   # expat and bzip2 are used from conan rather than the system
