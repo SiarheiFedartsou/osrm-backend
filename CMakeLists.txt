@@ -448,9 +448,6 @@ add_subdirectory(${FLATBUFFERS_SRC_DIR}
         ${CMAKE_CURRENT_BINARY_DIR}/flatbuffers-build
         EXCLUDE_FROM_ALL)
 
-# if conan is enabled no find_package calls are made
-# to ensure that we are only compiling and linking against
-# fully portable conan packages
 if(ENABLE_CONAN)
   message(STATUS "Installing dependencies via conan")
 
@@ -465,19 +462,19 @@ if(ENABLE_CONAN)
   conan_cmake_run(REQUIRES boost/1.79.0 bzip2/1.0.8 expat/2.2.10 lua/5.4.4 tbb/2020.3 BASIC_SETUP BUILD missing)
   
 
-  find_package(Boost 1.79.0 EXACT REQUIRED COMPONENTS ${BOOST_COMPONENTS})
+  find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
   add_dependency_includes(${BOOST_INCLUDE_DIRS})
 
-  find_package(BZip2 1.0.8 EXACT REQUIRED)
+  find_package(BZip2 REQUIRED)
   add_dependency_includes(${BZIP2_INCLUDE_DIRS})
 
-  find_package(Expat 2.2.10 EXACT REQUIRED)
+  find_package(Expat REQUIRED)
   add_dependency_includes(${EXPAT_INCLUDE_DIRS})
 
-  find_package(Lua 5.4.4 EXACT REQUIRED)
+  find_package(Lua REQUIRED)
   add_dependency_includes(${LUA_INCLUDE_DIRS})
 
-  find_package(TBB 2020.3 EXACT REQUIRED)
+  find_package(TBB REQUIRED)
   add_dependency_includes(${TBB_INCLUDE_DIRS})
 
   # note: we avoid calling find_package(Osmium ...) here to ensure that the
