@@ -334,7 +334,7 @@ if (ENABLE_SANITIZER)
 endif()
 
 # Configuring compilers
-set(OSRM_WARNING_FLAGS "")
+set(OSRM_WARNING_FLAGS "-Werror=all -Werror=extra  -Werror=uninitialized -Werror=unreachable-code -Werror=unused-variable -Werror=unreachable-code -Wno-error=cpp -Wpedantic")
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OSRM_WARNING_FLAGS} -Werror=strict-overflow=2 -Wno-error=unused-local-typedef -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fPIC -fcolor-diagnostics -ftemplate-depth=1024 -Wno-unused-command-line-argument")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
@@ -456,23 +456,13 @@ add_subdirectory(${FLATBUFFERS_SRC_DIR}
 if(ENABLE_CONAN)
   message(STATUS "Installing dependencies via conan")
 
+  set(CONAN_SYSTEM_INCLUDES ON)
   conan_cmake_run(REQUIRES boost/1.79.0 bzip2/1.0.8 expat/2.2.10 lua/5.4.4 tbb/2020.3 BASIC_SETUP BUILD missing)
-  
-
   find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
-  add_dependency_includes(${BOOST_INCLUDE_DIRS})
-
   find_package(BZip2 REQUIRED)
-  add_dependency_includes(${BZIP2_INCLUDE_DIRS})
-
   find_package(EXPAT REQUIRED)
-  add_dependency_includes(${EXPAT_INCLUDE_DIRS})
-
   find_package(Lua REQUIRED)
-  add_dependency_includes(${LUA_INCLUDE_DIRS})
-
-  set(TBB_LIBRARIES ${CONAN_LIBS_TBB})
-  add_dependency_includes(${CONAN_INCLUDE_DIRS_TBB})
+  find_package(TBB REQUIRED)
 
   # note: we avoid calling find_package(Osmium ...) here to ensure that the
   # expat and bzip2 are used from conan rather than the system
