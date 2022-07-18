@@ -52,6 +52,9 @@ endif()
 
 if(ENABLE_CONAN)
   message(STATUS "Using Conan")
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
+  list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
+
   include(${CMAKE_CURRENT_LIST_DIR}/cmake/conan.cmake)
 endif()
 
@@ -457,12 +460,41 @@ if(ENABLE_CONAN)
   message(STATUS "Installing dependencies via conan")
 
   set(CONAN_SYSTEM_INCLUDES ON)
-  conan_cmake_run(REQUIRES boost/1.79.0 bzip2/1.0.8 expat/2.2.10 lua/5.4.4 tbb/2020.3 BASIC_SETUP BUILD missing)
+  conan_cmake_run(
+    REQUIRES 
+    boost/1.79.0 
+    bzip2/1.0.8 
+    expat/2.2.10 
+    lua/5.4.4 
+    tbb/2020.3 
+    BASIC_SETUP 
+    BUILD missing 
+    GENERATORS cmake_find_package
+  )
+
   find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
-  find_package(BZip2 REQUIRED)
+  link_directories(${Boost_LIB_DIRS})
+  
+  set(Boost_DATE_TIME_LIBRARY "${Boost_date_time_LIB_TARGETS}")
+  set(Boost_CHRONO_LIBRARY "${Boost_chrono_LIB_TARGETS}")
+  set(Boost_PROGRAM_OPTIONS_LIBRARY "${Boost_program_options_LIB_TARGETS}")
+  set(Boost_FILESYSTEM_LIBRARY "${Boost_filesystem_LIB_TARGETS}")
+  set(Boost_IOSTREAMS_LIBRARY "${Boost_iostreams_LIB_TARGETS}")
+  set(Boost_THREAD_LIBRARY "${Boost_thread_LIB_TARGETS}")
+  set(Boost_SYSTEM_LIBRARY "${Boost_system_LIB_TARGETS}")
+  set(Boost_ZLIB_LIBRARY "${Boost_zlib_LIB_TARGETS}")
+  set(Boost_REGEX_LIBRARY "${Boost_regex_LIB_TARGETS}")
+  find_package(BZip2 REQUIRED EXACT 1.0.8)
   find_package(EXPAT REQUIRED)
-  find_package(Lua REQUIRED)
+  find_package(lua REQUIRED)
+  set(LUA_LIBRARIES ${lua_LIBRARIES})
+
   find_package(TBB REQUIRED)
+
+
+  # set(Boost_FILESYSTEM_LIBRARY ${Boost_LIBRARIES})
+  # message(FATAL_ERROR "Where is Boost? ${CMAKE_MODULE_PATH}")
+  
 
   # note: we avoid calling find_package(Osmium ...) here to ensure that the
   # expat and bzip2 are used from conan rather than the system
