@@ -51,13 +51,8 @@ if (ENABLE_CLANG_TIDY)
 endif()
 
 if(ENABLE_CONAN)
-  message(STATUS "Installing dependencies via conan")
-
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-    message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
-                "${CMAKE_BINARY_DIR}/conan.cmake")
-  endif()
+  message(STATUS "Using Conan")
+  include(${CMAKE_CURRENT_LIST_DIR}/cmake/conan.cmake)
 endif()
 
 
@@ -460,8 +455,6 @@ add_subdirectory(${FLATBUFFERS_SRC_DIR}
 
 if(ENABLE_CONAN)
   message(STATUS "Installing dependencies via conan")
-
-  include(${CMAKE_BINARY_DIR}/conan.cmake)
 
   conan_cmake_run(REQUIRES boost/1.79.0 bzip2/1.0.8 expat/2.2.10 lua/5.4.4 tbb/2020.3 BASIC_SETUP BUILD missing)
   
