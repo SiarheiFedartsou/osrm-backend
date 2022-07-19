@@ -472,6 +472,7 @@ if(ENABLE_CONAN)
     GENERATORS cmake_find_package
   )
 
+  set(Boost_USE_STATIC_LIBS ON)
   find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
   set(Boost_DATE_TIME_LIBRARY "${Boost_date_time_LIB_TARGETS}")
   set(Boost_CHRONO_LIBRARY "${Boost_chrono_LIB_TARGETS}")
@@ -562,14 +563,6 @@ endif()
 # to ensure that osrm binaries play well with other binaries like nodejs
 find_package(ZLIB REQUIRED)
 add_dependency_includes(${ZLIB_INCLUDE_DIRS})
-
-if(NOT WIN32 AND NOT Boost_USE_STATIC_LIBS)
-  add_dependency_defines(-DBOOST_TEST_DYN_LINK)
-endif()
-
-if(NOT WIN32 AND NOT Boost_USE_STATIC_LIBS)
-  add_dependency_defines(-DBOOST_TEST_DYN_LINK)
-endif()
 
 add_dependency_defines(-DBOOST_SPIRIT_USE_PHOENIX_V3)
 add_dependency_defines(-DBOOST_RESULT_OF_USE_DECLTYPE)
