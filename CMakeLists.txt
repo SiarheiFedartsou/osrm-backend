@@ -473,8 +473,6 @@ if(ENABLE_CONAN)
   )
 
   find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
-  link_directories(${Boost_LIB_DIRS})
-  
   set(Boost_DATE_TIME_LIBRARY "${Boost_date_time_LIB_TARGETS}")
   set(Boost_CHRONO_LIBRARY "${Boost_chrono_LIB_TARGETS}")
   set(Boost_PROGRAM_OPTIONS_LIBRARY "${Boost_program_options_LIB_TARGETS}")
@@ -484,6 +482,8 @@ if(ENABLE_CONAN)
   set(Boost_SYSTEM_LIBRARY "${Boost_system_LIB_TARGETS}")
   set(Boost_ZLIB_LIBRARY "${Boost_zlib_LIB_TARGETS}")
   set(Boost_REGEX_LIBRARY "${Boost_regex_LIB_TARGETS}")
+  set(Boost_UNIT_TEST_FRAMEWORK_LIBRARY "${Boost_unit_test_framework_LIB_TARGETS}")
+  
   find_package(BZip2 REQUIRED EXACT 1.0.8)
   find_package(EXPAT REQUIRED)
   find_package(lua REQUIRED)
