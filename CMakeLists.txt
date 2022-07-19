@@ -470,6 +470,7 @@ if(ENABLE_CONAN)
     BASIC_SETUP 
     BUILD missing 
     GENERATORS cmake_find_package
+    KEEP_RPATHS
   )
 
   set(Boost_USE_STATIC_LIBS ON)
