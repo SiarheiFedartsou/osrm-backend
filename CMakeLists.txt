@@ -789,7 +789,7 @@ JOIN("-I${DEPENDENCIES_INCLUDE_DIRS}" " -I" PKGCONFIG_OSRM_INCLUDE_FLAGS)
 # Boost uses imported targets, we need to use a generator expression to extract
 # the link libraries to be written to the pkg-config file.
 foreach(engine_lib ${ENGINE_LIBRARIES})
-  if("${engine_lib}" MATCHES "^Boost.*")
+  if("${engine_lib}" MATCHES "^Boost.*" OR "${engine_lib}" MATCHES "^CONAN_LIB.*")
     list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "$<TARGET_LINKER_FILE:${engine_lib}>")
   else()
     list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "${engine_lib}")
