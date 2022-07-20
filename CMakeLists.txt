@@ -50,15 +50,6 @@ if (ENABLE_CLANG_TIDY)
   endif()
 endif()
 
-if(ENABLE_CONAN)
-  message(STATUS "Using Conan")
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
-  list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
-
-  include(${CMAKE_CURRENT_LIST_DIR}/cmake/conan.cmake)
-endif()
-
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # be compatible with version handling before cmake 3.x
@@ -457,16 +448,28 @@ add_subdirectory(${FLATBUFFERS_SRC_DIR}
         EXCLUDE_FROM_ALL)
 
 if(ENABLE_CONAN)
-  message(STATUS "Installing dependencies via conan")
+  message(STATUS "Installing dependencies via Conan")
 
+  # Conan will generate Find*.cmake files to build directory, so we use them with the highest priority 
+  list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_BINARY_DIR})
+  list(INSERT CMAKE_PREFIX_PATH 0 ${CMAKE_BINARY_DIR})
+
+  include(${CMAKE_CURRENT_LIST_DIR}/cmake/conan.cmake)
+
+  set(CONAN_BOOST_VERSION 1.79.0)
+  set(CONAN_BZIP2_VERSION 1.0.8)
+  set(CONAN_EXPAT_VERSION 2.2.10)
+  set(CONAN_LUA_VERSION 5.4.4)
+  set(CONAN_TBB_VERSION 2020.3)
+  
   set(CONAN_SYSTEM_INCLUDES ON)
   conan_cmake_run(
     REQUIRES 
-    boost/1.79.0 
-    bzip2/1.0.8 
-    expat/2.2.10 
-    lua/5.4.4 
-    tbb/2020.3 
+    boost/${CONAN_BOOST_VERSION}
+    bzip2/${CONAN_BZIP2_VERSION}
+    expat/${CONAN_EXPAT_VERSION}
+    lua/${CONAN_LUA_VERSION}
+    tbb/${CONAN_TBB_VERSION}
     BASIC_SETUP 
     BUILD missing 
     GENERATORS cmake_find_package
@@ -474,7 +477,7 @@ if(ENABLE_CONAN)
   )
 
   set(Boost_USE_STATIC_LIBS ON)
-  find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
+  find_package(Boost REQUIRED EXACT ${CONAN_BOOST_VERSION} COMPONENTS ${BOOST_COMPONENTS})
   set(Boost_DATE_TIME_LIBRARY "${Boost_date_time_LIB_TARGETS}")
   set(Boost_CHRONO_LIBRARY "${Boost_chrono_LIB_TARGETS}")
   set(Boost_PROGRAM_OPTIONS_LIBRARY "${Boost_program_options_LIB_TARGETS}")
@@ -486,17 +489,13 @@ if(ENABLE_CONAN)
   set(Boost_REGEX_LIBRARY "${Boost_regex_LIB_TARGETS}")
   set(Boost_UNIT_TEST_FRAMEWORK_LIBRARY "${Boost_unit_test_framework_LIB_TARGETS}")
   
-  find_package(BZip2 REQUIRED EXACT 1.0.8)
-  find_package(EXPAT REQUIRED)
-  find_package(lua REQUIRED)
+  find_package(BZip2 REQUIRED EXACT ${CONAN_BZIP2_VERSION})
+  find_package(EXPAT REQUIRED EXACT ${CONAN_EXPAT_VERSION})
+  find_package(lua REQUIRED EXACT ${CONAN_LUA_VERSION})
   set(LUA_LIBRARIES ${lua_LIBRARIES})
 
-  find_package(TBB REQUIRED)
+  find_package(TBB REQUIRED EXACT ${CONAN_TBB_VERSION})
 
-
-  # set(Boost_FILESYSTEM_LIBRARY ${Boost_LIBRARIES})
-  # message(FATAL_ERROR "Where is Boost? ${CMAKE_MODULE_PATH}")
-  
 
   # note: we avoid calling find_package(Osmium ...) here to ensure that the
   # expat and bzip2 are used from conan rather than the system
