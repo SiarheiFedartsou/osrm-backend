@@ -474,6 +474,7 @@ if(ENABLE_CONAN)
     BUILD missing 
     GENERATORS cmake_find_package
     KEEP_RPATHS
+    NO_OUTPUT_DIRS
   )
 
   add_dependency_includes(${CONAN_INCLUDE_DIRS_BOOST})
