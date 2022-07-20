@@ -476,6 +476,12 @@ if(ENABLE_CONAN)
     KEEP_RPATHS
   )
 
+  add_dependency_includes(${CONAN_INCLUDE_DIRS_BOOST})
+  add_dependency_includes(${CONAN_INCLUDE_DIRS_BZIP2})
+  add_dependency_includes(${CONAN_INCLUDE_DIRS_EXPAT})
+  add_dependency_includes(${CONAN_INCLUDE_DIRS_LUA})
+  add_dependency_includes(${CONAN_INCLUDE_DIRS_TBB})
+
   set(Boost_USE_STATIC_LIBS ON)
   find_package(Boost REQUIRED EXACT ${CONAN_BOOST_VERSION} COMPONENTS ${BOOST_COMPONENTS})
   set(Boost_DATE_TIME_LIBRARY "${Boost_date_time_LIB_TARGETS}")
