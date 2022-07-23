@@ -1,6 +1,5 @@
 #include "server/connection.hpp"
 #include "server/request_handler.hpp"
-#include "server/request_parser.hpp"
 
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/bind.hpp>
@@ -18,26 +17,25 @@ Connection::Connection(boost::asio::io_context &io_context, RequestHandler &hand
     : strand(boost::asio::make_strand(io_context)), TCP_socket(strand), timer(strand),
       request_handler(handler)
 {
-
-            http_request_parser.emplace();
+    http_request_parser.emplace();
 }
 
 boost::asio::ip::tcp::socket &Connection::socket() { return TCP_socket; }
 
 namespace {
 
-http::compression_type SelectCompression(const boost::beast::http::fields& fields) {
-            const auto header_value = fields[boost::beast::http::field::accept_encoding];
-            /* giving gzip precedence over deflate */
-            if (boost::icontains(header_value, "deflate"))
-            {
-                return http::deflate_rfc1951;
-            }
-            if (boost::icontains(header_value, "gzip"))
-            {
-                return http::gzip_rfc1952;
-            }
-            return http::no_compression;
+http::compression_type select_compression(const boost::beast::http::fields& fields) {
+    const auto header_value = fields[boost::beast::http::field::accept_encoding];
+    /* giving gzip precedence over deflate */
+    if (boost::icontains(header_value, "deflate"))
+    {
+        return http::deflate_rfc1951;
+    }
+    if (boost::icontains(header_value, "gzip"))
+    {
+        return http::gzip_rfc1952;
+    }
+    return http::no_compression;
 }
 
 } // namespace
@@ -63,6 +61,8 @@ void Connection::start()
 
 void Connection::handle_read(const boost::system::error_code &error, std::size_t bytes_transferred)
 {
+    boost::ignore_unused(bytes_transferred);
+
     if (error)
     {
         if (error != boost::asio::error::operation_aborted)
@@ -80,19 +80,11 @@ void Connection::handle_read(const boost::system::error_code &error, std::size_t
         timer.expires_from_now(boost::posix_time::seconds(0));
     }
 
-    (void)bytes_transferred;
     boost::beast::error_code ec;
     http_request_parser->put(boost::asio::buffer(incoming_data_buffer), ec);
     // no error detected, let's parse the request
     http::compression_type compression_type(http::no_compression);
 
-    // RequestParser::RequestStatus result;
-    // std::tie(result, compression_type) =
-    //     request_parser.parse(current_request,
-    //                          incoming_data_buffer.data(),
-    //                          incoming_data_buffer.data() + bytes_transferred);
-
-    // the request has been parsed
     if (ec) {
         if (ec == boost::beast::http::error::need_more) {
         // we don't have a result yet, so continue reading
@@ -112,11 +104,15 @@ void Connection::handle_read(const boost::system::error_code &error, std::size_t
                                              boost::asio::placeholders::error));
         }
     } else {
-         boost::system::error_code ec;
+        // the request has been parsed
+        const auto& message = http_request_parser->get();
+        compression_type = select_compression(message);
+
+        fill_request(message, current_request);
+
+        boost::system::error_code ec;
         current_request.endpoint = TCP_socket.remote_endpoint(ec).address();
-        current_request.uri = http_request_parser->get().target().to_string();
-        compression_type = SelectCompression(http_request_parser->get());
-    std::cerr <<  http_request_parser->get()[boost::beast::http::field::host];
+
         if (ec)
         {
             util::Log(logDEBUG) << "Socket remote endpoint error: " << ec.message();
@@ -182,7 +178,6 @@ void Connection::handle_write(const boost::system::error_code &error)
             --processed_requests;
             current_request = http::request();
             current_reply = http::reply();
-            request_parser = RequestParser();
             http_request_parser.emplace();
             incoming_data_buffer = boost::array<char, 8192>();
             output_buffer.clear();
@@ -245,5 +240,13 @@ std::vector<char> Connection::compress_buffers(const std::vector<char> &uncompre
 
     return compressed_data;
 }
+
+void Connection::fill_request(const RequestParser::value_type& http_message, http::request& current_request) {
+    current_request.uri = http_message.target().to_string();
+    current_request.agent = http_message[boost::beast::http::field::user_agent].to_string();
+    current_request.referrer = http_message[boost::beast::http::field::referer].to_string();
+    current_request.connection = http_message[boost::beast::http::field::connection].to_string();
+}
+
 } // namespace server
 } // namespace osrm

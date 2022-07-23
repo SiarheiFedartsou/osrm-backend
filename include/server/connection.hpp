@@ -4,7 +4,6 @@
 #include "server/http/compression_type.hpp"
 #include "server/http/reply.hpp"
 #include "server/http/request.hpp"
-#include "server/request_parser.hpp"
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/websocket.hpp>
@@ -50,6 +49,7 @@ class Connection : public std::enable_shared_from_this<Connection>
     void start();
 
   private:
+    using RequestParser = boost::beast::http::request_parser<boost::beast::http::string_body>;
     void handle_read(const boost::system::error_code &e, std::size_t bytes_transferred);
 
     /// Handle completion of a write operation.
@@ -63,12 +63,13 @@ class Connection : public std::enable_shared_from_this<Connection>
     std::vector<char> compress_buffers(const std::vector<char> &uncompressed_data,
                                        const http::compression_type compression_type);
 
+    void fill_request(const RequestParser::value_type& httpMessage, http::request& request);
+
     boost::asio::strand<boost::asio::io_context::executor_type> strand;
     boost::asio::ip::tcp::socket TCP_socket;
     boost::asio::deadline_timer timer;
     RequestHandler &request_handler;
-    RequestParser request_parser;
-    boost::optional<boost::beast::http::request_parser<boost::beast::http::string_body>> http_request_parser;
+    boost::optional<RequestParser> http_request_parser;
     boost::array<char, 8192> incoming_data_buffer;
     http::request current_request;
     http::reply current_reply;
