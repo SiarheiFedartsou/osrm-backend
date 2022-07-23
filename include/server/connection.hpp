@@ -49,7 +49,7 @@ class Connection : public std::enable_shared_from_this<Connection>
     void start();
 
   private:
-    using RequestParser = boost::beast::http::request_parser<boost::beast::http::string_body>;
+    using RequestParser = boost::beast::http::request_parser<boost::beast::http::empty_body>;
     void handle_read(const boost::system::error_code &e, std::size_t bytes_transferred);
 
     /// Handle completion of a write operation.

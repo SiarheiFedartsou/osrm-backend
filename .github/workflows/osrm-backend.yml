@@ -49,7 +49,7 @@ jobs:
         npm run docs && ./scripts/error_on_dirty.sh
 
   build-test-publish:
-    needs: format-taginfo-docs
+    #needs: format-taginfo-docs
     strategy:
       matrix:
         include:
