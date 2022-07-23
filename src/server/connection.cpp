@@ -18,6 +18,8 @@ Connection::Connection(boost::asio::io_context &io_context, RequestHandler &hand
     : strand(boost::asio::make_strand(io_context)), TCP_socket(strand), timer(strand),
       request_handler(handler)
 {
+
+            http_request_parser.emplace();
 }
 
 boost::asio::ip::tcp::socket &Connection::socket() { return TCP_socket; }
@@ -60,19 +62,38 @@ void Connection::handle_read(const boost::system::error_code &error, std::size_t
         timer.expires_from_now(boost::posix_time::seconds(0));
     }
 
+    (void)bytes_transferred;
+    boost::beast::error_code ec;
+    http_request_parser->put(boost::asio::buffer(incoming_data_buffer), ec);
     // no error detected, let's parse the request
     http::compression_type compression_type(http::no_compression);
-    RequestParser::RequestStatus result;
-    std::tie(result, compression_type) =
-        request_parser.parse(current_request,
-                             incoming_data_buffer.data(),
-                             incoming_data_buffer.data() + bytes_transferred);
+    // RequestParser::RequestStatus result;
+    // std::tie(result, compression_type) =
+    //     request_parser.parse(current_request,
+    //                          incoming_data_buffer.data(),
+    //                          incoming_data_buffer.data() + bytes_transferred);
 
     // the request has been parsed
-    if (result == RequestParser::RequestStatus::valid)
-    {
+    if (ec) {
+        if (ec == boost::beast::http::error::need_more) {
+        // we don't have a result yet, so continue reading
+        TCP_socket.async_read_some(boost::asio::buffer(incoming_data_buffer),
+                                   boost::bind(&Connection::handle_read,
+                                               this->shared_from_this(),
+                                               boost::asio::placeholders::error,
+                                               boost::asio::placeholders::bytes_transferred));
+        } else {
+            // request is not parseable
+        current_reply = http::reply::stock_reply(http::reply::bad_request);
 
-        boost::system::error_code ec;
+        boost::asio::async_write(TCP_socket,
+                                 current_reply.to_buffers(),
+                                 boost::bind(&Connection::handle_write,
+                                             this->shared_from_this(),
+                                             boost::asio::placeholders::error));
+        }
+    } else {
+         boost::system::error_code ec;
         current_request.endpoint = TCP_socket.remote_endpoint(ec).address();
         if (ec)
         {
@@ -127,25 +148,6 @@ void Connection::handle_read(const boost::system::error_code &error, std::size_t
                                              this->shared_from_this(),
                                              boost::asio::placeholders::error));
     }
-    else if (result == RequestParser::RequestStatus::invalid)
-    { // request is not parseable
-        current_reply = http::reply::stock_reply(http::reply::bad_request);
-
-        boost::asio::async_write(TCP_socket,
-                                 current_reply.to_buffers(),
-                                 boost::bind(&Connection::handle_write,
-                                             this->shared_from_this(),
-                                             boost::asio::placeholders::error));
-    }
-    else
-    {
-        // we don't have a result yet, so continue reading
-        TCP_socket.async_read_some(boost::asio::buffer(incoming_data_buffer),
-                                   boost::bind(&Connection::handle_read,
-                                               this->shared_from_this(),
-                                               boost::asio::placeholders::error,
-                                               boost::asio::placeholders::bytes_transferred));
-    }
 }
 
 /// Handle completion of a write operation.
@@ -159,6 +161,7 @@ void Connection::handle_write(const boost::system::error_code &error)
             current_request = http::request();
             current_reply = http::reply();
             request_parser = RequestParser();
+            http_request_parser.emplace();
             incoming_data_buffer = boost::array<char, 8192>();
             output_buffer.clear();
             this->start();
