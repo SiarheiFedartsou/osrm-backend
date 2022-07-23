@@ -24,7 +24,7 @@ boost::asio::ip::tcp::socket &Connection::socket() { return TCP_socket; }
 namespace
 {
 
-http::compression_type select_compression(const boost::beast::http::fields &fields) 
+http::compression_type select_compression(const boost::beast::http::fields &fields)
 {
     const auto header_value = fields[boost::beast::http::field::accept_encoding];
     /* giving gzip precedence over deflate */
@@ -88,7 +88,7 @@ void Connection::handle_read(const boost::system::error_code &error, std::size_t
 
     if (ec)
     {
-        if (ec == boost::beast::http::error::need_more) 
+        if (ec == boost::beast::http::error::need_more)
         {
             // we don't have a result yet, so continue reading
             TCP_socket.async_read_some(boost::asio::buffer(incoming_data_buffer),
