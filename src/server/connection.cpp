@@ -5,7 +5,6 @@
 #include <boost/bind.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
-#include <boost/beast/http/parser.hpp>
 #include <vector>
 
 namespace osrm
@@ -22,14 +21,14 @@ Connection::Connection(boost::asio::io_context &io_context, RequestHandler &hand
 
 boost::asio::ip::tcp::socket &Connection::socket() { return TCP_socket; }
 
-namespace 
+namespace
 {
 
 http::compression_type select_compression(const boost::beast::http::fields &fields) 
 {
     const auto header_value = fields[boost::beast::http::field::accept_encoding];
     /* giving gzip precedence over deflate */
-    if (boost::icontains(header_value, "deflate")) 
+    if (boost::icontains(header_value, "deflate"))
     {
         return http::deflate_rfc1951;
     }
@@ -87,16 +86,19 @@ void Connection::handle_read(const boost::system::error_code &error, std::size_t
     // no error detected, let's parse the request
     http::compression_type compression_type(http::no_compression);
 
-    if (ec) 
+    if (ec)
     {
-        if (ec == boost::beast::http::error::need_more) {
+        if (ec == boost::beast::http::error::need_more) 
+        {
             // we don't have a result yet, so continue reading
             TCP_socket.async_read_some(boost::asio::buffer(incoming_data_buffer),
                                        boost::bind(&Connection::handle_read,
                                                    this->shared_from_this(),
                                                    boost::asio::placeholders::error,
                                                    boost::asio::placeholders::bytes_transferred));
-        } else {
+        }
+        else
+        {
             // request is not parseable
             current_reply = http::reply::stock_reply(http::reply::bad_request);
 
@@ -106,7 +108,9 @@ void Connection::handle_read(const boost::system::error_code &error, std::size_t
                                                  this->shared_from_this(),
                                                  boost::asio::placeholders::error));
         }
-    } else {
+    }
+    else
+    {
         // the request has been parsed
         const auto &message = http_request_parser->get();
         compression_type = select_compression(message);
@@ -246,6 +250,7 @@ std::vector<char> Connection::compress_buffers(const std::vector<char> &uncompre
 
 void Connection::fill_request(const RequestParser::value_type &http_message,
                               http::request &current_request)
+{
     current_request.uri = http_message.target().to_string();
     current_request.agent = http_message[boost::beast::http::field::user_agent].to_string();
     current_request.referrer = http_message[boost::beast::http::field::referer].to_string();
