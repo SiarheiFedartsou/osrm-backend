@@ -24,6 +24,24 @@ Connection::Connection(boost::asio::io_context &io_context, RequestHandler &hand
 
 boost::asio::ip::tcp::socket &Connection::socket() { return TCP_socket; }
 
+namespace {
+
+http::compression_type SelectCompression(const boost::beast::http::fields& fields) {
+            const auto header_value = fields[boost::beast::http::field::accept_encoding];
+            /* giving gzip precedence over deflate */
+            if (boost::icontains(header_value, "deflate"))
+            {
+                return http::deflate_rfc1951;
+            }
+            if (boost::icontains(header_value, "gzip"))
+            {
+                return http::gzip_rfc1952;
+            }
+            return http::no_compression;
+}
+
+} // namespace
+
 /// Start the first asynchronous operation for the connection.
 void Connection::start()
 {
@@ -67,6 +85,7 @@ void Connection::handle_read(const boost::system::error_code &error, std::size_t
     http_request_parser->put(boost::asio::buffer(incoming_data_buffer), ec);
     // no error detected, let's parse the request
     http::compression_type compression_type(http::no_compression);
+
     // RequestParser::RequestStatus result;
     // std::tie(result, compression_type) =
     //     request_parser.parse(current_request,
@@ -95,6 +114,9 @@ void Connection::handle_read(const boost::system::error_code &error, std::size_t
     } else {
          boost::system::error_code ec;
         current_request.endpoint = TCP_socket.remote_endpoint(ec).address();
+        current_request.uri = http_request_parser->get().target().to_string();
+        compression_type = SelectCompression(http_request_parser->get());
+    std::cerr <<  http_request_parser->get()[boost::beast::http::field::host];
         if (ec)
         {
             util::Log(logDEBUG) << "Socket remote endpoint error: " << ec.message();
