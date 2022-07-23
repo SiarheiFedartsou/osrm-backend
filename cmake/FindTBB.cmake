@@ -126,6 +126,7 @@ endif (CMAKE_SYSTEM MATCHES "SunOS.*")
 #-- Clear the public variables
 set (TBB_FOUND "NO")
 
+set(TBB_INSTALL_DIR "/opt/homebrew/Cellar/tbb@2020/2020_U3/")
 
 #-- Find TBB install dir and set ${_TBB_INSTALL_DIR} and cached ${TBB_INSTALL_DIR}
 # first: use CMake variable TBB_INSTALL_DIR
@@ -180,7 +181,7 @@ endmacro(TBB_CORRECT_LIB_DIR var_content)
 
 
 #-- Look for include directory and set ${TBB_INCLUDE_DIR}
-set (TBB_INC_SEARCH_DIR ${_TBB_INSTALL_DIR}/include)
+set (TBB_INC_SEARCH_DIR "/opt/homebrew/Cellar/tbb@2020/2020_U3/include")
 # Jiri: tbbvars now sets the CPATH environment variable to the directory
 #       containing the headers.
 find_path(TBB_INCLUDE_DIR

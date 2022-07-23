@@ -6,7 +6,7 @@
 #include <boost/bind.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
-
+#include <boost/beast/http/parser.hpp>
 #include <vector>
 
 namespace osrm

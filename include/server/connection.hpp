@@ -5,7 +5,10 @@
 #include "server/http/reply.hpp"
 #include "server/http/request.hpp"
 #include "server/request_parser.hpp"
-
+#include <boost/beast/core.hpp>
+#include <boost/beast/http.hpp>
+#include <boost/beast/websocket.hpp>
+#include <boost/beast/version.hpp>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/config.hpp>
@@ -65,6 +68,7 @@ class Connection : public std::enable_shared_from_this<Connection>
     boost::asio::deadline_timer timer;
     RequestHandler &request_handler;
     RequestParser request_parser;
+    boost::beast::http::request_parser<boost::beast::http::string_body> http_request_parser;
     boost::array<char, 8192> incoming_data_buffer;
     http::request current_request;
     http::reply current_reply;
