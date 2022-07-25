@@ -75,7 +75,7 @@ option(ENABLE_CLANG_TIDY "Enables clang-tidy checks" OFF)
 # if (POLICY CMP0074)
 #   cmake_policy(SET CMP0074 NEW)
 # endif()
-# project(OSRM C CXX)
+project(OSRM C CXX)
 
 # include(JSONParser)
 # file(READ "package.json" packagejsonraw)
