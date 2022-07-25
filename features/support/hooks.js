@@ -51,9 +51,9 @@ module.exports = function () {
             .defer(rimraf, this.scenarioLogFile)
             .awaitAll(callback);
         // uncomment to get path to logfile
-        // console.log('  Writing logging output to ' + this.scenarioLogFile);
+        console.log('  Writing logging output to ' + this.scenarioLogFile);
     });
-
+ 
     this.After((scenario, callback) => {
         this.resetOptionsOutput();
         callback();
