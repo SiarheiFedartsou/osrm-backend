@@ -1,4 +1,4 @@
-name: osrm-backend CI
+name: My CI
 on:
   push:
     branches:
