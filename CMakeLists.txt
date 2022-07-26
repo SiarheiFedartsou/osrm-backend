@@ -437,6 +437,7 @@ project(OSRM C CXX)
 # if(UNIX AND NOT APPLE)
 #   set(MAYBE_RT_LIBRARY -lrt)
 # endif()
+
 #
 message(STATUS "XXXFindThreads")
 find_package(Threads REQUIRED)
