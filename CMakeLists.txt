@@ -347,6 +347,9 @@ if (ENABLE_SANITIZER)
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${SANITIZER_FLAGS}")
 endif()
 
+list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+
 # # Configuring compilers
 # set(OSRM_WARNING_FLAGS "-Werror=all -Werror=extra  -Werror=uninitialized -Werror=unreachable-code -Werror=unused-variable -Werror=unreachable-code -Wno-error=cpp -Wpedantic")
 # if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
