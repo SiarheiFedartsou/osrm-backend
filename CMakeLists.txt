@@ -346,7 +346,7 @@ find_package(Threads REQUIRED)
 message(STATUS "XXXFindThreads2")
 
 if (ENABLE_SANITIZER)
-  set(SANITIZER_FLAGS "-g -fsanitize=undefined")
+  set(SANITIZER_FLAGS "-g -fsanitize=address -fsanitize-address-use-after-scope -fsanitize=undefined -fno-omit-frame-pointer")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${SANITIZER_FLAGS}")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SANITIZER_FLAGS}")
   set(OSRM_CXXFLAGS "${OSRM_CXXFLAGS} ${SANITIZER_FLAGS}")
