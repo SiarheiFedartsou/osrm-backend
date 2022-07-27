@@ -337,6 +337,9 @@ project(OSRM C CXX)
 #   set(MAYBE_COVERAGE_LIBRARIES "-lgcov")
 #   set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -O0 -ftest-coverage -fprofile-arcs")
 # endif()
+message(STATUS "XXXFindThreads")
+find_package(Threads REQUIRED)
+message(STATUS "XXXFindThreads2")
 
 if (ENABLE_SANITIZER)
   set(SANITIZER_FLAGS "-g -fsanitize=undefined -fsanitize-blacklist=${CMAKE_CURRENT_SOURCE_DIR}/scripts/ci/asan-ubsan.conf")
@@ -441,9 +444,6 @@ list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 # endif()
 
 #
-message(STATUS "XXXFindThreads")
-find_package(Threads REQUIRED)
-message(STATUS "XXXFindThreads2")
 
 # # Third-party libraries
 # set(RAPIDJSON_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party/rapidjson/include")
