@@ -45,7 +45,7 @@ option(ENABLE_CLANG_TIDY "Enables clang-tidy checks" OFF)
 # endif()
 
 
-# list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 # if(ENABLE_MASON)
 #   # versions in use
