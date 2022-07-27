@@ -126,9 +126,12 @@ macro(_check_pthreads_flag)
       unset(_threads_src)
 
       if(THREADS_HAVE_PTHREAD_ARG)
+      message(STATUS "THREADS_HAVE_PTHREAD_ARG2")
         set(Threads_FOUND TRUE)
         message(CHECK_PASS "yes")
       else()
+
+      message(STATUS "THREADS_HAVE_PTHREAD_ARG1")
         message(CHECK_FAIL "no")
       endif()
 
@@ -149,12 +152,15 @@ else()
 endif()
 
 if(CMAKE_HAVE_PTHREAD_H)
+    message(STATUS "FOUND pthread.h")
   #
   # We have pthread.h
   # Let's check for the library now.
   #
   set(CMAKE_HAVE_THREADS_LIBRARY)
   if(NOT THREADS_HAVE_PTHREAD_ARG)
+
+  message(STATUS "NOT THREADS_HAVE_PTHREAD_ARG")
     # Check if pthread functions are in normal C library.
     # We list some pthread functions in PTHREAD_C_CXX_TEST_SOURCE test code.
     # If the pthread functions already exist in C library, we could just use
@@ -164,7 +170,10 @@ if(CMAKE_HAVE_PTHREAD_H)
     elseif(CMAKE_CXX_COMPILER_LOADED)
       CHECK_CXX_SOURCE_COMPILES("${PTHREAD_C_CXX_TEST_SOURCE}" CMAKE_HAVE_LIBC_PTHREAD)
     endif()
+    
     if(CMAKE_HAVE_LIBC_PTHREAD)
+
+  message(STATUS "CMAKE_HAVE_LIBC_PTHREAD")
       set(CMAKE_THREAD_LIBS_INIT "")
       set(CMAKE_HAVE_THREADS_LIBRARY 1)
       set(Threads_FOUND TRUE)
@@ -173,6 +182,8 @@ if(CMAKE_HAVE_PTHREAD_H)
       # way, but not backwards compatible as one must also pass -pthread
       # as compiler flag then.
       if (THREADS_PREFER_PTHREAD_FLAG)
+
+  message(STATUS "THREADS_PREFER_PTHREAD_FLAG")
          _check_pthreads_flag()
       endif ()
 
@@ -188,7 +199,10 @@ if(CMAKE_HAVE_PTHREAD_H)
     endif()
   endif()
 
+  message(STATUS "_check_pthreads_flag")
   _check_pthreads_flag()
+
+  message(STATUS "_check_pthreads_flag2")
 endif()
 
 if(CMAKE_THREAD_LIBS_INIT OR CMAKE_HAVE_LIBC_PTHREAD)
