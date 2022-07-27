@@ -44,6 +44,7 @@ if (ENABLE_CLANG_TIDY)
   endif()
 endif()
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 if(ENABLE_MASON)
   # versions in use
