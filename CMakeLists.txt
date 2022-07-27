@@ -339,7 +339,7 @@ project(OSRM C CXX)
 # endif()
 
 if (ENABLE_SANITIZER)
-  set(SANITIZER_FLAGS "-g -fsanitize=address -fsanitize-address-use-after-scope")
+  set(SANITIZER_FLAGS "-g -fsanitize=undefined -fno-omit-frame-pointer -fsanitize-blacklist=${CMAKE_CURRENT_SOURCE_DIR}/scripts/ci/asan-ubsan.conf")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${SANITIZER_FLAGS}")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SANITIZER_FLAGS}")
   set(OSRM_CXXFLAGS "${OSRM_CXXFLAGS} ${SANITIZER_FLAGS}")
