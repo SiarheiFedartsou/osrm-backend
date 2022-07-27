@@ -45,8 +45,6 @@ option(ENABLE_CLANG_TIDY "Enables clang-tidy checks" OFF)
 # endif()
 
 
-list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
 # if(ENABLE_MASON)
 #   # versions in use
 #   set(MASON_BOOST_VERSION "1.73.0")
@@ -341,7 +339,7 @@ project(OSRM C CXX)
 # endif()
 
 if (ENABLE_SANITIZER)
-  set(SANITIZER_FLAGS "-g -fsanitize=address -fsanitize-address-use-after-scope -fsanitize=undefined -fno-omit-frame-pointer -fsanitize-blacklist=${CMAKE_CURRENT_SOURCE_DIR}/scripts/ci/asan-ubsan.conf")
+  set(SANITIZER_FLAGS "-g -fsanitize=address -fsanitize-address-use-after-scope")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${SANITIZER_FLAGS}")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SANITIZER_FLAGS}")
   set(OSRM_CXXFLAGS "${OSRM_CXXFLAGS} ${SANITIZER_FLAGS}")
