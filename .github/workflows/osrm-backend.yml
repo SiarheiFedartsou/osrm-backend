@@ -101,7 +101,7 @@ jobs:
             runs-on: ubuntu-20.04
             BUILD_TOOLS: ON
             BUILD_TYPE: Release
-            CLANG_VERSION: 5.0.0
+            CLANG_VERSION: 11.0.0
             ENABLE_MASON: ON
             ENABLE_SANITIZER: ON
 
