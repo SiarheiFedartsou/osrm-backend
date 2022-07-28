@@ -65,6 +65,16 @@ std::string LogPolicy::GetLevels()
 
 Log::Log(LogLevel level_, std::ostream &ostream) : level(level_), stream(ostream)
 {
+    Init();
+}
+
+Log::Log(LogLevel level_) : level(level_), buffer{}, stream{buffer} 
+{
+    Init();
+}
+
+void Log::Init() 
+{
     std::lock_guard<std::mutex> lock(get_mutex());
     if (!LogPolicy::GetInstance().IsMute() && level <= LogPolicy::GetInstance().GetLevel())
     {
@@ -90,8 +100,6 @@ Log::Log(LogLevel level_, std::ostream &ostream) : level(level_), stream(ostream
         }
     }
 }
-
-Log::Log(LogLevel level_) : level(level_), buffer{}, stream{buffer} {}
 
 std::mutex &Log::get_mutex()
 {
