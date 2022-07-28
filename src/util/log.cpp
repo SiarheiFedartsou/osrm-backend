@@ -91,7 +91,7 @@ Log::Log(LogLevel level_, std::ostream &ostream) : level(level_), stream(ostream
     }
 }
 
-Log::Log(LogLevel level_) : Log(level_, buffer) {}
+Log::Log(LogLevel level_) : level(level_), buffer{}, stream{buffer} {}
 
 std::mutex &Log::get_mutex()
 {
