@@ -422,6 +422,7 @@ jobs:
         if [[ "$ENABLE_SANITIZER" == 'ON' ]]; then
           # We can only set this after checkout once we know the workspace directory
           echo "LSAN_OPTIONS=print_suppressions=0:suppressions=${GITHUB_WORKSPACE}/scripts/ci/leaksanitizer.conf" >> $GITHUB_ENV
+          echo "UBSAN_OPTIONS=symbolize=1:halt_on_error=1:print_stacktrace=1:suppressions=${GITHUB_WORKSPACE}/scripts/ci/undefinedsanitizer.conf" >> $GITHUB_ENV
         fi
 
         if [[ "${RUNNER_OS}" == "Linux" ]]; then
@@ -553,6 +554,12 @@ jobs:
       if: ${{ matrix.NODE_PACKAGE_TESTS_ONLY == 'ON' }}
       run: |
         npm run nodejs-tests
+    - name: Upload test logs
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: logs
+        path: test/logs/
 
     - name: Generate code coverage
       if: ${{ matrix.ENABLE_COVERAGE == 'ON' }}
