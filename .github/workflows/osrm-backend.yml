@@ -455,7 +455,9 @@ jobs:
         python3 -m pip install conan==1.51.0
 
         # CMake
-        conan install cmake/3.16.3 -g=virtualenv
+        conan profile new profile --detect       
+        conan install . --profile profile --build
+
         source activate.sh
         cmake --version
         
