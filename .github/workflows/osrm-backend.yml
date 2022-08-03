@@ -446,8 +446,8 @@ jobs:
         fi
 
         echo "MASON=${GITHUB_WORKSPACE}/scripts/mason.sh" >> $GITHUB_ENV
-        echo "CMAKE_URL=https://mason-binaries.s3.amazonaws.com/${MASON_OS}-x86_64/cmake/${CMAKE_VERSION}.tar.gz" >> $GITHUB_ENV
-        echo "CMAKE_DIR=mason_packages/${MASON_OS}-x86_64/cmake/${CMAKE_VERSION}" >> $GITHUB_ENV
+        # echo "CMAKE_URL=https://mason-binaries.s3.amazonaws.com/${MASON_OS}-x86_64/cmake/${CMAKE_VERSION}.tar.gz" >> $GITHUB_ENV
+        # echo "CMAKE_DIR=mason_packages/${MASON_OS}-x86_64/cmake/${CMAKE_VERSION}" >> $GITHUB_ENV
 
 
     - name: Install dev dependencies
@@ -455,9 +455,13 @@ jobs:
         python3 -m pip install conan==1.50.0
 
         # CMake
-        mkdir -p ${CMAKE_DIR}
-        wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C ${CMAKE_DIR}
-        echo "${CMAKE_DIR}/bin" >> $GITHUB_PATH
+        conan install cmake/3.16.3 -g=virtualenv
+        source activate.sh
+        cmake --version
+        
+        # mkdir -p ${CMAKE_DIR}
+        # wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C ${CMAKE_DIR}
+        # echo "${CMAKE_DIR}/bin" >> $GITHUB_PATH
 
         # TBB
         ${MASON} install tbb 2017_U7
