@@ -84,18 +84,18 @@ jobs:
           #   runs-on: ubuntu-20.04
           #   BUILD_TOOLS: ON
           #   BUILD_TYPE: Debug
-          #   CLANG_VERSION: 5.0.0
+          #   CLANG_VERSION: 5
           #   CUCUMBER_TIMEOUT: 60000
 
-          # - name: clang-11.0-debug-clang-tidy
-          #   continue-on-error: false
-          #   node: 12
-          #   runs-on: ubuntu-20.04
-          #   BUILD_TOOLS: ON
-          #   BUILD_TYPE: Debug
-          #   CLANG_VERSION: 11.0.0
-          #   CUCUMBER_TIMEOUT: 60000
-          #   ENABLE_CLANG_TIDY: ON
+          - name: clang-11.0-debug-clang-tidy
+            continue-on-error: false
+            node: 12
+            runs-on: ubuntu-20.04
+            BUILD_TOOLS: ON
+            BUILD_TYPE: Debug
+            CLANG_VERSION: 11
+            CUCUMBER_TIMEOUT: 60000
+            ENABLE_CLANG_TIDY: ON
 
           # - name: conan-linux-debug-asan-ubsan
           #   continue-on-error: false
@@ -461,31 +461,26 @@ jobs:
         source activate.sh
         cmake --version
         
-        # mkdir -p ${CMAKE_DIR}
-        # wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C ${CMAKE_DIR}
-        # echo "${CMAKE_DIR}/bin" >> $GITHUB_PATH
-
         # TBB
         ${MASON} install tbb 2017_U7
         echo "LD_LIBRARY_PATH=$(${MASON} prefix tbb 2017_U7)/lib/:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
 
-        # ccache
-        ${MASON} install ccache ${CCACHE_VERSION}
-        echo "$(${MASON} prefix ccache ${CCACHE_VERSION})/bin" >> $GITHUB_PATH
-
         # clang
         if [[ -n ${CLANG_VERSION} ]]; then
-          echo "CCOMPILER=clang" >> $GITHUB_ENV
-          echo "CXXCOMPILER=clang++" >> $GITHUB_ENV
-          ${MASON} install clang++ ${CLANG_VERSION}
-          echo "$(${MASON} prefix clang++ ${CLANG_VERSION})/bin" >> $GITHUB_PATH
-          # we only enable lto for release builds
-          # and therefore don't need to us ld.gold or llvm tools for linking
-          # for debug builds
-          if [[ ${BUILD_TYPE} == 'Release' ]]; then
-            ${MASON} install binutils 2.27
-            echo "$(${MASON} prefix binutils 2.27)/bin" >> $GITHUB_PATH
-          fi
+          bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+          sudo apt-get install -y clang-${CLANG_VERSION} clang++-${CLANG_VERSION}
+
+          # echo "CCOMPILER=clang" >> $GITHUB_ENV
+          # echo "CXXCOMPILER=clang++" >> $GITHUB_ENV
+          # ${MASON} install clang++ ${CLANG_VERSION}
+          # echo "$(${MASON} prefix clang++ ${CLANG_VERSION})/bin" >> $GITHUB_PATH
+          # # we only enable lto for release builds
+          # # and therefore don't need to us ld.gold or llvm tools for linking
+          # # for debug builds
+          # if [[ ${BUILD_TYPE} == 'Release' ]]; then
+          #   ${MASON} install binutils 2.27
+          #   echo "$(${MASON} prefix binutils 2.27)/bin" >> $GITHUB_PATH
+          # fi
         fi
 
         # Linux dev packages
