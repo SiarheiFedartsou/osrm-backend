@@ -501,6 +501,7 @@ jobs:
 
     - name: Prepare build
       run: |
+        source activate.sh
         mkdir ${OSRM_BUILD_DIR}
         ccache --max-size=256M
         npm ci --ignore-scripts
@@ -512,6 +513,7 @@ jobs:
 
     - name: Build and install OSRM
       run: |
+        source activate.sh
         echo "Using ${JOBS} jobs"
         pushd ${OSRM_BUILD_DIR}
         cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
