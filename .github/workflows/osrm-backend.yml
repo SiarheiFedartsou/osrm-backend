@@ -455,7 +455,7 @@ jobs:
         python3 -m pip install conan==1.51.0
 
         # CMake
-        conan profile new profile --detect       
+        conan profile new profile --detect --force       
         conan install . --profile profile --build
 
         source activate.sh
