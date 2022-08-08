@@ -25,6 +25,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: pip install conan
+    - run: conan --version
     - uses: actions/setup-node@v3
       with:
         node-version: 16
