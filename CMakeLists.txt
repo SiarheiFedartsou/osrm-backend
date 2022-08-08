@@ -462,26 +462,38 @@ if(ENABLE_CONAN)
   
   set(CONAN_SYSTEM_INCLUDES ON)
 
-  # explicitly use x86 dependencies if build for x86 platforms (https://github.com/conan-io/cmake-conan/issues/141)
-  # if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
-  #   set(CONAN_ARCHITECTURE "ARCH x86")
-  # else()
-  #   set(CONAN_ARCHITECTURE "")
-  # endif()
-  conan_cmake_run(
-    REQUIRES 
-    boost/${CONAN_BOOST_VERSION}
-    bzip2/${CONAN_BZIP2_VERSION}
-    expat/${CONAN_EXPAT_VERSION}
-    lua/${CONAN_LUA_VERSION}
-    onetbb/${CONAN_TBB_VERSION}
-    BASIC_SETUP 
-    BUILD missing 
-    GENERATORS cmake_find_package
-    KEEP_RPATHS
-    NO_OUTPUT_DIRS
-    ARCH x86
-  )
+
+  # explicitly say Conan to use x86 dependencies if build for x86 platforms (https://github.com/conan-io/cmake-conan/issues/141)
+  if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+    conan_cmake_run(
+      REQUIRES 
+      boost/${CONAN_BOOST_VERSION}
+      bzip2/${CONAN_BZIP2_VERSION}
+      expat/${CONAN_EXPAT_VERSION}
+      lua/${CONAN_LUA_VERSION}
+      onetbb/${CONAN_TBB_VERSION}
+      BASIC_SETUP 
+      BUILD missing 
+      GENERATORS cmake_find_package
+      KEEP_RPATHS
+      NO_OUTPUT_DIRS
+      ARCH x86
+    )
+  else()
+    conan_cmake_run(
+      REQUIRES 
+      boost/${CONAN_BOOST_VERSION}
+      bzip2/${CONAN_BZIP2_VERSION}
+      expat/${CONAN_EXPAT_VERSION}
+      lua/${CONAN_LUA_VERSION}
+      onetbb/${CONAN_TBB_VERSION}
+      BASIC_SETUP 
+      BUILD missing 
+      GENERATORS cmake_find_package
+      KEEP_RPATHS
+      NO_OUTPUT_DIRS
+    )
+  endif()
 
   add_dependency_includes(${CONAN_INCLUDE_DIRS_BOOST})
   add_dependency_includes(${CONAN_INCLUDE_DIRS_BZIP2})
