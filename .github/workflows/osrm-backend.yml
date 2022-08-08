@@ -36,7 +36,9 @@ jobs:
     - run: npm link --ignore-scripts
     - run: MKDIR build
     - run: cd build
-    - run: cmake ..
+    - run: |
+        cd build
+        cmake ..
     - run: SET PATH=%CD%\osrm-deps\lib
     - run: SET OSRM_BUILD_DIR=build\Release
     - run: .\appveyor-build.bat
