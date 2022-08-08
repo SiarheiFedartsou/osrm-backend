@@ -154,7 +154,9 @@ jobs:
             CFLAGS: "-m32 -msse2 -mfpmath=sse"
             CXXCOMPILER: g++-9
             CXXFLAGS: "-m32 -msse2 -mfpmath=sse"
+            LDFLAGS: "-ltbb"
             TARGET_ARCH: i686
+            
 
           # - name: gcc-8-release
           #   continue-on-error: false
