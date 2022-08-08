@@ -461,6 +461,13 @@ if(ENABLE_CONAN)
   set(CONAN_TBB_VERSION 2021.3.0)
   
   set(CONAN_SYSTEM_INCLUDES ON)
+
+  # explicitly use x86 dependencies if build for x86 platforms (https://github.com/conan-io/cmake-conan/issues/141)
+  if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set(CONAN_ARCHITECTURE "ARCH x86")
+  else()
+    set(CONAN_ARCHITECTURE "")
+  endif()
   conan_cmake_run(
     REQUIRES 
     boost/${CONAN_BOOST_VERSION}
@@ -473,7 +480,7 @@ if(ENABLE_CONAN)
     GENERATORS cmake_find_package
     KEEP_RPATHS
     NO_OUTPUT_DIRS
-    ARCH x86
+    ${CONAN_ARCHITECTURE}
   )
 
   add_dependency_includes(${CONAN_INCLUDE_DIRS_BOOST})
@@ -551,11 +558,6 @@ else()
   find_package(Osmium REQUIRED COMPONENTS io)
   include_directories(SYSTEM ${OSMIUM_INCLUDE_DIR})
 endif()
-
-# link tbb
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ltbb")
-set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -ltbb")
-
 
 # prefix compilation with ccache by default if available and on clang or gcc
 if(ENABLE_CCACHE AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
