@@ -21,7 +21,7 @@ env:
 
 jobs:
   windows:
-    runs-on: windows
+    runs-on: windows-11
     steps:
     - uses: actions/checkout@v2
 
