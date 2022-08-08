@@ -31,8 +31,8 @@ jobs:
     - run: npm --version
     - run: npm install --ignore-scripts
     - run: npm link --ignore-scripts
-    - run: SET PATH=%CD%\osrm-deps\lib;%PATH%
-    - run: SET OSRM_BUILD_DIR=build\%Configuration%
+    - run: SET PATH=%CD%\osrm-deps\lib
+    - run: SET OSRM_BUILD_DIR=build\Release
     - run: CALL appveyor-build.bat
     
 
