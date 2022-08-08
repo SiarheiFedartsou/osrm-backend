@@ -459,22 +459,42 @@ if(ENABLE_CONAN)
   set(CONAN_BZIP2_VERSION 1.0.8)
   set(CONAN_EXPAT_VERSION 2.2.10)
   set(CONAN_LUA_VERSION 5.4.4)
-  set(CONAN_TBB_VERSION 2020.3)
+  set(CONAN_TBB_VERSION 2021.3.0)
   
   set(CONAN_SYSTEM_INCLUDES ON)
-  conan_cmake_run(
-    REQUIRES 
-    boost/${CONAN_BOOST_VERSION}
-    bzip2/${CONAN_BZIP2_VERSION}
-    expat/${CONAN_EXPAT_VERSION}
-    lua/${CONAN_LUA_VERSION}
-    tbb/${CONAN_TBB_VERSION}
-    BASIC_SETUP 
-    BUILD missing 
-    GENERATORS cmake_find_package
-    KEEP_RPATHS
-    NO_OUTPUT_DIRS
-  )
+
+
+  # explicitly say Conan to use x86 dependencies if build for x86 platforms (https://github.com/conan-io/cmake-conan/issues/141)
+  if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+    conan_cmake_run(
+      REQUIRES 
+      boost/${CONAN_BOOST_VERSION}
+      bzip2/${CONAN_BZIP2_VERSION}
+      expat/${CONAN_EXPAT_VERSION}
+      lua/${CONAN_LUA_VERSION}
+      onetbb/${CONAN_TBB_VERSION}
+      BASIC_SETUP 
+      BUILD missing 
+      GENERATORS cmake_find_package
+      KEEP_RPATHS
+      NO_OUTPUT_DIRS
+      ARCH x86
+    )
+  else()
+    conan_cmake_run(
+      REQUIRES 
+      boost/${CONAN_BOOST_VERSION}
+      bzip2/${CONAN_BZIP2_VERSION}
+      expat/${CONAN_EXPAT_VERSION}
+      lua/${CONAN_LUA_VERSION}
+      onetbb/${CONAN_TBB_VERSION}
+      BASIC_SETUP 
+      BUILD missing 
+      GENERATORS cmake_find_package
+      KEEP_RPATHS
+      NO_OUTPUT_DIRS
+    )
+  endif()
 
   add_dependency_includes(${CONAN_INCLUDE_DIRS_BOOST})
   add_dependency_includes(${CONAN_INCLUDE_DIRS_BZIP2})
@@ -496,7 +516,7 @@ if(ENABLE_CONAN)
   set(Boost_UNIT_TEST_FRAMEWORK_LIBRARY "${Boost_unit_test_framework_LIB_TARGETS}")
   
   find_package(BZip2 REQUIRED EXACT ${CONAN_BZIP2_VERSION})
-  find_package(EXPAT REQUIRED EXACT ${CONAN_EXPAT_VERSION})
+  find_package(EXPAT REQUIRED)
   find_package(lua REQUIRED EXACT ${CONAN_LUA_VERSION})
   set(LUA_LIBRARIES ${lua_LIBRARIES})
 
@@ -517,9 +537,7 @@ else()
 
   find_package(TBB REQUIRED)
   add_dependency_includes(${TBB_INCLUDE_DIR})
-  if(WIN32)
-    set(TBB_LIBRARIES optimized ${TBB_LIBRARY} optimized ${TBB_MALLOC_LIBRARY} debug ${TBB_LIBRARY_DEBUG} debug ${TBB_MALLOC_LIBRARY_DEBUG})
-  endif()
+  set(TBB_LIBRARIES TBB::tbb)
 
   find_package(EXPAT REQUIRED)
   add_dependency_includes(${EXPAT_INCLUDE_DIRS})
@@ -793,9 +811,9 @@ JOIN("-I${DEPENDENCIES_INCLUDE_DIRS}" " -I" PKGCONFIG_OSRM_INCLUDE_FLAGS)
 
 # Boost uses imported targets, we need to use a generator expression to extract
 # the link libraries to be written to the pkg-config file.
-# Conan defines dependencies as CMake targets too, that's why we do the same for them.
+# Conan & TBB define dependencies as CMake targets too, that's why we do the same for them.
 foreach(engine_lib ${ENGINE_LIBRARIES})
-  if("${engine_lib}" MATCHES "^Boost.*" OR "${engine_lib}" MATCHES "^CONAN_LIB.*")
+  if("${engine_lib}" MATCHES "^Boost.*" OR "${engine_lib}" MATCHES "^CONAN_LIB.*" OR "${engine_lib}" MATCHES "^TBB.*")
     list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "$<TARGET_LINKER_FILE:${engine_lib}>")
   else()
     list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "${engine_lib}")

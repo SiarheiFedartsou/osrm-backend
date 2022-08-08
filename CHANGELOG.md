@@ -5,6 +5,7 @@
     - Misc:
       - FIXED: Fix bug with reading Set values from Lua scripts. [#6285](https://github.com/Project-OSRM/osrm-backend/pull/6285)
     - Build:
+      - CHANGED: Migrate to modern TBB version. [#6300](https://github.com/Project-OSRM/osrm-backend/pull/6300)
       - CHANGED: Configure Undefined Behaviour Sanitizer. [#6290](https://github.com/Project-OSRM/osrm-backend/pull/6290)
       - CHANGED: Use Conan instead of Mason to install code dependencies. [#6284](https://github.com/Project-OSRM/osrm-backend/pull/6284)
       - CHANGED: Migrate to C++17. Update sol2 to 3.3.0. [#6279](https://github.com/Project-OSRM/osrm-backend/pull/6279)
