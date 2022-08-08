@@ -144,12 +144,12 @@ jobs:
           #   CXXCOMPILER: g++-9
           #   CXXFLAGS: -Wno-cast-function-type
 
-          - name: gcc-9-release-i686
+          - name: gcc-9-conan-release-i686
             continue-on-error: false
             node: 12
             runs-on: ubuntu-20.04
             BUILD_TOOLS: ON
-            BUILD_TYPE: Debug
+            BUILD_TYPE: Release
             CCOMPILER: gcc-9
             CFLAGS: "-m32 -msse2 -mfpmath=sse"
             CXXCOMPILER: g++-9
