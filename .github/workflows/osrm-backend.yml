@@ -24,7 +24,7 @@ jobs:
     runs-on: windows
     steps:
     - uses: actions/checkout@v2
-    
+
   format-taginfo-docs:
     runs-on: ubuntu-20.04
     steps:
@@ -368,252 +368,252 @@ jobs:
           #   NODE_PACKAGE_TESTS_ONLY: ON
 
 
-    name: ${{ matrix.name}}
-    continue-on-error: ${{ matrix.continue-on-error }}
-    runs-on: ${{ matrix.runs-on }}
-    env:
-      BUILD_TOOLS: ${{ matrix.BUILD_TOOLS }}
-      BUILD_TYPE: ${{ matrix.BUILD_TYPE }}
-      BUILD_SHARED_LIBS: ${{ matrix.BUILD_SHARED_LIBS }}
-      CCOMPILER: ${{ matrix.CCOMPILER }}
-      CFLAGS: ${{ matrix.CFLAGS }}
-      CLANG_VERSION: ${{ matrix.CLANG_VERSION }}
-      CUCUMBER_TIMEOUT: ${{ matrix.CUCUMBER_TIMEOUT }}
-      CXXCOMPILER: ${{ matrix.CXXCOMPILER }}
-      CXXFLAGS: ${{ matrix.CXXFLAGS }}
-      ENABLE_ASSERTIONS: ${{ matrix.ENABLE_ASSERTIONS }}
-      ENABLE_CLANG_TIDY: ${{ matrix.ENABLE_CLANG_TIDY }} 
-      ENABLE_COVERAGE: ${{ matrix.ENABLE_COVERAGE }}
-      ENABLE_GLIBC_WORKAROUND: ${{ matrix.ENABLE_GLIBC_WORKAROUND }}
-      ENABLE_CONAN: ${{ matrix.ENABLE_CONAN }}
-      ENABLE_SANITIZER: ${{ matrix.ENABLE_SANITIZER }}
-      NODE_PACKAGE_TESTS_ONLY: ${{ matrix.NODE_PACKAGE_TESTS_ONLY }}
-      TARGET_ARCH: ${{ matrix.TARGET_ARCH }}
-      OSRM_CONNECTION_RETRIES: ${{ matrix.OSRM_CONNECTION_RETRIES }}
-      OSRM_CONNECTION_EXP_BACKOFF_COEF: ${{ matrix.OSRM_CONNECTION_EXP_BACKOFF_COEF }}
-    steps:
-    - uses: actions/checkout@v2
+    # name: ${{ matrix.name}}
+    # continue-on-error: ${{ matrix.continue-on-error }}
+    # runs-on: ${{ matrix.runs-on }}
+    # env:
+    #   BUILD_TOOLS: ${{ matrix.BUILD_TOOLS }}
+    #   BUILD_TYPE: ${{ matrix.BUILD_TYPE }}
+    #   BUILD_SHARED_LIBS: ${{ matrix.BUILD_SHARED_LIBS }}
+    #   CCOMPILER: ${{ matrix.CCOMPILER }}
+    #   CFLAGS: ${{ matrix.CFLAGS }}
+    #   CLANG_VERSION: ${{ matrix.CLANG_VERSION }}
+    #   CUCUMBER_TIMEOUT: ${{ matrix.CUCUMBER_TIMEOUT }}
+    #   CXXCOMPILER: ${{ matrix.CXXCOMPILER }}
+    #   CXXFLAGS: ${{ matrix.CXXFLAGS }}
+    #   ENABLE_ASSERTIONS: ${{ matrix.ENABLE_ASSERTIONS }}
+    #   ENABLE_CLANG_TIDY: ${{ matrix.ENABLE_CLANG_TIDY }} 
+    #   ENABLE_COVERAGE: ${{ matrix.ENABLE_COVERAGE }}
+    #   ENABLE_GLIBC_WORKAROUND: ${{ matrix.ENABLE_GLIBC_WORKAROUND }}
+    #   ENABLE_CONAN: ${{ matrix.ENABLE_CONAN }}
+    #   ENABLE_SANITIZER: ${{ matrix.ENABLE_SANITIZER }}
+    #   NODE_PACKAGE_TESTS_ONLY: ${{ matrix.NODE_PACKAGE_TESTS_ONLY }}
+    #   TARGET_ARCH: ${{ matrix.TARGET_ARCH }}
+    #   OSRM_CONNECTION_RETRIES: ${{ matrix.OSRM_CONNECTION_RETRIES }}
+    #   OSRM_CONNECTION_EXP_BACKOFF_COEF: ${{ matrix.OSRM_CONNECTION_EXP_BACKOFF_COEF }}
+    # steps:
+    # - uses: actions/checkout@v2
 
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node }}
-    - name: Enable Node.js cache
-      uses: actions/cache@v2
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - name: Enable compiler cache
-      uses: actions/cache@v2
-      with:
-        path: ~/.ccache
-        key: ccache-${{ matrix.name }}-${{ github.sha }}
-        restore-keys: |
-          ccache-${{ matrix.name }}-
-    - name: Enable Conan cache
-      uses: actions/cache@v2
-      with:
-        path: ~/.conan
-        key: conan-${{ matrix.name }}-${{ github.sha }}
-        restore-keys: |
-          conan-${{ matrix.name }}-
-    - name: Enable test cache
-      uses: actions/cache@v2
-      with:
-        path: ${{github.workspace}}/test/cache
-        key: test-${{ matrix.name }}-${{ github.sha }}
-        restore-keys: |
-          test-${{ matrix.name }}-
+    # - name: Use Node.js
+    #   uses: actions/setup-node@v2
+    #   with:
+    #     node-version: ${{ matrix.node }}
+    # - name: Enable Node.js cache
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ~/.npm
+    #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-node-
+    # - name: Enable compiler cache
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ~/.ccache
+    #     key: ccache-${{ matrix.name }}-${{ github.sha }}
+    #     restore-keys: |
+    #       ccache-${{ matrix.name }}-
+    # - name: Enable Conan cache
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ~/.conan
+    #     key: conan-${{ matrix.name }}-${{ github.sha }}
+    #     restore-keys: |
+    #       conan-${{ matrix.name }}-
+    # - name: Enable test cache
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ${{github.workspace}}/test/cache
+    #     key: test-${{ matrix.name }}-${{ github.sha }}
+    #     restore-keys: |
+    #       test-${{ matrix.name }}-
 
-    - name: Prepare environment
-      run: |
-        PACKAGE_JSON_VERSION=$(node -e "console.log(require('./package.json').version)")
-        echo PUBLISH=$([[ "${GITHUB_REF:-}" == "refs/tags/v${PACKAGE_JSON_VERSION}" ]] && echo "On" || echo "Off") >> $GITHUB_ENV
+    # - name: Prepare environment
+    #   run: |
+    #     PACKAGE_JSON_VERSION=$(node -e "console.log(require('./package.json').version)")
+    #     echo PUBLISH=$([[ "${GITHUB_REF:-}" == "refs/tags/v${PACKAGE_JSON_VERSION}" ]] && echo "On" || echo "Off") >> $GITHUB_ENV
 
-        echo "OSRM_INSTALL_DIR=${GITHUB_WORKSPACE}/install-osrm" >> $GITHUB_ENV
-        echo "OSRM_BUILD_DIR=${GITHUB_WORKSPACE}/build-osrm" >> $GITHUB_ENV
+    #     echo "OSRM_INSTALL_DIR=${GITHUB_WORKSPACE}/install-osrm" >> $GITHUB_ENV
+    #     echo "OSRM_BUILD_DIR=${GITHUB_WORKSPACE}/build-osrm" >> $GITHUB_ENV
 
-        if [[ "$ENABLE_SANITIZER" == 'ON' ]]; then
-          # We can only set this after checkout once we know the workspace directory
-          echo "LSAN_OPTIONS=print_suppressions=0:suppressions=${GITHUB_WORKSPACE}/scripts/ci/leaksanitizer.conf" >> $GITHUB_ENV
-          echo "UBSAN_OPTIONS=symbolize=1:halt_on_error=1:print_stacktrace=1:suppressions=${GITHUB_WORKSPACE}/scripts/ci/undefinedsanitizer.conf" >> $GITHUB_ENV
-        fi
+    #     if [[ "$ENABLE_SANITIZER" == 'ON' ]]; then
+    #       # We can only set this after checkout once we know the workspace directory
+    #       echo "LSAN_OPTIONS=print_suppressions=0:suppressions=${GITHUB_WORKSPACE}/scripts/ci/leaksanitizer.conf" >> $GITHUB_ENV
+    #       echo "UBSAN_OPTIONS=symbolize=1:halt_on_error=1:print_stacktrace=1:suppressions=${GITHUB_WORKSPACE}/scripts/ci/undefinedsanitizer.conf" >> $GITHUB_ENV
+    #     fi
 
-        if [[ "${RUNNER_OS}" == "Linux" ]]; then
-          echo "JOBS=$((`nproc` + 1))" >>  $GITHUB_ENV
-          export MASON_OS=linux
-        elif [[ "${RUNNER_OS}" == "macOS" ]]; then
-          echo "JOBS=$((`sysctl -n hw.ncpu` + 1))" >>  $GITHUB_ENV
-          sudo mdutil -i off /
-          export MASON_OS=osx
-        fi
+    #     if [[ "${RUNNER_OS}" == "Linux" ]]; then
+    #       echo "JOBS=$((`nproc` + 1))" >>  $GITHUB_ENV
+    #       export MASON_OS=linux
+    #     elif [[ "${RUNNER_OS}" == "macOS" ]]; then
+    #       echo "JOBS=$((`sysctl -n hw.ncpu` + 1))" >>  $GITHUB_ENV
+    #       sudo mdutil -i off /
+    #       export MASON_OS=osx
+    #     fi
 
-        echo "MASON=${GITHUB_WORKSPACE}/scripts/mason.sh" >> $GITHUB_ENV
-        echo "CMAKE_URL=https://mason-binaries.s3.amazonaws.com/${MASON_OS}-x86_64/cmake/${CMAKE_VERSION}.tar.gz" >> $GITHUB_ENV
-        echo "CMAKE_DIR=mason_packages/${MASON_OS}-x86_64/cmake/${CMAKE_VERSION}" >> $GITHUB_ENV
+    #     echo "MASON=${GITHUB_WORKSPACE}/scripts/mason.sh" >> $GITHUB_ENV
+    #     echo "CMAKE_URL=https://mason-binaries.s3.amazonaws.com/${MASON_OS}-x86_64/cmake/${CMAKE_VERSION}.tar.gz" >> $GITHUB_ENV
+    #     echo "CMAKE_DIR=mason_packages/${MASON_OS}-x86_64/cmake/${CMAKE_VERSION}" >> $GITHUB_ENV
 
 
-    - name: Install dev dependencies
-      run: |
-        python3 -m pip install conan==1.50.0
+    # - name: Install dev dependencies
+    #   run: |
+    #     python3 -m pip install conan==1.50.0
 
-        # CMake
-        mkdir -p ${CMAKE_DIR}
-        wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C ${CMAKE_DIR}
-        echo "${CMAKE_DIR}/bin" >> $GITHUB_PATH
+    #     # CMake
+    #     mkdir -p ${CMAKE_DIR}
+    #     wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C ${CMAKE_DIR}
+    #     echo "${CMAKE_DIR}/bin" >> $GITHUB_PATH
 
-        # TBB
-        ${MASON} install tbb 2017_U7
-        echo "LD_LIBRARY_PATH=$(${MASON} prefix tbb 2017_U7)/lib/:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
+    #     # TBB
+    #     ${MASON} install tbb 2017_U7
+    #     echo "LD_LIBRARY_PATH=$(${MASON} prefix tbb 2017_U7)/lib/:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
 
-        # ccache
-        ${MASON} install ccache ${CCACHE_VERSION}
-        echo "$(${MASON} prefix ccache ${CCACHE_VERSION})/bin" >> $GITHUB_PATH
+    #     # ccache
+    #     ${MASON} install ccache ${CCACHE_VERSION}
+    #     echo "$(${MASON} prefix ccache ${CCACHE_VERSION})/bin" >> $GITHUB_PATH
 
-        # clang
-        if [[ -n ${CLANG_VERSION} ]]; then
-          echo "CCOMPILER=clang" >> $GITHUB_ENV
-          echo "CXXCOMPILER=clang++" >> $GITHUB_ENV
-          ${MASON} install clang++ ${CLANG_VERSION}
-          echo "$(${MASON} prefix clang++ ${CLANG_VERSION})/bin" >> $GITHUB_PATH
-          # we only enable lto for release builds
-          # and therefore don't need to us ld.gold or llvm tools for linking
-          # for debug builds
-          if [[ ${BUILD_TYPE} == 'Release' ]]; then
-            ${MASON} install binutils 2.27
-            echo "$(${MASON} prefix binutils 2.27)/bin" >> $GITHUB_PATH
-          fi
-        fi
+    #     # clang
+    #     if [[ -n ${CLANG_VERSION} ]]; then
+    #       echo "CCOMPILER=clang" >> $GITHUB_ENV
+    #       echo "CXXCOMPILER=clang++" >> $GITHUB_ENV
+    #       ${MASON} install clang++ ${CLANG_VERSION}
+    #       echo "$(${MASON} prefix clang++ ${CLANG_VERSION})/bin" >> $GITHUB_PATH
+    #       # we only enable lto for release builds
+    #       # and therefore don't need to us ld.gold or llvm tools for linking
+    #       # for debug builds
+    #       if [[ ${BUILD_TYPE} == 'Release' ]]; then
+    #         ${MASON} install binutils 2.27
+    #         echo "$(${MASON} prefix binutils 2.27)/bin" >> $GITHUB_PATH
+    #       fi
+    #     fi
 
-        # Linux dev packages
-        if [ "${TARGET_ARCH}" != "i686" ] && [ "${ENABLE_CONAN}" != "ON" ]; then
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-          sudo apt-get update -y
-          sudo apt-get install -y libbz2-dev libxml2-dev libzip-dev liblua5.2-dev libtbb-dev libboost-all-dev
-          if [[ -z "${CLANG_VERSION}" ]]; then
-            sudo apt-get install -y ${CXXCOMPILER}
-          fi
-          if [[ "${ENABLE_COVERAGE}" == "ON" ]]; then
-            sudo apt-get install -y lcov
-          fi
-        elif [[ $TARGET_ARCH == "i686" ]]; then
-          source ./scripts/ci/before_install.${TARGET_ARCH}.sh
-          echo "PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig:${PKG_CONFIG_PATH}" >> $GITHUB_ENV
-        fi
+    #     # Linux dev packages
+    #     if [ "${TARGET_ARCH}" != "i686" ] && [ "${ENABLE_CONAN}" != "ON" ]; then
+    #       sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    #       sudo apt-get update -y
+    #       sudo apt-get install -y libbz2-dev libxml2-dev libzip-dev liblua5.2-dev libtbb-dev libboost-all-dev
+    #       if [[ -z "${CLANG_VERSION}" ]]; then
+    #         sudo apt-get install -y ${CXXCOMPILER}
+    #       fi
+    #       if [[ "${ENABLE_COVERAGE}" == "ON" ]]; then
+    #         sudo apt-get install -y lcov
+    #       fi
+    #     elif [[ $TARGET_ARCH == "i686" ]]; then
+    #       source ./scripts/ci/before_install.${TARGET_ARCH}.sh
+    #       echo "PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig:${PKG_CONFIG_PATH}" >> $GITHUB_ENV
+    #     fi
 
-    - name: Prepare build
-      run: |
-        mkdir ${OSRM_BUILD_DIR}
-        ccache --max-size=256M
-        npm ci --ignore-scripts
-        if [[ "${ENABLE_COVERAGE}" == "ON" ]]; then
-          lcov --directory . --zerocounters # clean cached files
-        fi
-        echo "CC=${CCOMPILER}" >> $GITHUB_ENV
-        echo "CXX=${CXXCOMPILER}" >> $GITHUB_ENV
+    # - name: Prepare build
+    #   run: |
+    #     mkdir ${OSRM_BUILD_DIR}
+    #     ccache --max-size=256M
+    #     npm ci --ignore-scripts
+    #     if [[ "${ENABLE_COVERAGE}" == "ON" ]]; then
+    #       lcov --directory . --zerocounters # clean cached files
+    #     fi
+    #     echo "CC=${CCOMPILER}" >> $GITHUB_ENV
+    #     echo "CXX=${CXXCOMPILER}" >> $GITHUB_ENV
 
-    - name: Build and install OSRM
-      run: |
-        echo "Using ${JOBS} jobs"
-        pushd ${OSRM_BUILD_DIR}
-        cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
-                 -DENABLE_CONAN=${ENABLE_CONAN:-OFF} \
-                 -DENABLE_ASSERTIONS=${ENABLE_ASSERTIONS:-OFF} \
-                 -DENABLE_CLANG_TIDY=${ENABLE_CLANG_TIDY:-OFF} \
-                 -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS:-OFF} \
-                 -DENABLE_COVERAGE=${ENABLE_COVERAGE:-OFF} \
-                 -DENABLE_NODE_BINDINGS=${ENABLE_NODE_BINDINGS:-OFF} \
-                 -DENABLE_SANITIZER=${ENABLE_SANITIZER:-OFF} \
-                 -DBUILD_TOOLS=${BUILD_TOOLS:-OFF} \
-                 -DENABLE_CCACHE=ON \
-                 -DCMAKE_INSTALL_PREFIX=${OSRM_INSTALL_DIR} \
-                 -DENABLE_GLIBC_WORKAROUND=${ENABLE_GLIBC_WORKAROUND:-OFF}
-        make --jobs=${JOBS}
+    # - name: Build and install OSRM
+    #   run: |
+    #     echo "Using ${JOBS} jobs"
+    #     pushd ${OSRM_BUILD_DIR}
+    #     cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} \
+    #              -DENABLE_CONAN=${ENABLE_CONAN:-OFF} \
+    #              -DENABLE_ASSERTIONS=${ENABLE_ASSERTIONS:-OFF} \
+    #              -DENABLE_CLANG_TIDY=${ENABLE_CLANG_TIDY:-OFF} \
+    #              -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS:-OFF} \
+    #              -DENABLE_COVERAGE=${ENABLE_COVERAGE:-OFF} \
+    #              -DENABLE_NODE_BINDINGS=${ENABLE_NODE_BINDINGS:-OFF} \
+    #              -DENABLE_SANITIZER=${ENABLE_SANITIZER:-OFF} \
+    #              -DBUILD_TOOLS=${BUILD_TOOLS:-OFF} \
+    #              -DENABLE_CCACHE=ON \
+    #              -DCMAKE_INSTALL_PREFIX=${OSRM_INSTALL_DIR} \
+    #              -DENABLE_GLIBC_WORKAROUND=${ENABLE_GLIBC_WORKAROUND:-OFF}
+    #     make --jobs=${JOBS}
 
-        if [[ "${NODE_PACKAGE_TESTS_ONLY}" != "ON" ]]; then
-          make tests --jobs=${JOBS}
-          make benchmarks --jobs=${JOBS}
-          ccache -s
-          sudo make install
-          if [[ "${RUNNER_OS}" == "Linux" ]]; then
-            echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${OSRM_INSTALL_DIR}/lib" >> $GITHUB_ENV
-          fi
-          echo "PKG_CONFIG_PATH=${OSRM_INSTALL_DIR}/lib/pkgconfig" >> $GITHUB_ENV
-        fi
-        popd
-    - name: Build example
-      if: ${{ matrix.NODE_PACKAGE_TESTS_ONLY != 'ON' }}
-      run: |
-        mkdir example/build && pushd example/build
-        cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
-        make --jobs=${JOBS}
-        popd
+    #     if [[ "${NODE_PACKAGE_TESTS_ONLY}" != "ON" ]]; then
+    #       make tests --jobs=${JOBS}
+    #       make benchmarks --jobs=${JOBS}
+    #       ccache -s
+    #       sudo make install
+    #       if [[ "${RUNNER_OS}" == "Linux" ]]; then
+    #         echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${OSRM_INSTALL_DIR}/lib" >> $GITHUB_ENV
+    #       fi
+    #       echo "PKG_CONFIG_PATH=${OSRM_INSTALL_DIR}/lib/pkgconfig" >> $GITHUB_ENV
+    #     fi
+    #     popd
+    # - name: Build example
+    #   if: ${{ matrix.NODE_PACKAGE_TESTS_ONLY != 'ON' }}
+    #   run: |
+    #     mkdir example/build && pushd example/build
+    #     cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+    #     make --jobs=${JOBS}
+    #     popd
 
-    - name: Run all tests
-      if: ${{ matrix.NODE_PACKAGE_TESTS_ONLY != 'ON' }}
-      run: |
-        make -C test/data benchmark
+    # - name: Run all tests
+    #   if: ${{ matrix.NODE_PACKAGE_TESTS_ONLY != 'ON' }}
+    #   run: |
+    #     make -C test/data benchmark
 
-        # macOS SIP strips the linker path. Reset this inside the running shell
-        export LD_LIBRARY_PATH=${{ env.LD_LIBRARY_PATH }}
-        ./example/build/osrm-example test/data/mld/monaco.osrm
+    #     # macOS SIP strips the linker path. Reset this inside the running shell
+    #     export LD_LIBRARY_PATH=${{ env.LD_LIBRARY_PATH }}
+    #     ./example/build/osrm-example test/data/mld/monaco.osrm
 
-        # All tests assume to be run from the build directory
-        pushd ${OSRM_BUILD_DIR}
-        for i in ./unit_tests/*-tests ; do echo Running $i ; $i ; done
-        if [ -z "${ENABLE_SANITIZER}" ] && [ "$TARGET_ARCH" != "i686" ]; then
-          npm run nodejs-tests
-        fi
-        popd
-        npm test
-    - name: Run Node package tests only
-      if: ${{ matrix.NODE_PACKAGE_TESTS_ONLY == 'ON' }}
-      run: |
-        npm run nodejs-tests
-    - name: Upload test logs
-      uses: actions/upload-artifact@v3
-      if: failure()
-      with:
-        name: logs
-        path: test/logs/
+    #     # All tests assume to be run from the build directory
+    #     pushd ${OSRM_BUILD_DIR}
+    #     for i in ./unit_tests/*-tests ; do echo Running $i ; $i ; done
+    #     if [ -z "${ENABLE_SANITIZER}" ] && [ "$TARGET_ARCH" != "i686" ]; then
+    #       npm run nodejs-tests
+    #     fi
+    #     popd
+    #     npm test
+    # - name: Run Node package tests only
+    #   if: ${{ matrix.NODE_PACKAGE_TESTS_ONLY == 'ON' }}
+    #   run: |
+    #     npm run nodejs-tests
+    # - name: Upload test logs
+    #   uses: actions/upload-artifact@v3
+    #   if: failure()
+    #   with:
+    #     name: logs
+    #     path: test/logs/
 
-    - name: Generate code coverage
-      if: ${{ matrix.ENABLE_COVERAGE == 'ON' }}
-      run: |
-        lcov --directory . --capture --output-file coverage.info # capture coverage info
-        lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter out system
-        lcov --list coverage.info #debug info
-        # Uploading report to CodeCov
-    - name: Upload code coverage
-      if: ${{ matrix.ENABLE_COVERAGE == 'ON' }}
-      uses: codecov/codecov-action@v1
-      with:
-        files: coverage.info
-        name: codecov-osrm-backend
-        fail_ci_if_error: true
-        verbose: true
+    # - name: Generate code coverage
+    #   if: ${{ matrix.ENABLE_COVERAGE == 'ON' }}
+    #   run: |
+    #     lcov --directory . --capture --output-file coverage.info # capture coverage info
+    #     lcov --remove coverage.info '/usr/*' --output-file coverage.info # filter out system
+    #     lcov --list coverage.info #debug info
+    #     # Uploading report to CodeCov
+    # - name: Upload code coverage
+    #   if: ${{ matrix.ENABLE_COVERAGE == 'ON' }}
+    #   uses: codecov/codecov-action@v1
+    #   with:
+    #     files: coverage.info
+    #     name: codecov-osrm-backend
+    #     fail_ci_if_error: true
+    #     verbose: true
 
-    - name: Build Node package
-      if: ${{ matrix.build_node_package && env.PUBLISH == 'On' }}
-      run: ./scripts/ci/node_package.sh
-    - name: Publish Node package
-      if: ${{ matrix.build_node_package && env.PUBLISH == 'On' }}
-      uses: ncipollo/release-action@v1
-      with:
-        allowUpdates: true
-        artifactErrorsFailBuild: true
-        artifacts: build/stage/**/*.tar.gz
-        omitBody: true
-        omitBodyDuringUpdate: true
-        omitName: true
-        omitNameDuringUpdate: true
-        replacesArtifacts: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+    # - name: Build Node package
+    #   if: ${{ matrix.build_node_package && env.PUBLISH == 'On' }}
+    #   run: ./scripts/ci/node_package.sh
+    # - name: Publish Node package
+    #   if: ${{ matrix.build_node_package && env.PUBLISH == 'On' }}
+    #   uses: ncipollo/release-action@v1
+    #   with:
+    #     allowUpdates: true
+    #     artifactErrorsFailBuild: true
+    #     artifacts: build/stage/**/*.tar.gz
+    #     omitBody: true
+    #     omitBodyDuringUpdate: true
+    #     omitName: true
+    #     omitNameDuringUpdate: true
+    #     replacesArtifacts: true
+    #     token: ${{ secrets.GITHUB_TOKEN }}
 
-  ci-complete:
-    runs-on: ubuntu-18.04
-    needs: build-test-publish
-    steps:
-    - run: echo "CI complete"
+  # ci-complete:
+  #   runs-on: ubuntu-18.04
+  #   needs: build-test-publish
+  #   steps:
+  #   - run: echo "CI complete"
