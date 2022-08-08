@@ -519,6 +519,7 @@ else()
   endif()
   add_dependency_includes(${Boost_INCLUDE_DIRS})
 
+  set(TBB_FIND_RELEASE_ONLY ON)
   find_package(TBB REQUIRED)
   add_dependency_includes(${TBB_INCLUDE_DIR})
   set(TBB_LIBRARIES TBB::tbb)
