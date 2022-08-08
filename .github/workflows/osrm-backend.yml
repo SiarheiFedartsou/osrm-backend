@@ -155,6 +155,7 @@ jobs:
             CXXCOMPILER: g++-9
             CXXFLAGS: "-m32 -msse2 -mfpmath=sse"
             TARGET_ARCH: i686
+            ENABLE_CONAN: ON
             
 
           # - name: gcc-8-release
