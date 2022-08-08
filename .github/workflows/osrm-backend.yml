@@ -73,7 +73,7 @@ jobs:
             CCOMPILER: gcc-9
             CUCUMBER_TIMEOUT: 20000
             CXXCOMPILER: g++-9
-            ENABLE_SANITIZER: ON
+            ENABLE_SANITIZERS: "address;undefined"
             TARGET_ARCH: x86_64-asan-ubsan
             OSRM_CONNECTION_RETRIES: 10
             OSRM_CONNECTION_EXP_BACKOFF_COEF: 1.5
@@ -105,7 +105,7 @@ jobs:
             BUILD_TYPE: Release
             CLANG_VERSION: 11.0.0
             ENABLE_CONAN: ON
-            ENABLE_SANITIZER: ON
+            ENABLE_SANITIZERS: "address;undefined"
 
           - name: conan-linux-release
             continue-on-error: false
@@ -381,7 +381,7 @@ jobs:
       ENABLE_COVERAGE: ${{ matrix.ENABLE_COVERAGE }}
       ENABLE_GLIBC_WORKAROUND: ${{ matrix.ENABLE_GLIBC_WORKAROUND }}
       ENABLE_CONAN: ${{ matrix.ENABLE_CONAN }}
-      ENABLE_SANITIZER: ${{ matrix.ENABLE_SANITIZER }}
+      ENABLE_SANITIZERS: ${{ matrix.ENABLE_SANITIZERS }}
       NODE_PACKAGE_TESTS_ONLY: ${{ matrix.NODE_PACKAGE_TESTS_ONLY }}
       TARGET_ARCH: ${{ matrix.TARGET_ARCH }}
       OSRM_CONNECTION_RETRIES: ${{ matrix.OSRM_CONNECTION_RETRIES }}
@@ -430,7 +430,7 @@ jobs:
         echo "OSRM_INSTALL_DIR=${GITHUB_WORKSPACE}/install-osrm" >> $GITHUB_ENV
         echo "OSRM_BUILD_DIR=${GITHUB_WORKSPACE}/build-osrm" >> $GITHUB_ENV
 
-        if [[ "$ENABLE_SANITIZER" == 'ON' ]]; then
+        if [[ "$ENABLE_SANITIZERS" != "" ]]; then
           # We can only set this after checkout once we know the workspace directory
           echo "LSAN_OPTIONS=print_suppressions=0:suppressions=${GITHUB_WORKSPACE}/scripts/ci/leaksanitizer.conf" >> $GITHUB_ENV
           echo "UBSAN_OPTIONS=symbolize=1:halt_on_error=1:print_stacktrace=1:suppressions=${GITHUB_WORKSPACE}/scripts/ci/undefinedsanitizer.conf" >> $GITHUB_ENV
@@ -520,7 +520,7 @@ jobs:
                  -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS:-OFF} \
                  -DENABLE_COVERAGE=${ENABLE_COVERAGE:-OFF} \
                  -DENABLE_NODE_BINDINGS=${ENABLE_NODE_BINDINGS:-OFF} \
-                 -DENABLE_SANITIZER=${ENABLE_SANITIZER:-OFF} \
+                 -DENABLE_SANITIZERS=${ENABLE_SANITIZERS:-""} \
                  -DBUILD_TOOLS=${BUILD_TOOLS:-OFF} \
                  -DENABLE_CCACHE=ON \
                  -DCMAKE_INSTALL_PREFIX=${OSRM_INSTALL_DIR} \
@@ -558,7 +558,7 @@ jobs:
         # All tests assume to be run from the build directory
         pushd ${OSRM_BUILD_DIR}
         for i in ./unit_tests/*-tests ; do echo Running $i ; $i ; done
-        if [ -z "${ENABLE_SANITIZER}" ] && [ "$TARGET_ARCH" != "i686" ]; then
+        if [ -z "${ENABLE_SANITIZERS}" ] && [ "$TARGET_ARCH" != "i686" ]; then
           npm run nodejs-tests
         fi
         popd
