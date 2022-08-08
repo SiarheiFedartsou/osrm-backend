@@ -33,7 +33,7 @@ jobs:
     - run: npm link --ignore-scripts
     - run: SET PATH=%CD%\osrm-deps\lib
     - run: SET OSRM_BUILD_DIR=build\Release
-    - run: CALL appveyor-build.bat
+    - run: .\appveyor-build.bat
     
 
   format-taginfo-docs:
