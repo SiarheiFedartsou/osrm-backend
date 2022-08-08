@@ -38,7 +38,7 @@ jobs:
     - run: cd build
     - run: |
         cd build
-        cmake ..
+        cmake -DENABLE_CONAN=ON ..
     - run: SET PATH=%CD%\osrm-deps\lib
     - run: SET OSRM_BUILD_DIR=build\Release
     - run: .\appveyor-build.bat
