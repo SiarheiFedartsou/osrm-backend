@@ -154,7 +154,6 @@ jobs:
             CFLAGS: "-m32 -msse2 -mfpmath=sse"
             CXXCOMPILER: g++-9
             CXXFLAGS: "-m32 -msse2 -mfpmath=sse"
-            LDFLAGS: "-m32"
             TARGET_ARCH: i686
             
 
@@ -506,8 +505,6 @@ jobs:
         tar zxvf onetbb.tgz
         sudo cp -a oneapi-tbb-${TBB_VERSION}/lib/. /usr/local/lib/
         sudo cp -a oneapi-tbb-${TBB_VERSION}/include/. /usr/local/include/
-        ls -R /usr/local/lib/
-        echo "LD_LIBRARY_PATH=/usr/local/lib/ia32/:${LD_LIBRARY_PATH}" >> $GITHUB_ENV
 
     - name: Prepare build
       run: |
