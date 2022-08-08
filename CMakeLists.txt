@@ -463,11 +463,11 @@ if(ENABLE_CONAN)
   set(CONAN_SYSTEM_INCLUDES ON)
 
   # explicitly use x86 dependencies if build for x86 platforms (https://github.com/conan-io/cmake-conan/issues/141)
-  if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(CONAN_ARCHITECTURE "ARCH x86")
-  else()
-    set(CONAN_ARCHITECTURE "")
-  endif()
+  # if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+  #   set(CONAN_ARCHITECTURE "ARCH x86")
+  # else()
+  #   set(CONAN_ARCHITECTURE "")
+  # endif()
   conan_cmake_run(
     REQUIRES 
     boost/${CONAN_BOOST_VERSION}
@@ -480,7 +480,7 @@ if(ENABLE_CONAN)
     GENERATORS cmake_find_package
     KEEP_RPATHS
     NO_OUTPUT_DIRS
-    ${CONAN_ARCHITECTURE}
+    ARCH x86
   )
 
   add_dependency_includes(${CONAN_INCLUDE_DIRS_BOOST})
