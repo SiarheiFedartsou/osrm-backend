@@ -23,7 +23,14 @@ jobs:
   windows:
     runs-on: windows-11
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - run: node --version
+    - run: npm --version
+    - run: npm install --ignore-scripts
+    - run: npm link --ignore-scripts
 
   format-taginfo-docs:
     runs-on: ubuntu-20.04
