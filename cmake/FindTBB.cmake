@@ -93,7 +93,7 @@ unset(_tbb_find_optional_components)
 if (TBB_FOUND)
   return ()
 endif ()
-message(FATAL_ERROR "NOT FOUND QUIETLY")
+
 #====================================================
 # Fix the library path in case it is a linker script
 #====================================================

@@ -495,7 +495,7 @@ jobs:
 
         # TBB
         TBB_VERSION=2021.3.0
-        if [ "${TARGET_ARCH}" != "i686" ]; then
+        #if [ "${TARGET_ARCH}" != "i686" ]; then
           if [[ "${RUNNER_OS}" == "Linux" ]]; then
             TBB_URL="https://github.com/oneapi-src/oneTBB/releases/download/v${TBB_VERSION}/oneapi-tbb-${TBB_VERSION}-lin.tgz"
           elif [[ "${RUNNER_OS}" == "macOS" ]]; then
@@ -505,19 +505,19 @@ jobs:
           tar zxvf onetbb.tgz
           sudo cp -a oneapi-tbb-${TBB_VERSION}/lib/. /usr/local/lib/
           sudo cp -a oneapi-tbb-${TBB_VERSION}/include/. /usr/local/include/
-        else
-          git clone --depth 1 --single-branch --branch v${TBB_VERSION} https://github.com/oneapi-src/oneTBB.git
-          pushd oneTBB
-          mkdir build
-          pushd build
-          export LDFLAGS="-m32"
-          cmake -DCMAKE_BUILD_TYPE=Release -DTBB_TEST=OFF ..
-          VERBOSE=1 make -j${JOBS}
-          sudo make install
-          popd # build
-          popd # oneTBB
-          rm -rf oneTBB
-        fi
+        # else
+        #   git clone --depth 1 --single-branch --branch v${TBB_VERSION} https://github.com/oneapi-src/oneTBB.git
+        #   pushd oneTBB
+        #   mkdir build
+        #   pushd build
+        #   export LDFLAGS="-m32"
+        #   cmake -DCMAKE_BUILD_TYPE=Release -DTBB_TEST=OFF ..
+        #   VERBOSE=1 make -j${JOBS}
+        #   sudo make install
+        #   popd # build
+        #   popd # oneTBB
+        #   rm -rf oneTBB
+        # fi
 
     - name: Prepare build
       run: |
