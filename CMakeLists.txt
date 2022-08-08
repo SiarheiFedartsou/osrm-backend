@@ -36,6 +36,7 @@ option(ENABLE_GOLD_LINKER "Use GNU gold linker if available" ON)
 option(ENABLE_NODE_BINDINGS "Build NodeJs bindings" OFF)
 option(ENABLE_GLIBC_WORKAROUND "Workaround GLIBC symbol exports" OFF)
 option(ENABLE_CLANG_TIDY "Enables clang-tidy checks" OFF)
+option(ENABLE_32_BIT "Enables clang-tidy checks" OFF)
 
 if (ENABLE_CLANG_TIDY)
   find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
@@ -325,7 +326,10 @@ if (ENABLE_SANITIZER)
   set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${SANITIZER_FLAGS}")
   set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${SANITIZER_FLAGS}")
 endif()
-
+# if (ENABLE_32_BIT)
+# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ltbb")
+# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -ltbb")
+# endif()
 # Configuring compilers
 set(OSRM_WARNING_FLAGS "-Werror=all -Werror=extra  -Werror=uninitialized -Werror=unreachable-code -Werror=unused-variable -Werror=unreachable-code -Wno-error=cpp -Wpedantic")
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -459,7 +463,7 @@ if(ENABLE_CONAN)
   set(CONAN_BZIP2_VERSION 1.0.8)
   set(CONAN_EXPAT_VERSION 2.2.10)
   set(CONAN_LUA_VERSION 5.4.4)
-  set(CONAN_TBB_VERSION 2020.3)
+  set(CONAN_TBB_VERSION 2021.3.0)
   
   set(CONAN_SYSTEM_INCLUDES ON)
   conan_cmake_run(
@@ -468,7 +472,7 @@ if(ENABLE_CONAN)
     bzip2/${CONAN_BZIP2_VERSION}
     expat/${CONAN_EXPAT_VERSION}
     lua/${CONAN_LUA_VERSION}
-    tbb/${CONAN_TBB_VERSION}
+    onetbb/${CONAN_TBB_VERSION}
     BASIC_SETUP 
     BUILD missing 
     GENERATORS cmake_find_package
@@ -517,9 +521,7 @@ else()
 
   find_package(TBB REQUIRED)
   add_dependency_includes(${TBB_INCLUDE_DIR})
-  if(WIN32)
-    set(TBB_LIBRARIES optimized ${TBB_LIBRARY} optimized ${TBB_MALLOC_LIBRARY} debug ${TBB_LIBRARY_DEBUG} debug ${TBB_MALLOC_LIBRARY_DEBUG})
-  endif()
+  set(TBB_LIBRARIES TBB::tbb)
 
   find_package(EXPAT REQUIRED)
   add_dependency_includes(${EXPAT_INCLUDE_DIRS})
@@ -795,7 +797,7 @@ JOIN("-I${DEPENDENCIES_INCLUDE_DIRS}" " -I" PKGCONFIG_OSRM_INCLUDE_FLAGS)
 # the link libraries to be written to the pkg-config file.
 # Conan defines dependencies as CMake targets too, that's why we do the same for them.
 foreach(engine_lib ${ENGINE_LIBRARIES})
-  if("${engine_lib}" MATCHES "^Boost.*" OR "${engine_lib}" MATCHES "^CONAN_LIB.*")
+  if("${engine_lib}" MATCHES "^Boost.*" OR "${engine_lib}" MATCHES "^CONAN_LIB.*" OR "${engine_lib}" MATCHES "^TBB.*")
     list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "$<TARGET_LINKER_FILE:${engine_lib}>")
   else()
     list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "${engine_lib}")
