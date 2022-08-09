@@ -5,7 +5,7 @@ SET EL=0
 ECHO NUMBER_OF_PROCESSORS^: %NUMBER_OF_PROCESSORS%
 
 SET PATH=C:\Program Files (x86)\MSBuild\15.0\Bin;%PATH%
-CALL "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+CALL "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
 ECHO cl.exe version
 cl
 ECHO msbuild version
