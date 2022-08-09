@@ -20,6 +20,26 @@ env:
   ENABLE_NODE_BINDINGS: "ON"
 
 jobs:
+  docker-image:
+    runs-on: ubuntu-latest
+    steps:       
+      - name: Check out the repo
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Build container image - normal
+        uses: docker/build-push-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+          file: ./docker/Dockerfile
+          build-args: |
+            DOCKER_TAG=0.01
+            
   format-taginfo-docs:
     runs-on: ubuntu-20.04
     steps:
