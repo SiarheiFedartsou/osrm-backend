@@ -34,14 +34,13 @@ jobs:
     - run: npm --version
     - run: npm install --ignore-scripts
     - run: npm link --ignore-scripts
-    - run: MKDIR build
-    - run: cd build
-    - run: |
+    - name: Build
+      run: |
+        MKDIR build
         cd build
         cmake -DENABLE_CONAN=ON ..
-    - run: SET PATH=%CD%\osrm-deps\lib
-    - run: SET OSRM_BUILD_DIR=build\Release
-    - run: .\appveyor-build.bat
+        nmake
+        nmake tests
     
 
   format-taginfo-docs:
