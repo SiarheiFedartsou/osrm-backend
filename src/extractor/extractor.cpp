@@ -572,11 +572,13 @@ std::
             return relations;
         });
 
+std::mutex mu2;
     unsigned number_of_relations = 0;
     tbb::filter_t<std::shared_ptr<ExtractionRelationContainer>, void> buffer_storage_relation(
         tbb::filter::serial_in_order,
         // NOLINTNEXTLINE(performance-unnecessary-value-param)
         [&](const std::shared_ptr<ExtractionRelationContainer> parsed_relations) {
+        std::lock_guard<std::mutex> lock(mu2);
             number_of_relations += parsed_relations->GetRelationsNum();
             relations.Merge(std::move(*parsed_relations));
         });
