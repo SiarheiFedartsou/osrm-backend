@@ -25,12 +25,9 @@ jobs:
     steps:       
       - name: Check out the repo
         uses: actions/checkout@v2
-      - name: Build container image
-        uses: docker/build-push-action@v3
-        with:
-          file: ./docker/Dockerfile
-          build-args: |
-            DOCKER_TAG=0.01
+      - name: Docker build
+        run: |
+          docker build -f docker/Dockerfile . 
             
   format-taginfo-docs:
     runs-on: ubuntu-20.04
