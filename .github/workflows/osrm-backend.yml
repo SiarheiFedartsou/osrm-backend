@@ -34,11 +34,12 @@ jobs:
     - run: npm --version
     - run: npm install --ignore-scripts
     - run: npm link --ignore-scripts
+    - uses: ilammy/msvc-dev-cmd@v1
     - name: Build
       run: |
-        MKDIR build
+        mkdir build
         cd build
-        cmake -DENABLE_CONAN=ON ..
+        cmake -DENABLE_CONAN=ON  -G "NMake Makefiles" ..
         nmake
         nmake tests
     
