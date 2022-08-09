@@ -53,7 +53,6 @@ jobs:
           /nologo ^
           /flp1:logfile=build_errors.txt;errorsonly ^
           /flp2:logfile=build_warnings.txt;warningsonly
-          IF %ERRORLEVEL% EQU 1 GOTO ERROR
     
 
   format-taginfo-docs:
