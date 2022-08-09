@@ -38,6 +38,7 @@
 
 #include <boost/assert.hpp>
 
+#include <mutex>
 #include <osmium/handler/node_locations_for_ways.hpp>
 #include <osmium/index/map/flex_mem.hpp>
 #include <osmium/io/any_input.hpp>
@@ -453,9 +454,11 @@ std::
 
     ExtractionRelationContainer relations;
 
-    const auto buffer_reader = [](osmium::io::Reader &reader) {
+    std::mutex reader_mutex;
+    const auto buffer_reader = [&reader_mutex](osmium::io::Reader &reader) {
         return tbb::filter_t<void, SharedBuffer>(
-            tbb::filter::serial_in_order, [&reader](tbb::flow_control &fc) {
+            tbb::filter::serial_in_order, [&reader, &reader_mutex](tbb::flow_control &fc) {
+                std::lock_guard<std::mutex> lock(reader_mutex);
                 if (auto buffer = reader.read())
                 {
                     return std::make_shared<osmium::memory::Buffer>(std::move(buffer));
