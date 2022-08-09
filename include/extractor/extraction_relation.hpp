@@ -3,6 +3,7 @@
 
 #include "util/exception.hpp"
 
+#include <mutex>
 #include <osmium/osm/relation.hpp>
 
 #include <boost/assert.hpp>
@@ -95,6 +96,7 @@ class ExtractionRelationContainer
 
     void AddRelation(ExtractionRelation &&rel)
     {
+        std::lock_guard<std::mutex> lock(mu);
         rel.Prepare();
 
         BOOST_ASSERT(relations_data.find(rel.id.GetID()) == relations_data.end());
@@ -103,6 +105,8 @@ class ExtractionRelationContainer
 
     void AddRelationMember(const OsmIDTyped &relation_id, const OsmIDTyped &member_id)
     {
+
+        std::lock_guard<std::mutex> lock(mu);
         switch (member_id.GetType())
         {
         case osmium::item_type::node:
@@ -124,6 +128,7 @@ class ExtractionRelationContainer
 
     void Merge(ExtractionRelationContainer &&other)
     {
+        std::lock_guard<std::mutex> lock(mu);
         for (auto it : other.relations_data)
         {
             const auto res = relations_data.insert(std::make_pair(it.first, std::move(it.second)));
@@ -144,10 +149,14 @@ class ExtractionRelationContainer
         MergeRefMap(other.rel_refs, rel_refs);
     }
 
-    std::size_t GetRelationsNum() const { return relations_data.size(); }
+    std::size_t GetRelationsNum() const { 
+        
+        std::lock_guard<std::mutex> lock(mu);
+        return relations_data.size(); }
 
-    const RelationIDList &GetRelations(const OsmIDTyped &member_id) const
+    const RelationIDList GetRelations(const OsmIDTyped &member_id) const
     {
+        std::lock_guard<std::mutex> lock(mu);
         auto getFromMap = [this](std::uint64_t id,
                                  const RelationRefMap &map) -> const RelationIDList & {
             auto it = map.find(id);
@@ -175,8 +184,9 @@ class ExtractionRelationContainer
         return empty_rel_list;
     }
 
-    const ExtractionRelation &GetRelationData(const ExtractionRelation::OsmIDTyped &rel_id) const
+    const ExtractionRelation GetRelationData(const ExtractionRelation::OsmIDTyped &rel_id) const
     {
+        std::lock_guard<std::mutex> lock(mu);
         auto it = relations_data.find(rel_id.GetID());
         if (it == relations_data.end())
             throw osrm::util::exception("Can't find relation data for " +
@@ -186,6 +196,7 @@ class ExtractionRelationContainer
     }
 
   private:
+    mutable std::mutex mu;
     RelationIDList empty_rel_list;
     std::unordered_map<std::uint64_t, ExtractionRelation> relations_data;
 
