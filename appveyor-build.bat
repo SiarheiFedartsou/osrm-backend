@@ -6,6 +6,7 @@ ECHO NUMBER_OF_PROCESSORS^: %NUMBER_OF_PROCESSORS%
 
 SET PATH=C:\Program Files (x86)\MSBuild\15.0\Bin;%PATH%
 CALL "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+CALL "C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe" -latest -prerelease -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
 ECHO cl.exe version
 cl
 ECHO msbuild version
