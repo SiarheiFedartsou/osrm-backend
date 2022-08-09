@@ -14,7 +14,7 @@ msbuild /version
 
 mkdir build
 cd build
-cmake -DENABLE_CONAN=ON  -G "Visual Studio 19 2022" ..
+cmake -DENABLE_CONAN=ON  -G "Visual Studio 17 2022" ..
 msbuild OSRM.sln /p:Configuration=Release /p:Platform=x64 /t:rebuild /p:BuildInParallel=true /m:%NUMBER_OF_PROCESSORS% /toolsversion:Current /p:PlatformToolset=v142 /clp:Verbosity=normal /nologo /flp1:logfile=build_errors.txt;errorsonly /flp2:logfile=build_warnings.txt;warningsonly
     
 
