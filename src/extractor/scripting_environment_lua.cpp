@@ -1183,7 +1183,7 @@ void LuaScriptingContext::ProcessNode(const osmium::Node &node,
     {
     case 4:
     case 3:
-        node_function(profile_table, std::cref(node), result, relations);
+        node_function(profile_table, std::cref(node), result, std::cref(relations));
         break;
     case 2:
         node_function(profile_table, std::cref(node), result);
