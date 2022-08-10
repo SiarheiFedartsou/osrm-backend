@@ -588,6 +588,9 @@ set(BOOST_ENGINE_LIBRARIES
   ${Boost_ZLIB_LIBRARY}
   ${Boost_REGEX_LIBRARY}
   ${BOOST_BASE_LIBRARIES})
+  
+  
+  message(FATAL_ERROR ${BOOST_BASE_LIBRARIES})
 
 # Binaries
 target_link_libraries(osrm-datastore osrm_store ${Boost_PROGRAM_OPTIONS_LIBRARY})
