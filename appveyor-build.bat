@@ -5,7 +5,7 @@ SET EL=0
 ECHO NUMBER_OF_PROCESSORS^: %NUMBER_OF_PROCESSORS%
 
 SET PATH=C:\Program Files (x86)\MSBuild\15.0\Bin;%PATH%
-CALL "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+CALL "C:\Program Files\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
 CALL "C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe" -latest -prerelease -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
 ECHO cl.exe version
 cl
@@ -14,8 +14,8 @@ msbuild /version
 
 mkdir build
 cd build
-cmake -DENABLE_CONAN=ON  -G "Visual Studio 17 2022" ..
-msbuild OSRM.sln /p:Configuration=Release /p:Platform=x64 /t:rebuild /p:BuildInParallel=true /m:%NUMBER_OF_PROCESSORS% /toolsversion:Current /p:PlatformToolset=v142 /clp:Verbosity=normal /nologo /flp1:logfile=build_errors.txt;errorsonly /flp2:logfile=build_warnings.txt;warningsonly
+cmake -DENABLE_CONAN=ON  -G "Visual Studio 16 2019" ..
+msbuild OSRM.sln /p:Configuration=Release /p:Platform=x64 /t:rebuild /p:BuildInParallel=true /m:%NUMBER_OF_PROCESSORS% /toolsversion:Current /p:PlatformToolset=v143 /clp:Verbosity=normal /nologo /flp1:logfile=build_errors.txt;errorsonly /flp2:logfile=build_warnings.txt;warningsonly
     
 dir /s /b
 
