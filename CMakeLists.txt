@@ -589,7 +589,12 @@ set(BOOST_ENGINE_LIBRARIES
   ${Boost_REGEX_LIBRARY}
   ${BOOST_BASE_LIBRARIES})
   
-  
+  foreach(engine_lib ${ENGINE_LIBRARIES})
+  if("${engine_lib}" MATCHES "^Boost.*" OR "${engine_lib}" MATCHES "^CONAN_LIB.*")
+  message(STATUS "LIB $<TARGET_LINKER_FILE:${engine_lib}>")
+    list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "$<TARGET_LINKER_FILE:${engine_lib}>")
+  endif()
+endforeach(engine_lib)
   message(FATAL_ERROR ${BOOST_BASE_LIBRARIES})
 
 # Binaries
