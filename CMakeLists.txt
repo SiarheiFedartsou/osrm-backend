@@ -37,6 +37,8 @@ option(ENABLE_NODE_BINDINGS "Build NodeJs bindings" OFF)
 option(ENABLE_GLIBC_WORKAROUND "Workaround GLIBC symbol exports" OFF)
 option(ENABLE_CLANG_TIDY "Enables clang-tidy checks" OFF)
 
+conan_basic_setup(TARGETS)
+
 if (ENABLE_CLANG_TIDY)
   find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
   if(NOT CLANG_TIDY_COMMAND)
