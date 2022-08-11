@@ -28,7 +28,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef STORAGE_CONFIG_HPP
 #define STORAGE_CONFIG_HPP
 
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 
 #include "storage/io_config.hpp"
 
@@ -44,7 +44,7 @@ namespace storage
  */
 struct StorageConfig final : IOConfig
 {
-    StorageConfig(const boost::filesystem::path &base) : StorageConfig()
+    StorageConfig(const std::filesystem::path &base) : StorageConfig()
     {
         IOConfig::UseDefaultOutputNames(base);
     }

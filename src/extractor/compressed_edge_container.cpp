@@ -2,8 +2,7 @@
 #include "util/log.hpp"
 
 #include <boost/assert.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
+#include <filesystem>
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <limits>

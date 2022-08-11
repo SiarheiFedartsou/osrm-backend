@@ -10,7 +10,7 @@
 #include "util/static_graph.hpp"
 #include "util/typedefs.hpp"
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/function_output_iterator.hpp>
 
 #include <tbb/parallel_sort.h>
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
     const std::string inpath{argv[1]};
     const std::string outpath{argv[2]};
 
-    if (boost::filesystem::exists(outpath))
+    if (std::filesystem::exists(outpath))
     {
         util::Log(logWARNING) << "Components file " << outpath << " already exists";
         return EXIT_FAILURE;

@@ -3,7 +3,7 @@
 
 #include "util/log.hpp"
 
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <boost/geometry.hpp>
 #include <boost/geometry/index/rtree.hpp>
 #include <boost/optional.hpp>
@@ -34,7 +34,7 @@ class Timezoner
     Timezoner() = default;
 
     Timezoner(const char geojson[], std::time_t utc_time_now);
-    Timezoner(const boost::filesystem::path &tz_shapes_filename, std::time_t utc_time_now);
+    Timezoner(const std::filesystem::path &tz_shapes_filename, std::time_t utc_time_now);
 
     boost::optional<struct tm> operator()(const point_t &point) const;
 

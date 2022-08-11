@@ -1,16 +1,16 @@
 #ifndef UNIT_TESTS_TEMPORARY_FILE_HPP
 #define UNIT_TESTS_TEMPORARY_FILE_HPP
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 struct TemporaryFile
 {
-    TemporaryFile() : path(boost::filesystem::unique_path()) {}
+    TemporaryFile() : path(std::filesystem::unique_path()) {}
     TemporaryFile(const std::string &path) : path(path) {}
 
-    ~TemporaryFile() { boost::filesystem::remove(path); }
+    ~TemporaryFile() { std::filesystem::remove(path); }
 
-    boost::filesystem::path path;
+    std::filesystem::path path;
 };
 
 #endif // UNIT_TESTS_TEMPORARY_FILE_HPP

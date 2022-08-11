@@ -14,7 +14,7 @@
 #include <iostream>
 #include <random>
 
-#include <boost/filesystem/fstream.hpp>
+#include <filesystem>
 
 namespace osrm
 {

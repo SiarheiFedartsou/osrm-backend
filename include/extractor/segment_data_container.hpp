@@ -8,7 +8,7 @@
 #include "storage/shared_memory_ownership.hpp"
 #include "storage/tar_fwd.hpp"
 
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
 #include <boost/range/adaptor/reversed.hpp>
 #include <boost/range/iterator_range.hpp>
 
