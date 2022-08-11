@@ -454,7 +454,7 @@ if(ENABLE_CONAN)
 
   include(${CMAKE_CURRENT_LIST_DIR}/cmake/conan.cmake)
 
-  set(CONAN_BOOST_VERSION 1.75.0)
+  set(CONAN_BOOST_VERSION 1.79.0)
   set(CONAN_BZIP2_VERSION 1.0.8)
   set(CONAN_EXPAT_VERSION 2.2.10)
   set(CONAN_LUA_VERSION 5.4.4)
@@ -469,7 +469,7 @@ if(ENABLE_CONAN)
     lua/${CONAN_LUA_VERSION}
     tbb/${CONAN_TBB_VERSION}
     BASIC_SETUP 
-    BUILD missing 
+    BUILD all 
     GENERATORS cmake_find_package
     KEEP_RPATHS
     NO_OUTPUT_DIRS
