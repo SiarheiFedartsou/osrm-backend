@@ -38,6 +38,7 @@ option(ENABLE_GLIBC_WORKAROUND "Workaround GLIBC symbol exports" OFF)
 option(ENABLE_CLANG_TIDY "Enables clang-tidy checks" OFF)
 
 conan_basic_setup(TARGETS)
+include(${CMAKE_CURRENT_LIST_DIR}/cmake/conan.cmake)
 
 if (ENABLE_CLANG_TIDY)
   find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
@@ -454,7 +455,7 @@ if(ENABLE_CONAN)
   list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_BINARY_DIR})
   list(INSERT CMAKE_PREFIX_PATH 0 ${CMAKE_BINARY_DIR})
 
-  include(${CMAKE_CURRENT_LIST_DIR}/cmake/conan.cmake)
+  
 
   set(CONAN_BOOST_VERSION 1.79.0)
   set(CONAN_BZIP2_VERSION 1.0.8)
