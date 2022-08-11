@@ -11,6 +11,7 @@ if [[ $dirty ]]; then
     echo $MSG
     echo $dirty
     git diff
+    git diff > diff.patch
     exit 1
 else
     exit 0
