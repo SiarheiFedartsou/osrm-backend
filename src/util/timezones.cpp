@@ -4,7 +4,6 @@
 #include "util/log.hpp"
 
 #include <filesystem>
-#include <filesystem>
 #include <boost/optional.hpp>
 
 #include <rapidjson/document.h>
