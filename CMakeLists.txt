@@ -469,7 +469,8 @@ if(ENABLE_CONAN)
     lua/${CONAN_LUA_VERSION}
     tbb/${CONAN_TBB_VERSION}
     BASIC_SETUP 
-    BUILD all 
+    CMAKE_TARGETS
+    BUILD missing 
     GENERATORS cmake_find_package
     KEEP_RPATHS
     NO_OUTPUT_DIRS
