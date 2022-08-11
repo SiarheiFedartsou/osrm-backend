@@ -54,6 +54,7 @@ function(add_dependency_includes)
 endfunction(add_dependency_includes)
 
 if(ENABLE_CONAN)
+ add_definitions(-DBOOST_ALL_NO_LIB)
   message(STATUS "Installing dependencies via Conan")
 
   # Conan will generate Find*.cmake files to build directory, so we use them with the highest priority 
