@@ -132,7 +132,7 @@ include_directories(BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/include/)
 include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/third_party/sol2-3.3.0/include)
 include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/third_party/variant/include)
 
-set(BOOST_COMPONENTS date_time chrono filesystem iostreams program_options regex system thread unit_test_framework)
+set(BOOST_COMPONENTS date_time chrono iostreams program_options regex system thread unit_test_framework)
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/include/util/version.hpp.in
@@ -487,13 +487,13 @@ if(ENABLE_CONAN)
   set(Boost_DATE_TIME_LIBRARY "${Boost_date_time_LIB_TARGETS}")
   set(Boost_CHRONO_LIBRARY "${Boost_chrono_LIB_TARGETS}")
   set(Boost_PROGRAM_OPTIONS_LIBRARY "${Boost_program_options_LIB_TARGETS}")
-  set(Boost_FILESYSTEM_LIBRARY "${Boost_filesystem_LIB_TARGETS}")
   set(Boost_IOSTREAMS_LIBRARY "${Boost_iostreams_LIB_TARGETS}")
   set(Boost_THREAD_LIBRARY "${Boost_thread_LIB_TARGETS}")
   set(Boost_SYSTEM_LIBRARY "${Boost_system_LIB_TARGETS}")
   set(Boost_ZLIB_LIBRARY "${Boost_zlib_LIB_TARGETS}")
   set(Boost_REGEX_LIBRARY "${Boost_regex_LIB_TARGETS}")
   set(Boost_UNIT_TEST_FRAMEWORK_LIBRARY "${Boost_unit_test_framework_LIB_TARGETS}")
+
   
   find_package(BZip2 REQUIRED EXACT ${CONAN_BZIP2_VERSION})
   find_package(EXPAT REQUIRED EXACT ${CONAN_EXPAT_VERSION})
@@ -572,7 +572,6 @@ add_dependency_includes(${ZLIB_INCLUDE_DIRS})
 
 add_dependency_defines(-DBOOST_SPIRIT_USE_PHOENIX_V3)
 add_dependency_defines(-DBOOST_RESULT_OF_USE_DECLTYPE)
-add_dependency_defines(-DBOOST_FILESYSTEM_NO_DEPRECATED)
 
 add_definitions(${OSRM_DEFINES})
 include_directories(SYSTEM ${DEPENDENCIES_INCLUDE_DIRS})
@@ -580,7 +579,6 @@ include_directories(SYSTEM ${DEPENDENCIES_INCLUDE_DIRS})
 set(BOOST_BASE_LIBRARIES
    ${Boost_DATE_TIME_LIBRARY}
    ${Boost_CHRONO_LIBRARY}
-   ${Boost_FILESYSTEM_LIBRARY}
    ${Boost_IOSTREAMS_LIBRARY}
    ${Boost_THREAD_LIBRARY}
    ${Boost_SYSTEM_LIBRARY})

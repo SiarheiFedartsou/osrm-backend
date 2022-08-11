@@ -3,7 +3,7 @@
 #include "../common/range_tools.hpp"
 #include "../common/temporary_file.hpp"
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/test/unit_test.hpp>
 
 #include <cmath>

@@ -2,9 +2,9 @@
 
 #include "util/log.hpp"
 
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
+#include <filesystem>
+#include <filesystem>
+#include <filesystem>
 
 namespace osrm
 {
@@ -12,7 +12,7 @@ namespace storage
 {
 bool IOConfig::IsValid() const
 {
-    namespace fs = boost::filesystem;
+    namespace fs = std::filesystem;
 
     bool success = true;
     for (auto &fileName : required_input_files)

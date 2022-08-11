@@ -26,7 +26,7 @@
 #include <vector>
 
 #include <boost/assert.hpp>
-#include <boost/filesystem/operations.hpp>
+#include <filesystem>
 
 #if TBB_VERSION_MAJOR == 2020
 #include <tbb/global_control.h>
@@ -179,11 +179,11 @@ int Partitioner::Run(const PartitionerConfig &config)
         renumber(node_sequences, permutation);
         extractor::files::writeManeuverOverrides(filename, maneuver_overrides, node_sequences);
     }
-    if (boost::filesystem::exists(config.GetPath(".osrm.hsgr")))
+    if (std::filesystem::exists(config.GetPath(".osrm.hsgr")))
     {
         util::Log(logWARNING) << "Found existing .osrm.hsgr file, removing. You need to re-run "
                                  "osrm-contract after osrm-partition.";
-        boost::filesystem::remove(config.GetPath(".osrm.hsgr"));
+        std::filesystem::remove(config.GetPath(".osrm.hsgr"));
     }
     TIMER_STOP(renumber);
     util::Log() << "Renumbered data in " << TIMER_SEC(renumber) << " seconds";

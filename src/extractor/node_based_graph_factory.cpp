@@ -16,7 +16,7 @@ namespace extractor
 {
 
 NodeBasedGraphFactory::NodeBasedGraphFactory(
-    const boost::filesystem::path &input_file,
+    const std::filesystem::path &input_file,
     ScriptingEnvironment &scripting_environment,
     std::vector<TurnRestriction> &turn_restrictions,
     std::vector<UnresolvedManeuverOverride> &maneuver_overrides)
@@ -28,7 +28,7 @@ NodeBasedGraphFactory::NodeBasedGraphFactory(
 }
 
 // load the data serialised during the extraction run
-void NodeBasedGraphFactory::LoadDataFromFile(const boost::filesystem::path &input_file)
+void NodeBasedGraphFactory::LoadDataFromFile(const std::filesystem::path &input_file)
 {
     auto barriers_iter = inserter(barriers, end(barriers));
     auto traffic_signals_iter = inserter(traffic_signals, end(traffic_signals));

@@ -20,7 +20,7 @@
 #include "storage/shared_memory_ownership.hpp"
 
 #include <boost/assert.hpp>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <boost/format.hpp>
 #include <boost/iostreams/device/mapped_file.hpp>
 
@@ -273,7 +273,7 @@ class StaticRTree
     // Construct a packed Hilbert-R-Tree with Kamel-Faloutsos algorithm [1]
     explicit StaticRTree(const std::vector<EdgeDataT> &input_data_vector,
                          const Vector<Coordinate> &coordinate_list,
-                         const boost::filesystem::path &on_disk_file_name)
+                         const std::filesystem::path &on_disk_file_name)
         : m_coordinate_list(coordinate_list.data(), coordinate_list.size())
     {
         const auto element_count = input_data_vector.size();
@@ -459,7 +459,7 @@ class StaticRTree
      * Constructs an empty RTree for de-serialization.
      */
     template <typename = std::enable_if<Ownership == storage::Ownership::Container>>
-    explicit StaticRTree(const boost::filesystem::path &on_disk_file_name,
+    explicit StaticRTree(const std::filesystem::path &on_disk_file_name,
                          const Vector<Coordinate> &coordinate_list)
         : m_coordinate_list(coordinate_list.data(), coordinate_list.size()),
           m_objects(mmapFile<EdgeDataT>(on_disk_file_name, m_objects_region))
@@ -474,7 +474,7 @@ class StaticRTree
      */
     explicit StaticRTree(Vector<TreeNode> search_tree_,
                          Vector<std::uint64_t> tree_level_starts,
-                         const boost::filesystem::path &on_disk_file_name,
+                         const std::filesystem::path &on_disk_file_name,
                          const Vector<Coordinate> &coordinate_list)
         : m_search_tree(std::move(search_tree_)),
           m_coordinate_list(coordinate_list.data(), coordinate_list.size()),
