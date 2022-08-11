@@ -24,7 +24,7 @@ jobs:
     runs-on: windows-2019
     steps:
     - uses: actions/checkout@v3
-    - run: pip install conan
+    - run: pip install conan==1.50.0
     - run: conan --version
     - run: cmake --version
     - uses: actions/setup-node@v3
