@@ -75,7 +75,7 @@ SET test_region=monaco
 SET test_region_ch=ch\monaco
 SET test_region_corech=corech\monaco
 SET test_region_mld=mld\monaco
-SET test_osm=PROJECT_DIR\test\data\%test_region%.osm.pbf
+SET test_osm=%PROJECT_DIR%\test\data\%test_region%.osm.pbf
 ECHO running %CONFIGURATION%\osrm-extract.exe -p ../profiles/car.lua %test_osm%
 %CONFIGURATION%\osrm-extract.exe
 %CONFIGURATION%\osrm-extract.exe -p ../profiles/car.lua %test_osm%
