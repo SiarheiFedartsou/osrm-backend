@@ -35,7 +35,12 @@ msbuild OSRM.sln ^
 /flp1:logfile=build_errors.txt;errorsonly %
 /flp2:logfile=build_warnings.txt;warningsonly
 
+
+ECHO "GOING TO BUILD2"
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+
+ECHO "GOING TO BUILD"
+DIR
 
 CD %PROJECT_DIR%\build
 IF %ERRORLEVEL% EQU 1 GOTO ERROR
