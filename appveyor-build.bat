@@ -4,6 +4,8 @@ SET EL=0
 
 ECHO NUMBER_OF_PROCESSORS^: %NUMBER_OF_PROCESSORS%
 
+SET PROJECT_DIR=%CD%
+
 SET PATH=C:\Program Files (x86)\MSBuild\15.0\Bin;%PATH%
 CALL "C:\Program Files\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
 CALL "C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe" -latest -prerelease -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
@@ -13,10 +15,55 @@ ECHO msbuild version
 msbuild /version
 
 mkdir build
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 cd build
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 cmake -DENABLE_CONAN=ON  -G "Visual Studio 16 2019" ..
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 msbuild OSRM.sln /p:Configuration=Release /p:Platform=x64 /t:rebuild /p:BuildInParallel=true /m:%NUMBER_OF_PROCESSORS% /toolsversion:Current /p:PlatformToolset=v142 /clp:Verbosity=normal /nologo /flp1:logfile=build_errors.txt;errorsonly /flp2:logfile=build_warnings.txt;warningsonly
-    
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+
+CD %PROJECT_DIR%\build
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+ECHO running extractor-tests.exe ...
+unit_tests\%Configuration%\extractor-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+ECHO running contractor-tests.exe ...
+unit_tests\%Configuration%\contractor-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+ECHO running engine-tests.exe ...
+unit_tests\%Configuration%\engine-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+ECHO running util-tests.exe ...
+unit_tests\%Configuration%\util-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+ECHO running server-tests.exe ...
+unit_tests\%Configuration%\server-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+ECHO running partitioner-tests.exe ...
+unit_tests\%Configuration%\partitioner-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+ECHO running customizer-tests.exe ...
+unit_tests\%Configuration%\customizer-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+
+:ERROR
+ECHO ~~~~~~~~~~~~~~~~~~~~~~ ERROR %~f0 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ECHO ERRORLEVEL^: %ERRORLEVEL%
+SET EL=%ERRORLEVEL%
+
+:DONE
+ECHO ~~~~~~~~~~~~~~~~~~~~~~ DONE %~f0 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+EXIT /b %EL%
 
 @REM @ECHO OFF
 @REM SETLOCAL
