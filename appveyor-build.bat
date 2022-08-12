@@ -31,10 +31,7 @@ msbuild OSRM.sln ^
 /toolsversion:Current ^
 /p:PlatformToolset=v142 ^
 /clp:Verbosity=normal ^
-/nologo ^
-/flp1:logfile=build_errors.txt;errorsonly %
-/flp2:logfile=build_warnings.txt;warningsonly
-
+/nologo
 
 ECHO "GOING TO BUILD2"
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
