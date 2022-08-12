@@ -33,11 +33,8 @@ msbuild OSRM.sln ^
 /clp:Verbosity=normal ^
 /nologo
 
-ECHO "GOING TO BUILD2"
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
-ECHO "GOING TO BUILD"
-DIR
 
 CD %PROJECT_DIR%\build
 IF %ERRORLEVEL% EQU 1 GOTO ERROR
@@ -72,13 +69,17 @@ IF %ERRORLEVEL% EQU 1 GOTO ERROR
 
 ECHO running library-tests.exe ...
 SET test_region=monaco
-SET test_region_ch=ch\monaco
-SET test_region_corech=corech\monaco
-SET test_region_mld=mld\monaco
+SET test_region_ch=%PROJECT_DIR%\test\data\ch\monaco
+SET test_region_corech=%PROJECT_DIR%\test\data\corech\monaco
+SET test_region_mld=%PROJECT_DIR%\test\data\mld\monaco
 SET test_osm=%PROJECT_DIR%\test\data\%test_region%.osm.pbf
 ECHO running %CONFIGURATION%\osrm-extract.exe -p ../profiles/car.lua %test_osm%
 %CONFIGURATION%\osrm-extract.exe
 %CONFIGURATION%\osrm-extract.exe -p ../profiles/car.lua %test_osm%
+DIR
+
+DIR %PROJECT_DIR%\test\data\
+
 MKDIR ch
 XCOPY %test_region%.osrm.* ch\
 XCOPY %test_region%.osrm ch\
