@@ -5,7 +5,7 @@ SET EL=0
 ECHO NUMBER_OF_PROCESSORS^: %NUMBER_OF_PROCESSORS%
 
 SET PROJECT_DIR=%CD%
-SET CONFIGURATION=Debug
+SET CONFIGURATION=Release
 
 SET PATH=C:\Program Files (x86)\MSBuild\15.0\Bin;%PATH%
 CALL "C:\Program Files\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
@@ -66,7 +66,7 @@ IF %ERRORLEVEL% EQU 1 GOTO ERROR
 ECHO running customizer-tests.exe ...
 unit_tests\%CONFIGURATION%\customizer-tests.exe
 IF %ERRORLEVEL% EQU 1 GOTO ERROR
-echo Exit Code2 is %errorlevel%
+echo Exit Code is %errorlevel%
 ECHO running library-tests.exe ...
 SET test_region=monaco
 SET test_region_ch=%PROJECT_DIR%\test\data\ch\monaco
