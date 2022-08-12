@@ -78,8 +78,9 @@ cmd /c "exit /b 0"
 %CONFIGURATION%\osrm-extract.exe -p ../profiles/car.lua %test_osm%
 echo Exit Code is %errorlevel%
 @REM IF %ERRORLEVEL% NEQ 0 GOTO ERROR
-
-dir /s /b
+dir Release
+Release/osrm-extract.exe
+@rem dir /s /b
 
 MKDIR ch
 XCOPY %test_region%.osrm.* ch\
