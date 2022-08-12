@@ -1,4 +1,4 @@
-@ECHO OFF
+@REM @ECHO OFF
 SETLOCAL
 SET EL=0
 
@@ -74,11 +74,10 @@ SET test_region_corech=%PROJECT_DIR%\test\data\corech\monaco
 SET test_region_mld=%PROJECT_DIR%\test\data\mld\monaco
 SET test_osm=%PROJECT_DIR%\test\data\%test_region%.osm.pbf
 ECHO running %CONFIGURATION%\osrm-extract.exe -p ../profiles/car.lua %test_osm%
-%CONFIGURATION%\osrm-extract.exe
 %CONFIGURATION%\osrm-extract.exe -p ../profiles/car.lua %test_osm%
-DIR
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
-DIR %PROJECT_DIR%\test\data\
+dir /s /b
 
 MKDIR ch
 XCOPY %test_region%.osrm.* ch\
