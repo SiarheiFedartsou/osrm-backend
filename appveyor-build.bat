@@ -79,7 +79,7 @@ cmd /c "exit /b 0"
 echo Exit Code is %errorlevel%
 @REM IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 dir Release
-Release/osrm-extract.exe
+Release\osrm-extract.exe --version
 @rem dir /s /b
 
 MKDIR ch
