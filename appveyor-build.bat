@@ -74,6 +74,7 @@ SET test_region_corech=%PROJECT_DIR%\test\data\corech\monaco
 SET test_region_mld=%PROJECT_DIR%\test\data\mld\monaco
 SET test_osm=%PROJECT_DIR%\test\data\%test_region%.osm.pbf
 ECHO running %CONFIGURATION%\osrm-extract.exe -p ../profiles/car.lua %test_osm%
+cmd /c "exit /b 0"
 %CONFIGURATION%\osrm-extract.exe -p ../profiles/car.lua %test_osm%
 echo Exit Code is %errorlevel%
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
