@@ -37,11 +37,11 @@ IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 
 CD %PROJECT_DIR%\build
-IF %ERRORLEVEL% EQU 1 GOTO ERROR
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 ECHO running extractor-tests.exe ...
 unit_tests\%CONFIGURATION%\extractor-tests.exe
-IF %ERRORLEVEL% EQU 1 GOTO ERROR
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 ECHO running contractor-tests.exe ...
 unit_tests\%CONFIGURATION%\contractor-tests.exe
