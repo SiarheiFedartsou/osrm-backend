@@ -37,14 +37,6 @@ option(ENABLE_NODE_BINDINGS "Build NodeJs bindings" OFF)
 option(ENABLE_GLIBC_WORKAROUND "Workaround GLIBC symbol exports" OFF)
 option(ENABLE_CLANG_TIDY "Enables clang-tidy checks" OFF)
 
-# Explicitly set the build type to Release if no other type is specified
-# on the command line.  Without this, cmake defaults to an unoptimized,
-# non-debug build, which almost nobody wants.
-if(NOT CMAKE_BUILD_TYPE)
-  message(STATUS "No build type specified, defaulting to Release")
-  set(CMAKE_BUILD_TYPE Release)
-endif()
-
 if (ENABLE_CLANG_TIDY)
   find_program(CLANG_TIDY_COMMAND NAMES clang-tidy)
   if(NOT CLANG_TIDY_COMMAND)
@@ -481,7 +473,6 @@ if(ENABLE_CONAN)
     lua/${CONAN_LUA_VERSION}
     tbb/${CONAN_TBB_VERSION}
     BASIC_SETUP 
-    CMAKE_TARGETS
     BUILD missing 
     GENERATORS cmake_find_package
     KEEP_RPATHS
@@ -602,14 +593,6 @@ set(BOOST_ENGINE_LIBRARIES
   ${Boost_ZLIB_LIBRARY}
   ${Boost_REGEX_LIBRARY}
   ${BOOST_BASE_LIBRARIES})
-  
-#   foreach(engine_lib ${BOOST_BASE_LIBRARIES})
-#   if("${engine_lib}" MATCHES "^Boost.*" OR "${engine_lib}" MATCHES "^CONAN_LIB.*")
-#   message(STATUS "LIB $<TARGET_LINKER_FILE:${engine_lib}>")
-#     list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "$<TARGET_LINKER_FILE:${engine_lib}>")
-#   endif()
-# endforeach(engine_lib)
-#   message(FATAL_ERROR ${BOOST_BASE_LIBRARIES})
 
 # Binaries
 target_link_libraries(osrm-datastore osrm_store ${Boost_PROGRAM_OPTIONS_LIBRARY})
@@ -815,13 +798,13 @@ JOIN("-I${DEPENDENCIES_INCLUDE_DIRS}" " -I" PKGCONFIG_OSRM_INCLUDE_FLAGS)
 # Boost uses imported targets, we need to use a generator expression to extract
 # the link libraries to be written to the pkg-config file.
 # Conan defines dependencies as CMake targets too, that's why we do the same for them.
-# foreach(engine_lib ${ENGINE_LIBRARIES})
-#   if("${engine_lib}" MATCHES "^Boost.*" OR "${engine_lib}" MATCHES "^CONAN_LIB.*")
-#     list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "$<TARGET_LINKER_FILE:${engine_lib}>")
-#   else()
-#     list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "${engine_lib}")
-#   endif()
-# endforeach(engine_lib)
+foreach(engine_lib ${ENGINE_LIBRARIES})
+  if("${engine_lib}" MATCHES "^Boost.*" OR "${engine_lib}" MATCHES "^CONAN_LIB.*")
+    list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "$<TARGET_LINKER_FILE:${engine_lib}>")
+  else()
+    list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "${engine_lib}")
+  endif()
+endforeach(engine_lib)
 JOIN("${PKGCONFIG_DEPENDENT_LIBRARIES}" " " PKGCONFIG_OSRM_DEPENDENT_LIBRARIES)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/pkgconfig.in pkgconfig.configured @ONLY)
