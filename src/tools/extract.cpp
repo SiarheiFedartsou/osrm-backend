@@ -144,7 +144,7 @@ return_code parseArguments(int argc,
 int main(int argc, char *argv[])
 try
 {
-    std::cout << "start\n";
+    std::cout << "start" << std::endl;
     util::LogPolicy::GetInstance().Unmute();
     extractor::ExtractorConfig extractor_config;
     std::string verbosity;
