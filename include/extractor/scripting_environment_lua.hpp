@@ -107,7 +107,7 @@ class Sol2ScriptingEnvironment final : public ScriptingEnvironment
     void InitContext(LuaScriptingContext &context);
     std::mutex init_mutex;
     std::string file_name;
-    tbb::enumerable_thread_specific<std::unique_ptr<LuaScriptingContext>> script_contexts;
+ //   tbb::enumerable_thread_specific<std::unique_ptr<LuaScriptingContext>> script_contexts;
     const LocationDependentData location_dependent_data;
 };
 } // namespace extractor

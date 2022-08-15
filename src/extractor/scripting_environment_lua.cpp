@@ -21,6 +21,7 @@
 #include "util/lua_util.hpp"
 #include "util/typedefs.hpp"
 
+#include <cstdlib>
 #include <osmium/osm.hpp>
 
 #include <memory>
@@ -98,7 +99,7 @@ Sol2ScriptingEnvironment::Sol2ScriptingEnvironment(
     const std::vector<boost::filesystem::path> &location_dependent_data_paths)
     : file_name(file_name), location_dependent_data(location_dependent_data_paths)
 {
-    util::Log() << "Using script " << file_name;
+   // util::Log() << "Using script " << file_name;
 }
 
 void Sol2ScriptingEnvironment::InitContext(LuaScriptingContext &context)
@@ -851,16 +852,17 @@ const ProfileProperties &Sol2ScriptingEnvironment::GetProfileProperties()
 
 LuaScriptingContext &Sol2ScriptingEnvironment::GetSol2Context()
 {
-    std::lock_guard<std::mutex> lock(init_mutex);
-    bool initialized = false;
-    auto &ref = script_contexts.local(initialized);
-    if (!initialized)
-    {
-        ref = std::make_unique<LuaScriptingContext>(location_dependent_data);
-        InitContext(*ref);
-    }
+    std::abort();
+    // std::lock_guard<std::mutex> lock(init_mutex);
+    // bool initialized = false;
+    // auto &ref = script_contexts.local(initialized);
+    // if (!initialized)
+    // {
+    //     ref = std::make_unique<LuaScriptingContext>(location_dependent_data);
+    //     InitContext(*ref);
+    // }
 
-    return *ref;
+    // return *ref;
 }
 
 void Sol2ScriptingEnvironment::ProcessElements(
