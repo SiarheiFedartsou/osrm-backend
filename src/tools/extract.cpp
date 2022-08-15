@@ -151,40 +151,39 @@ try
     std::string verbosity;
 
     const auto result = parseArguments(argc, argv, verbosity, extractor_config);
-    (void)result;
-    // if (return_code::fail == result)
-    // {
-    //     return EXIT_FAILURE;
-    // }
+    if (return_code::fail == result)
+    {
+        return EXIT_FAILURE;
+    }
 
-    // if (return_code::exit == result)
-    // {
-    //     return EXIT_SUCCESS;
-    // }
+    if (return_code::exit == result)
+    {
+        return EXIT_SUCCESS;
+    }
 
-    // util::LogPolicy::GetInstance().SetLevel(verbosity);
+    util::LogPolicy::GetInstance().SetLevel(verbosity);
 
-    // extractor_config.UseDefaultOutputNames(extractor_config.input_path);
+    extractor_config.UseDefaultOutputNames(extractor_config.input_path);
 
-    // if (1 > extractor_config.requested_num_threads)
-    // {
-    //     util::Log(logERROR) << "Number of threads must be 1 or larger";
-    //     return EXIT_FAILURE;
-    // }
+    if (1 > extractor_config.requested_num_threads)
+    {
+        util::Log(logERROR) << "Number of threads must be 1 or larger";
+        return EXIT_FAILURE;
+    }
 
-    // if (!boost::filesystem::is_regular_file(extractor_config.input_path))
-    // {
-    //     util::Log(logERROR) << "Input file " << extractor_config.input_path.string()
-    //                         << " not found!";
-    //     return EXIT_FAILURE;
-    // }
+    if (!boost::filesystem::is_regular_file(extractor_config.input_path))
+    {
+        util::Log(logERROR) << "Input file " << extractor_config.input_path.string()
+                            << " not found!";
+        return EXIT_FAILURE;
+    }
 
-    // if (!boost::filesystem::is_regular_file(extractor_config.profile_path))
-    // {
-    //     util::Log(logERROR) << "Profile " << extractor_config.profile_path.string()
-    //                         << " not found!";
-    //     return EXIT_FAILURE;
-    // }
+    if (!boost::filesystem::is_regular_file(extractor_config.profile_path))
+    {
+        util::Log(logERROR) << "Profile " << extractor_config.profile_path.string()
+                            << " not found!";
+        return EXIT_FAILURE;
+    }
 
     // std::cout << "extract s\n";
     // osrm::extract(extractor_config);
