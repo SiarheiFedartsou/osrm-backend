@@ -145,14 +145,13 @@ return_code parseArguments(int argc,
 int main(int argc, char *argv[])
 try
 {
-    (void)parseArguments;
-    std::cout << "start" << std::endl;
-    // util::LogPolicy::GetInstance().Unmute();
-    // extractor::ExtractorConfig extractor_config;
-    // std::string verbosity;
+    std::cout << "XXXstartXXX" << std::endl;
+    util::LogPolicy::GetInstance().Unmute();
+    extractor::ExtractorConfig extractor_config;
+    std::string verbosity;
 
-    // const auto result = parseArguments(argc, argv, verbosity, extractor_config);
-
+    const auto result = parseArguments(argc, argv, verbosity, extractor_config);
+    (void)result;
     // if (return_code::fail == result)
     // {
     //     return EXIT_FAILURE;
