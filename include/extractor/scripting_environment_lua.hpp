@@ -7,7 +7,7 @@
 #include "extractor/scripting_environment.hpp"
 
 #include <tbb/enumerable_thread_specific.h>
-
+#include <thread>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -107,7 +107,7 @@ class Sol2ScriptingEnvironment final : public ScriptingEnvironment
     void InitContext(LuaScriptingContext &context);
     std::mutex init_mutex;
     std::string file_name;
-    std::unique_ptr<LuaScriptingContext> script_contexts;
+    std::unordered_map<std::thread::id, std::unique_ptr<LuaScriptingContext>> script_contexts;
     const LocationDependentData location_dependent_data;
 };
 } // namespace extractor

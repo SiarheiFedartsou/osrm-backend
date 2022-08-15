@@ -15,9 +15,7 @@ void extract(const extractor::ExtractorConfig &config)
     std::cout << config.profile_path.string() << std::endl;
     extractor::Sol2ScriptingEnvironment scripting_environment(config.profile_path.string(),
                                                               config.location_dependent_data_paths);
-    (void)scripting_environment;
-  //  std::cerr << scripting_environment.GetClassNames().size() << std::endl;
-    //extractor::Extractor(config).run(scripting_environment);
+    extractor::Extractor(config).run(scripting_environment);
 }
 
 } // namespace osrm
