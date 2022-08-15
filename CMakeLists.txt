@@ -288,8 +288,8 @@ endif()
 
 set_target_properties(UTIL PROPERTIES LINKER_LANGUAGE CXX)
 
-#add_executable(osrm-extract main.cpp)
-add_executable(osrm-extract src/tools/extract.cpp)
+add_executable(osrm-extract main.cpp)
+#add_executable(osrm-extract src/tools/extract.cpp)
 add_executable(osrm-partition src/tools/partition.cpp)
 add_executable(osrm-customize src/tools/customize.cpp)
 add_executable(osrm-contract src/tools/contract.cpp)
