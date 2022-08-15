@@ -46,10 +46,10 @@ SET test_region_mld=%PROJECT_DIR%\test\data\mld\monaco
 SET test_osm=%PROJECT_DIR%\test\data\%test_region%.osm.pbf
 echo Exit Code 1 is %errorlevel%
 %PROJECT_DIR%\build\%CONFIGURATION%\osrm-extract.exe -p %PROJECT_DIR%\profiles\car.lua %test_osm%
-echo Exit Code 2 is %errorlevel%
-@REM IF %ERRORLEVEL% NEQ 0 GOTO ERROR
-dir /s /b
-%PROJECT_DIR%\Release\osrm-extract.exe --version
+@REM echo Exit Code 2 is %errorlevel%
+@REM @REM IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+@REM dir /s /b
+@REM %PROJECT_DIR%\Release\osrm-extract.exe --version
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 @REM ECHO running extractor-tests.exe ...

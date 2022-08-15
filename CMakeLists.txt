@@ -480,7 +480,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   add_dependency_defines(-D_WIN32_WINNT=0x0501)
   add_dependency_defines(-DXML_STATIC)
   find_library(ws2_32_LIBRARY_PATH ws2_32)
- # target_link_libraries(osrm-extract wsock32 ws2_32)
+  target_link_libraries(osrm-extract wsock32 ws2_32)
 endif()
 
 # Configuring linker
@@ -606,7 +606,7 @@ set(BOOST_ENGINE_LIBRARIES
 
 # Binaries
 target_link_libraries(osrm-datastore osrm_store ${Boost_PROGRAM_OPTIONS_LIBRARY})
-#target_link_libraries(osrm-extract osrm_extract ${Boost_PROGRAM_OPTIONS_LIBRARY})
+target_link_libraries(osrm-extract osrm_extract ${Boost_PROGRAM_OPTIONS_LIBRARY})
 target_link_libraries(osrm-partition osrm_partition ${Boost_PROGRAM_OPTIONS_LIBRARY})
 target_link_libraries(osrm-customize osrm_customize ${Boost_PROGRAM_OPTIONS_LIBRARY})
 target_link_libraries(osrm-contract osrm_contract ${Boost_PROGRAM_OPTIONS_LIBRARY})
@@ -713,13 +713,13 @@ endif()
 # Add RPATH info to executables so that when they are run after being installed
 # (i.e., from /usr/local/bin/) the linker can find library dependencies. For
 # more info see http://www.cmake.org/Wiki/CMake_RPATH_handling
-# set_property(TARGET osrm-extract PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
-# set_property(TARGET osrm-partition PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
-# set_property(TARGET osrm-contract PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
-# set_property(TARGET osrm-datastore PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
-# if (BUILD_ROUTED)
-#   set_property(TARGET osrm-routed PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
-# endif()
+set_property(TARGET osrm-extract PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+set_property(TARGET osrm-partition PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+set_property(TARGET osrm-contract PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+set_property(TARGET osrm-datastore PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+if (BUILD_ROUTED)
+  set_property(TARGET osrm-routed PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+endif()
 
 file(GLOB VariantGlob third_party/variant/include/mapbox/*.hpp)
 file(GLOB FlatbuffersGlob third_party/flatbuffers/include/flatbuffers/*.h)
