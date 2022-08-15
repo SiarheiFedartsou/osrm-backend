@@ -202,169 +202,169 @@ std::vector<CompressedNodeBasedGraphEdge> toEdgeList(const util::NodeBasedDynami
 int Extractor::run(ScriptingEnvironment &scripting_environment)
 {
     std::cerr << "Extracting data..." << std::endl;
-//     util::LogPolicy::GetInstance().Unmute();
+    util::LogPolicy::GetInstance().Unmute();
 
-//     const unsigned recommended_num_threads = std::thread::hardware_concurrency();
-//     const auto number_of_threads = std::min(recommended_num_threads, config.requested_num_threads);
+    const unsigned recommended_num_threads = std::thread::hardware_concurrency();
+    const auto number_of_threads = std::min(recommended_num_threads, config.requested_num_threads);
 
-// #if TBB_VERSION_MAJOR == 2020
-//     tbb::global_control gc(tbb::global_control::max_allowed_parallelism,
-//                            config.requested_num_threads);
-// #else
-//     tbb::task_scheduler_init init(config.requested_num_threads);
-//     BOOST_ASSERT(init.is_active());
-// #endif
+#if TBB_VERSION_MAJOR == 2020
+    tbb::global_control gc(tbb::global_control::max_allowed_parallelism,
+                           config.requested_num_threads);
+#else
+    tbb::task_scheduler_init init(config.requested_num_threads);
+    BOOST_ASSERT(init.is_active());
+#endif
 
-//     LaneDescriptionMap turn_lane_map;
-//     std::vector<TurnRestriction> turn_restrictions;
-//     std::vector<UnresolvedManeuverOverride> unresolved_maneuver_overrides;
-//     std::tie(turn_lane_map, turn_restrictions, unresolved_maneuver_overrides) =
-//         ParseOSMData(scripting_environment, number_of_threads);
+    LaneDescriptionMap turn_lane_map;
+    std::vector<TurnRestriction> turn_restrictions;
+    std::vector<UnresolvedManeuverOverride> unresolved_maneuver_overrides;
+    std::tie(turn_lane_map, turn_restrictions, unresolved_maneuver_overrides) =
+        ParseOSMData(scripting_environment, number_of_threads);
 
-//     // Transform the node-based graph that OSM is based on into an edge-based graph
-//     // that is better for routing.  Every edge becomes a node, and every valid
-//     // movement (e.g. turn from A->B, and B->A) becomes an edge
-//     util::Log() << "Generating edge-expanded graph representation";
+    // Transform the node-based graph that OSM is based on into an edge-based graph
+    // that is better for routing.  Every edge becomes a node, and every valid
+    // movement (e.g. turn from A->B, and B->A) becomes an edge
+    util::Log() << "Generating edge-expanded graph representation";
 
-//     TIMER_START(expansion);
+    TIMER_START(expansion);
 
-//     EdgeBasedNodeDataContainer edge_based_nodes_container;
-//     std::vector<EdgeBasedNodeSegment> edge_based_node_segments;
-//     util::DeallocatingVector<EdgeBasedEdge> edge_based_edge_list;
-//     std::vector<EdgeWeight> edge_based_node_weights;
-//     std::vector<EdgeDuration> edge_based_node_durations;
-//     std::vector<EdgeDistance> edge_based_node_distances;
-//     std::uint32_t ebg_connectivity_checksum = 0;
+    EdgeBasedNodeDataContainer edge_based_nodes_container;
+    std::vector<EdgeBasedNodeSegment> edge_based_node_segments;
+    util::DeallocatingVector<EdgeBasedEdge> edge_based_edge_list;
+    std::vector<EdgeWeight> edge_based_node_weights;
+    std::vector<EdgeDuration> edge_based_node_durations;
+    std::vector<EdgeDistance> edge_based_node_distances;
+    std::uint32_t ebg_connectivity_checksum = 0;
 
-//     // Create a node-based graph from the OSRM file
-//     NodeBasedGraphFactory node_based_graph_factory(config.GetPath(".osrm"),
-//                                                    scripting_environment,
-//                                                    turn_restrictions,
-//                                                    unresolved_maneuver_overrides);
+    // Create a node-based graph from the OSRM file
+    NodeBasedGraphFactory node_based_graph_factory(config.GetPath(".osrm"),
+                                                   scripting_environment,
+                                                   turn_restrictions,
+                                                   unresolved_maneuver_overrides);
 
-//     NameTable name_table;
-//     files::readNames(config.GetPath(".osrm.names"), name_table);
+    NameTable name_table;
+    files::readNames(config.GetPath(".osrm.names"), name_table);
 
-//     util::Log() << "Find segregated edges in node-based graph ..." << std::flush;
-//     TIMER_START(segregated);
+    util::Log() << "Find segregated edges in node-based graph ..." << std::flush;
+    TIMER_START(segregated);
 
-//     auto segregated_edges = guidance::findSegregatedNodes(node_based_graph_factory, name_table);
+    auto segregated_edges = guidance::findSegregatedNodes(node_based_graph_factory, name_table);
 
-//     TIMER_STOP(segregated);
-//     util::Log() << "ok, after " << TIMER_SEC(segregated) << "s";
-//     util::Log() << "Segregated edges count = " << segregated_edges.size();
+    TIMER_STOP(segregated);
+    util::Log() << "ok, after " << TIMER_SEC(segregated) << "s";
+    util::Log() << "Segregated edges count = " << segregated_edges.size();
 
-//     util::Log() << "Writing nodes for nodes-based and edges-based graphs ...";
-//     auto const &coordinates = node_based_graph_factory.GetCoordinates();
-//     files::writeNodes(
-//         config.GetPath(".osrm.nbg_nodes"), coordinates, node_based_graph_factory.GetOsmNodes());
-//     node_based_graph_factory.ReleaseOsmNodes();
+    util::Log() << "Writing nodes for nodes-based and edges-based graphs ...";
+    auto const &coordinates = node_based_graph_factory.GetCoordinates();
+    files::writeNodes(
+        config.GetPath(".osrm.nbg_nodes"), coordinates, node_based_graph_factory.GetOsmNodes());
+    node_based_graph_factory.ReleaseOsmNodes();
 
-//     auto const &node_based_graph = node_based_graph_factory.GetGraph();
+    auto const &node_based_graph = node_based_graph_factory.GetGraph();
 
-//     // The osrm-partition tool requires the compressed node based graph with an embedding.
-//     //
-//     // The `Run` function above re-numbers non-reverse compressed node based graph edges
-//     // to a continuous range so that the nodes in the edge based graph are continuous.
-//     //
-//     // Luckily node based node ids still coincide with the coordinate array.
-//     // That's the reason we can only here write out the final compressed node based graph.
-//     files::writeCompressedNodeBasedGraph(config.GetPath(".osrm.cnbg").string(),
-//                                          toEdgeList(node_based_graph));
+    // The osrm-partition tool requires the compressed node based graph with an embedding.
+    //
+    // The `Run` function above re-numbers non-reverse compressed node based graph edges
+    // to a continuous range so that the nodes in the edge based graph are continuous.
+    //
+    // Luckily node based node ids still coincide with the coordinate array.
+    // That's the reason we can only here write out the final compressed node based graph.
+    files::writeCompressedNodeBasedGraph(config.GetPath(".osrm.cnbg").string(),
+                                         toEdgeList(node_based_graph));
 
-//     node_based_graph_factory.GetCompressedEdges().PrintStatistics();
+    node_based_graph_factory.GetCompressedEdges().PrintStatistics();
 
-//     const auto &barrier_nodes = node_based_graph_factory.GetBarriers();
-//     const auto &traffic_signals = node_based_graph_factory.GetTrafficSignals();
-//     // stealing the annotation data from the node-based graph
-//     edge_based_nodes_container =
-//         EdgeBasedNodeDataContainer({}, std::move(node_based_graph_factory.GetAnnotationData()));
+    const auto &barrier_nodes = node_based_graph_factory.GetBarriers();
+    const auto &traffic_signals = node_based_graph_factory.GetTrafficSignals();
+    // stealing the annotation data from the node-based graph
+    edge_based_nodes_container =
+        EdgeBasedNodeDataContainer({}, std::move(node_based_graph_factory.GetAnnotationData()));
 
-//     turn_restrictions = removeInvalidRestrictions(std::move(turn_restrictions), node_based_graph);
-//     auto restriction_graph = constructRestrictionGraph(turn_restrictions);
+    turn_restrictions = removeInvalidRestrictions(std::move(turn_restrictions), node_based_graph);
+    auto restriction_graph = constructRestrictionGraph(turn_restrictions);
 
-//     const auto number_of_node_based_nodes = node_based_graph.GetNumberOfNodes();
+    const auto number_of_node_based_nodes = node_based_graph.GetNumberOfNodes();
 
-//     const auto number_of_edge_based_nodes =
-//         BuildEdgeExpandedGraph(node_based_graph,
-//                                coordinates,
-//                                node_based_graph_factory.GetCompressedEdges(),
-//                                barrier_nodes,
-//                                traffic_signals,
-//                                restriction_graph,
-//                                segregated_edges,
-//                                name_table,
-//                                unresolved_maneuver_overrides,
-//                                turn_lane_map,
-//                                scripting_environment,
-//                                edge_based_nodes_container,
-//                                edge_based_node_segments,
-//                                edge_based_node_weights,
-//                                edge_based_node_durations,
-//                                edge_based_node_distances,
-//                                edge_based_edge_list,
-//                                ebg_connectivity_checksum);
+    const auto number_of_edge_based_nodes =
+        BuildEdgeExpandedGraph(node_based_graph,
+                               coordinates,
+                               node_based_graph_factory.GetCompressedEdges(),
+                               barrier_nodes,
+                               traffic_signals,
+                               restriction_graph,
+                               segregated_edges,
+                               name_table,
+                               unresolved_maneuver_overrides,
+                               turn_lane_map,
+                               scripting_environment,
+                               edge_based_nodes_container,
+                               edge_based_node_segments,
+                               edge_based_node_weights,
+                               edge_based_node_durations,
+                               edge_based_node_distances,
+                               edge_based_edge_list,
+                               ebg_connectivity_checksum);
 
-//     ProcessGuidanceTurns(node_based_graph,
-//                          edge_based_nodes_container,
-//                          coordinates,
-//                          node_based_graph_factory.GetCompressedEdges(),
-//                          barrier_nodes,
-//                          restriction_graph,
-//                          name_table,
-//                          std::move(turn_lane_map),
-//                          scripting_environment);
+    ProcessGuidanceTurns(node_based_graph,
+                         edge_based_nodes_container,
+                         coordinates,
+                         node_based_graph_factory.GetCompressedEdges(),
+                         barrier_nodes,
+                         restriction_graph,
+                         name_table,
+                         std::move(turn_lane_map),
+                         scripting_environment);
 
-//     TIMER_STOP(expansion);
+    TIMER_STOP(expansion);
 
-//     // output the geometry of the node-based graph, needs to be done after the last usage, since it
-//     // destroys internal containers
-//     files::writeSegmentData(config.GetPath(".osrm.geometry"),
-//                             *node_based_graph_factory.GetCompressedEdges().ToSegmentData());
+    // output the geometry of the node-based graph, needs to be done after the last usage, since it
+    // destroys internal containers
+    files::writeSegmentData(config.GetPath(".osrm.geometry"),
+                            *node_based_graph_factory.GetCompressedEdges().ToSegmentData());
 
-//     util::Log() << "Saving edge-based node weights to file.";
-//     TIMER_START(timer_write_node_weights);
-//     extractor::files::writeEdgeBasedNodeWeightsDurationsDistances(config.GetPath(".osrm.enw"),
-//                                                                   edge_based_node_weights,
-//                                                                   edge_based_node_durations,
-//                                                                   edge_based_node_distances);
-//     TIMER_STOP(timer_write_node_weights);
-//     util::Log() << "Done writing. (" << TIMER_SEC(timer_write_node_weights) << ")";
+    util::Log() << "Saving edge-based node weights to file.";
+    TIMER_START(timer_write_node_weights);
+    extractor::files::writeEdgeBasedNodeWeightsDurationsDistances(config.GetPath(".osrm.enw"),
+                                                                  edge_based_node_weights,
+                                                                  edge_based_node_durations,
+                                                                  edge_based_node_distances);
+    TIMER_STOP(timer_write_node_weights);
+    util::Log() << "Done writing. (" << TIMER_SEC(timer_write_node_weights) << ")";
 
-//     util::Log() << "Computing strictly connected components ...";
-//     FindComponents(number_of_edge_based_nodes,
-//                    edge_based_edge_list,
-//                    edge_based_node_segments,
-//                    edge_based_nodes_container);
+    util::Log() << "Computing strictly connected components ...";
+    FindComponents(number_of_edge_based_nodes,
+                   edge_based_edge_list,
+                   edge_based_node_segments,
+                   edge_based_nodes_container);
 
-//     util::Log() << "Building r-tree ...";
-//     TIMER_START(rtree);
-//     BuildRTree(std::move(edge_based_node_segments), coordinates);
+    util::Log() << "Building r-tree ...";
+    TIMER_START(rtree);
+    BuildRTree(std::move(edge_based_node_segments), coordinates);
 
-//     TIMER_STOP(rtree);
+    TIMER_STOP(rtree);
 
-//     files::writeNodeData(config.GetPath(".osrm.ebg_nodes"), edge_based_nodes_container);
+    files::writeNodeData(config.GetPath(".osrm.ebg_nodes"), edge_based_nodes_container);
 
-//     util::Log() << "Writing edge-based-graph edges       ... " << std::flush;
-//     TIMER_START(write_edges);
-//     files::writeEdgeBasedGraph(config.GetPath(".osrm.ebg"),
-//                                number_of_edge_based_nodes,
-//                                edge_based_edge_list,
-//                                ebg_connectivity_checksum);
-//     TIMER_STOP(write_edges);
-//     util::Log() << "ok, after " << TIMER_SEC(write_edges) << "s";
+    util::Log() << "Writing edge-based-graph edges       ... " << std::flush;
+    TIMER_START(write_edges);
+    files::writeEdgeBasedGraph(config.GetPath(".osrm.ebg"),
+                               number_of_edge_based_nodes,
+                               edge_based_edge_list,
+                               ebg_connectivity_checksum);
+    TIMER_STOP(write_edges);
+    util::Log() << "ok, after " << TIMER_SEC(write_edges) << "s";
 
-//     util::Log() << "Processed " << edge_based_edge_list.size() << " edges";
+    util::Log() << "Processed " << edge_based_edge_list.size() << " edges";
 
-//     const auto nodes_per_second =
-//         static_cast<std::uint64_t>(number_of_node_based_nodes / TIMER_SEC(expansion));
-//     const auto edges_per_second =
-//         static_cast<std::uint64_t>((number_of_edge_based_nodes) / TIMER_SEC(expansion));
+    const auto nodes_per_second =
+        static_cast<std::uint64_t>(number_of_node_based_nodes / TIMER_SEC(expansion));
+    const auto edges_per_second =
+        static_cast<std::uint64_t>((number_of_edge_based_nodes) / TIMER_SEC(expansion));
 
-//     util::Log() << "Expansion: " << nodes_per_second << " nodes/sec and " << edges_per_second
-//                 << " edges/sec";
-//     util::Log() << "To prepare the data for routing, run: "
-//                 << "./osrm-contract " << config.GetPath(".osrm");
+    util::Log() << "Expansion: " << nodes_per_second << " nodes/sec and " << edges_per_second
+                << " edges/sec";
+    util::Log() << "To prepare the data for routing, run: "
+                << "./osrm-contract " << config.GetPath(".osrm");
 
     return 0;
 }
