@@ -119,6 +119,7 @@ IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 :ERROR
 ECHO ~~~~~~~~~~~~~~~~~~~~~~ ERROR %~f0 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ECHO ERRORLEVEL^: %ERRORLEVEL%
+net helpmsg %ERRORLEVEL%
 SET EL=%ERRORLEVEL%
 
 :DONE
