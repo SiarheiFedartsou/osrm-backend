@@ -288,7 +288,8 @@ endif()
 
 set_target_properties(UTIL PROPERTIES LINKER_LANGUAGE CXX)
 
-add_executable(osrm-extract src/tools/extract.cpp)
+add_executable(osrm-extract main.cpp)
+#add_executable(osrm-extract src/tools/extract.cpp)
 add_executable(osrm-partition src/tools/partition.cpp)
 add_executable(osrm-customize src/tools/customize.cpp)
 add_executable(osrm-contract src/tools/contract.cpp)
@@ -479,7 +480,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   add_dependency_defines(-D_WIN32_WINNT=0x0501)
   add_dependency_defines(-DXML_STATIC)
   find_library(ws2_32_LIBRARY_PATH ws2_32)
-  target_link_libraries(osrm-extract wsock32 ws2_32)
+ # target_link_libraries(osrm-extract wsock32 ws2_32)
 endif()
 
 # Configuring linker
@@ -605,7 +606,7 @@ set(BOOST_ENGINE_LIBRARIES
 
 # Binaries
 target_link_libraries(osrm-datastore osrm_store ${Boost_PROGRAM_OPTIONS_LIBRARY})
-target_link_libraries(osrm-extract osrm_extract ${Boost_PROGRAM_OPTIONS_LIBRARY})
+#target_link_libraries(osrm-extract osrm_extract ${Boost_PROGRAM_OPTIONS_LIBRARY})
 target_link_libraries(osrm-partition osrm_partition ${Boost_PROGRAM_OPTIONS_LIBRARY})
 target_link_libraries(osrm-customize osrm_customize ${Boost_PROGRAM_OPTIONS_LIBRARY})
 target_link_libraries(osrm-contract osrm_contract ${Boost_PROGRAM_OPTIONS_LIBRARY})
@@ -742,7 +743,7 @@ install(FILES ${ParametersGlob} DESTINATION include/osrm/engine/api)
 install(FILES ${ApiHeader} DESTINATION include/osrm/engine/api)
 install(FILES ${VariantGlob} DESTINATION include/mapbox)
 install(FILES ${FlatbuffersGlob} DESTINATION include/flatbuffers)
-install(TARGETS osrm-extract DESTINATION bin)
+#install(TARGETS osrm-extract DESTINATION bin)
 install(TARGETS osrm-partition DESTINATION bin)
 install(TARGETS osrm-customize DESTINATION bin)
 install(TARGETS osrm-contract DESTINATION bin)
@@ -807,13 +808,13 @@ JOIN("-I${DEPENDENCIES_INCLUDE_DIRS}" " -I" PKGCONFIG_OSRM_INCLUDE_FLAGS)
 # Boost uses imported targets, we need to use a generator expression to extract
 # the link libraries to be written to the pkg-config file.
 # Conan defines dependencies as CMake targets too, that's why we do the same for them.
-# foreach(engine_lib ${ENGINE_LIBRARIES})
-#   if("${engine_lib}" MATCHES "^Boost.*" OR "${engine_lib}" MATCHES "^CONAN_LIB.*")
-#     list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "$<TARGET_LINKER_FILE:${engine_lib}>")
-#   else()
-#     list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "${engine_lib}")
-#   endif()
-# endforeach(engine_lib)
+foreach(engine_lib ${ENGINE_LIBRARIES})
+  if("${engine_lib}" MATCHES "^Boost.*" OR "${engine_lib}" MATCHES "^CONAN_LIB.*")
+    list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "$<TARGET_LINKER_FILE:${engine_lib}>")
+  else()
+    list(APPEND PKGCONFIG_DEPENDENT_LIBRARIES "${engine_lib}")
+  endif()
+endforeach(engine_lib)
 JOIN("${PKGCONFIG_DEPENDENT_LIBRARIES}" " " PKGCONFIG_OSRM_DEPENDENT_LIBRARIES)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/pkgconfig.in pkgconfig.configured @ONLY)
