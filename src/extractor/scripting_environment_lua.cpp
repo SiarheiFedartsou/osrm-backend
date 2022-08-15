@@ -98,7 +98,7 @@ Sol2ScriptingEnvironment::Sol2ScriptingEnvironment(
     const std::vector<boost::filesystem::path> &location_dependent_data_paths)
     : file_name(file_name), location_dependent_data(location_dependent_data_paths)
 {
-   // util::Log() << "Using script " << file_name;
+    util::Log() << "Using script " << file_name;
 }
 
 void Sol2ScriptingEnvironment::InitContext(LuaScriptingContext &context)

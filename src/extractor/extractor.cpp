@@ -199,7 +199,7 @@ std::vector<CompressedNodeBasedGraphEdge> toEdgeList(const util::NodeBasedDynami
  * graph
  *
  */
-int Extractor::run()
+int Extractor::run(ScriptingEnvironment &scripting_environment)
 {
     std::cerr << "Extracting data..." << std::endl;
 //     util::LogPolicy::GetInstance().Unmute();

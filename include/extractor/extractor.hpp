@@ -57,7 +57,7 @@ class Extractor
 {
   public:
     Extractor(ExtractorConfig extractor_config) : config(std::move(extractor_config)) {}
-    int run();
+    int run(ScriptingEnvironment &scripting_environment);
 
   private:
     ExtractorConfig config;
