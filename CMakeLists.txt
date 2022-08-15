@@ -712,13 +712,13 @@ endif()
 # Add RPATH info to executables so that when they are run after being installed
 # (i.e., from /usr/local/bin/) the linker can find library dependencies. For
 # more info see http://www.cmake.org/Wiki/CMake_RPATH_handling
-set_property(TARGET osrm-extract PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
-set_property(TARGET osrm-partition PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
-set_property(TARGET osrm-contract PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
-set_property(TARGET osrm-datastore PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
-if (BUILD_ROUTED)
-  set_property(TARGET osrm-routed PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
-endif()
+# set_property(TARGET osrm-extract PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+# set_property(TARGET osrm-partition PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+# set_property(TARGET osrm-contract PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+# set_property(TARGET osrm-datastore PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+# if (BUILD_ROUTED)
+#   set_property(TARGET osrm-routed PROPERTY INSTALL_RPATH_USE_LINK_PATH TRUE)
+# endif()
 
 file(GLOB VariantGlob third_party/variant/include/mapbox/*.hpp)
 file(GLOB FlatbuffersGlob third_party/flatbuffers/include/flatbuffers/*.h)
