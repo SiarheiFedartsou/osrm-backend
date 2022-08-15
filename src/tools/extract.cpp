@@ -185,8 +185,8 @@ try
         return EXIT_FAILURE;
     }
 
-    // std::cout << "extract s\n";
-    // osrm::extract(extractor_config);
+    std::cout << "extract s\n";
+    osrm::extract(extractor_config);
 
     // std::cout << "extract e\n";
     // util::DumpMemoryStats();
