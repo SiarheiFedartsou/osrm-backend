@@ -478,8 +478,7 @@ if(ENABLE_CONAN)
     GENERATORS cmake_find_package
     KEEP_RPATHS
     NO_OUTPUT_DIRS
-    OPTIONS tbb:tbbmalloc=True
-            tbb:tbbproxy=True
+    OPTIONS tbb:shared=False
   )
 
   add_dependency_includes(${CONAN_INCLUDE_DIRS_BOOST})
