@@ -24,13 +24,13 @@ jobs:
     runs-on: windows-2022
     steps:
     - uses: actions/checkout@v3
-    - name: Enable Conan cache
-      uses: actions/cache@v2
-      with:
-        path: C:\Users\runneradmin\.conan\
-        key: conan-${{ matrix.name }}-${{ github.sha }}
-        restore-keys: |
-          conan-${{ matrix.name }}-
+    # - name: Enable Conan cache
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: C:\Users\runneradmin\.conan\
+    #     key: conan-${{ matrix.name }}-${{ github.sha }}
+    #     restore-keys: |
+    #       conan-${{ matrix.name }}-
     - run: pip install conan==1.50.0
     - run: conan --version
     - run: cmake --version

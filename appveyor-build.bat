@@ -73,8 +73,27 @@ SET test_region_ch=%PROJECT_DIR%\test\data\ch\monaco
 SET test_region_corech=%PROJECT_DIR%\test\data\corech\monaco
 SET test_region_mld=%PROJECT_DIR%\test\data\mld\monaco
 SET test_osm=%PROJECT_DIR%\test\data\%test_region%.osm.pbf
-%PROJECT_DIR%\build\%CONFIGURATION%\osrm-extract.exe -p %PROJECT_DIR%\profiles\car.lua %test_osm%
+%CONFIGURATION%\osrm-extract.exe -p %PROJECT_DIR%\profiles\car.lua %test_osm%
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+
+MKDIR ch
+XCOPY %test_region%.osrm.* ch\
+XCOPY %test_region%.osrm ch\
+MKDIR corech
+XCOPY %test_region%.osrm.* corech\
+XCOPY %test_region%.osrm corech\
+MKDIR mld
+XCOPY %test_region%.osrm.* mld\
+XCOPY %test_region%.osrm mld\
+%CONFIGURATION%\osrm-contract.exe %test_region_ch%.osrm
+%CONFIGURATION%\osrm-contract.exe --core 0.8 %test_region_corech%.osrm
+%CONFIGURATION%\osrm-partition.exe %test_region_mld%.osrm
+%CONFIGURATION%\osrm-customize.exe %test_region_mld%.osrm
+XCOPY /Y ch\*.* ..\test\data\ch\
+XCOPY /Y corech\*.* ..\test\data\corech\
+XCOPY /Y mld\*.* ..\test\data\mld\
+unit_tests\%CONFIGURATION%\library-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
 
 @REM ECHO running extractor-tests.exe ...
 @REM unit_tests\%CONFIGURATION%\extractor-tests.exe
@@ -143,7 +162,6 @@ IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 :ERROR
 ECHO ~~~~~~~~~~~~~~~~~~~~~~ ERROR %~f0 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ECHO ERRORLEVEL^: %ERRORLEVEL%
-net helpmsg %ERRORLEVEL%
 SET EL=%ERRORLEVEL%
 
 :DONE
