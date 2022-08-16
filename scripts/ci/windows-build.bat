@@ -46,27 +46,27 @@ IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 ECHO running contractor-tests.exe ...
 unit_tests\%CONFIGURATION%\contractor-tests.exe
-IF %ERRORLEVEL% EQU 1 GOTO ERROR
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 ECHO running engine-tests.exe ...
 unit_tests\%CONFIGURATION%\engine-tests.exe
-IF %ERRORLEVEL% EQU 1 GOTO ERROR
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 ECHO running util-tests.exe ...
 unit_tests\%CONFIGURATION%\util-tests.exe
-IF %ERRORLEVEL% EQU 1 GOTO ERROR
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 ECHO running server-tests.exe ...
 unit_tests\%CONFIGURATION%\server-tests.exe
-IF %ERRORLEVEL% EQU 1 GOTO ERROR
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 ECHO running partitioner-tests.exe ...
 unit_tests\%CONFIGURATION%\partitioner-tests.exe
-IF %ERRORLEVEL% EQU 1 GOTO ERROR
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 ECHO running customizer-tests.exe ...
 unit_tests\%CONFIGURATION%\customizer-tests.exe
-IF %ERRORLEVEL% EQU 1 GOTO ERROR
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 SET test_region=monaco
 SET test_region_ch=ch\monaco
@@ -94,7 +94,7 @@ XCOPY /Y ch\*.* ..\test\data\ch\
 XCOPY /Y corech\*.* ..\test\data\corech\
 XCOPY /Y mld\*.* ..\test\data\mld\
 unit_tests\%CONFIGURATION%\library-tests.exe
-IF %ERRORLEVEL% EQU 1 GOTO ERROR
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 :ERROR
 ECHO ~~~~~~~~~~~~~~~~~~~~~~ ERROR %~f0 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
