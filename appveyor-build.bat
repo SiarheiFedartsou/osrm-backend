@@ -8,7 +8,7 @@ SET PROJECT_DIR=%CD%
 SET CONFIGURATION=Release
 
 SET PATH=C:\Program Files (x86)\MSBuild\15.0\Bin;%PATH%
-CALL "C:\Program Files\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+CALL "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
 CALL "C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe" -latest -prerelease -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
 ECHO cl.exe version
 cl
@@ -19,7 +19,7 @@ mkdir build
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 cd build
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
-cmake -DENABLE_CONAN=ON -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_TOOLS=ON -G "Visual Studio 16 2019" ..
+cmake -DENABLE_CONAN=ON -DCMAKE_BUILD_TYPE=%CONFIGURATION% -DBUILD_TOOLS=ON -G "Visual Studio 17 2022" ..
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 msbuild OSRM.sln ^
@@ -29,7 +29,6 @@ msbuild OSRM.sln ^
 /p:BuildInParallel=true ^
 /m:%NUMBER_OF_PROCESSORS% ^
 /toolsversion:Current ^
-/p:PlatformToolset=v142 ^
 /clp:Verbosity=normal ^
 /nologo
 
