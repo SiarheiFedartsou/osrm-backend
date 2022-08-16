@@ -451,6 +451,7 @@ add_subdirectory(${FLATBUFFERS_SRC_DIR}
 if(ENABLE_CONAN)
   add_definitions(-DBOOST_ALL_NO_LIB)
   add_definitions(-D__TBB_NO_IMPLICIT_LINKAGE=1)
+  add_definitions(-D__TBB_DYNAMIC_LOAD_ENABLED=0)
   message(STATUS "Installing dependencies via Conan")
 
   # Conan will generate Find*.cmake files to build directory, so we use them with the highest priority 
@@ -478,7 +479,7 @@ if(ENABLE_CONAN)
     GENERATORS cmake_find_package
     KEEP_RPATHS
     NO_OUTPUT_DIRS
-    OPTIONS tbb:shared=False
+    #OPTIONS tbb:shared=False
   )
 
   add_dependency_includes(${CONAN_INCLUDE_DIRS_BOOST})
