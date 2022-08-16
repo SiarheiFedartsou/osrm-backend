@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.20)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
@@ -467,6 +467,13 @@ if(ENABLE_CONAN)
   set(CONAN_TBB_VERSION 2020.3)
   
   set(CONAN_SYSTEM_INCLUDES ON)
+  
+  if (MSVC)
+    set(TBB_SHARED False)
+  else()
+    set(TBB_SHARED True)
+  endif()
+
   conan_cmake_run(
     REQUIRES 
     boost/${CONAN_BOOST_VERSION}
@@ -479,7 +486,7 @@ if(ENABLE_CONAN)
     GENERATORS cmake_find_package
     KEEP_RPATHS
     NO_OUTPUT_DIRS
-    OPTIONS tbb:shared=$<IF:MSVC,False,True>
+    OPTIONS tbb:shared=${TBB_SHARED}
   )
 
   add_dependency_includes(${CONAN_INCLUDE_DIRS_BOOST})
