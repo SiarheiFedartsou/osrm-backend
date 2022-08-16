@@ -21,10 +21,12 @@
 #include "util/lua_util.hpp"
 #include "util/typedefs.hpp"
 
+#include <cstdlib>
 #include <osmium/osm.hpp>
 
 #include <memory>
 #include <sstream>
+#include <thread>
 
 namespace sol
 {
@@ -852,15 +854,15 @@ const ProfileProperties &Sol2ScriptingEnvironment::GetProfileProperties()
 LuaScriptingContext &Sol2ScriptingEnvironment::GetSol2Context()
 {
     std::lock_guard<std::mutex> lock(init_mutex);
-    bool initialized = false;
-    auto &ref = script_contexts.local(initialized);
-    if (!initialized)
+    auto itr = script_contexts.find(std::this_thread::get_id());
+    if (itr == script_contexts.end())
     {
-        ref = std::make_unique<LuaScriptingContext>(location_dependent_data);
-        InitContext(*ref);
+        auto context = std::make_unique<LuaScriptingContext>(location_dependent_data);
+        InitContext(*context);
+        script_contexts[std::this_thread::get_id()] = std::move(context);
+        return *script_contexts[std::this_thread::get_id()];
     }
-
-    return *ref;
+    return *itr->second;
 }
 
 void Sol2ScriptingEnvironment::ProcessElements(

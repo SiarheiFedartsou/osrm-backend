@@ -13,6 +13,7 @@
 #include <thread>
 
 #include "util/meminfo.hpp"
+#include <iostream>
 
 using namespace osrm;
 
@@ -144,12 +145,12 @@ return_code parseArguments(int argc,
 int main(int argc, char *argv[])
 try
 {
+    std::cout << "XXXstartXXX" << std::endl;
     util::LogPolicy::GetInstance().Unmute();
     extractor::ExtractorConfig extractor_config;
     std::string verbosity;
 
     const auto result = parseArguments(argc, argv, verbosity, extractor_config);
-
     if (return_code::fail == result)
     {
         return EXIT_FAILURE;
@@ -184,26 +185,32 @@ try
         return EXIT_FAILURE;
     }
 
+    std::cout << "extract s\n";
     osrm::extract(extractor_config);
 
-    util::DumpMemoryStats();
+    // std::cout << "extract e\n";
+    // util::DumpMemoryStats();
 
+    // std::cout << "extract e2\n";
     return EXIT_SUCCESS;
 }
 catch (const osrm::RuntimeError &e)
 {
+    std::cout << "extract e3\n";
     util::DumpMemoryStats();
     util::Log(logERROR) << e.what();
     return e.GetCode();
 }
 catch (const std::system_error &e)
 {
+    std::cout << "extract e4\n";
     util::DumpMemoryStats();
     util::Log(logERROR) << e.what();
     return e.code().value();
 }
 catch (const std::bad_alloc &e)
 {
+    std::cout << "extract e5\n";
     util::DumpMemoryStats();
     util::Log(logERROR) << "[exception] " << e.what();
     util::Log(logERROR) << "Please provide more memory or consider using a larger swapfile";
@@ -212,6 +219,7 @@ catch (const std::bad_alloc &e)
 #ifdef _WIN32
 catch (const std::exception &e)
 {
+    std::cout << "extract e6\n";
     util::Log(logERROR) << "[exception] " << e.what() << std::endl;
     return EXIT_FAILURE;
 }

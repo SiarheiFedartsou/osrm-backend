@@ -87,12 +87,14 @@ endif()
 # include_directories and add_definitions for both
 # this build and for sharing externally via pkg-config
 
+
 function(add_dependency_includes)
   if(${ARGC} GREATER 0)
     list(APPEND DEPENDENCIES_INCLUDE_DIRS "${ARGV}")
     set(DEPENDENCIES_INCLUDE_DIRS "${DEPENDENCIES_INCLUDE_DIRS}" PARENT_SCOPE)
   endif()
 endfunction(add_dependency_includes)
+
 
 function(add_dependency_defines defines)
   list(APPEND OSRM_DEFINES "${defines}")
@@ -356,7 +358,6 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Intel")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-intel -wd10237 -Wall -ipo -fPIC")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # using Visual Studio C++
-  set(BOOST_COMPONENTS ${BOOST_COMPONENTS} zlib)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj") # avoid compiler error C1128 from scripting_environment_lua.cpp
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DWIN32_LEAN_AND_MEAN") # avoid compiler error C2011 from dual #include of winsock.h and winsock2.h
   add_dependency_defines(-DBOOST_LIB_DIAGNOSTIC)
@@ -446,14 +447,18 @@ add_subdirectory(${FLATBUFFERS_SRC_DIR}
         ${CMAKE_CURRENT_BINARY_DIR}/flatbuffers-build
         EXCLUDE_FROM_ALL)
 
+if (MSVC)
+add_definitions(-DBOOST_ALL_NO_LIB)
+endif()
+
 if(ENABLE_CONAN)
   message(STATUS "Installing dependencies via Conan")
 
   # Conan will generate Find*.cmake files to build directory, so we use them with the highest priority 
   list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_BINARY_DIR})
   list(INSERT CMAKE_PREFIX_PATH 0 ${CMAKE_BINARY_DIR})
-
   include(${CMAKE_CURRENT_LIST_DIR}/cmake/conan.cmake)
+  
 
   set(CONAN_BOOST_VERSION 1.79.0)
   set(CONAN_BZIP2_VERSION 1.0.8)
@@ -462,6 +467,13 @@ if(ENABLE_CONAN)
   set(CONAN_TBB_VERSION 2020.3)
   
   set(CONAN_SYSTEM_INCLUDES ON)
+  
+  if (MSVC)
+    set(TBB_SHARED False)
+  else()
+    set(TBB_SHARED True)
+  endif()
+
   conan_cmake_run(
     REQUIRES 
     boost/${CONAN_BOOST_VERSION}
@@ -474,6 +486,7 @@ if(ENABLE_CONAN)
     GENERATORS cmake_find_package
     KEEP_RPATHS
     NO_OUTPUT_DIRS
+    OPTIONS tbb:shared=${TBB_SHARED}
   )
 
   add_dependency_includes(${CONAN_INCLUDE_DIRS_BOOST})
@@ -495,6 +508,7 @@ if(ENABLE_CONAN)
   set(Boost_REGEX_LIBRARY "${Boost_regex_LIB_TARGETS}")
   set(Boost_UNIT_TEST_FRAMEWORK_LIBRARY "${Boost_unit_test_framework_LIB_TARGETS}")
   
+
   find_package(BZip2 REQUIRED)
   find_package(EXPAT REQUIRED)
   find_package(lua REQUIRED)
@@ -553,6 +567,7 @@ else()
   find_package(Osmium REQUIRED COMPONENTS io)
   include_directories(SYSTEM ${OSMIUM_INCLUDE_DIR})
 endif()
+       
 
 # prefix compilation with ccache by default if available and on clang or gcc
 if(ENABLE_CCACHE AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU"))
