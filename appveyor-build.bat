@@ -31,7 +31,6 @@ msbuild OSRM.sln ^
 /toolsversion:Current ^
 /clp:Verbosity=normal ^
 /nologo
-
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 dir C:\Users\runneradmin\.conan\
@@ -41,17 +40,40 @@ SET PATH=C:\Users\runneradmin\.conan\data\tbb\2020.3\_\_\package\e9a552ebe8f9943
 CD %PROJECT_DIR%\build
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
+ECHO running extractor-tests.exe ...
+unit_tests\%CONFIGURATION%\extractor-tests.exe
+IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+
+ECHO running contractor-tests.exe ...
+unit_tests\%CONFIGURATION%\contractor-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+ECHO running engine-tests.exe ...
+unit_tests\%CONFIGURATION%\engine-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+ECHO running util-tests.exe ...
+unit_tests\%CONFIGURATION%\util-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+ECHO running server-tests.exe ...
+unit_tests\%CONFIGURATION%\server-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+ECHO running partitioner-tests.exe ...
+unit_tests\%CONFIGURATION%\partitioner-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
+ECHO running customizer-tests.exe ...
+unit_tests\%CONFIGURATION%\customizer-tests.exe
+IF %ERRORLEVEL% EQU 1 GOTO ERROR
+
 SET test_region=monaco
 SET test_region_ch=%PROJECT_DIR%\test\data\ch\monaco
 SET test_region_corech=%PROJECT_DIR%\test\data\corech\monaco
 SET test_region_mld=%PROJECT_DIR%\test\data\mld\monaco
 SET test_osm=%PROJECT_DIR%\test\data\%test_region%.osm.pbf
-echo Exit Code 1 is %errorlevel%
-%PROJECT_DIR%\build\%CONFIGURATION%\osrm-extract.exe -p %PROJECT_DIR%\profiles\car.lua %test_osm% 2>&1
-@REM echo Exit Code 2 is %errorlevel%
-@REM @REM IF %ERRORLEVEL% NEQ 0 GOTO ERROR
-@REM dir /s /b
-@REM %PROJECT_DIR%\Release\osrm-extract.exe --version
+%PROJECT_DIR%\build\%CONFIGURATION%\osrm-extract.exe -p %PROJECT_DIR%\profiles\car.lua %test_osm%
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 @REM ECHO running extractor-tests.exe ...
