@@ -449,6 +449,9 @@ add_subdirectory(${FLATBUFFERS_SRC_DIR}
 if(ENABLE_CONAN)
   message(STATUS "Installing dependencies via Conan")
 
+  add_definitions(-DBOOST_ALL_NO_LIB)
+  add_definitions(-D__TBB_NO_IMPLICIT_LINKAGE=1)
+
   # Conan will generate Find*.cmake files to build directory, so we use them with the highest priority 
   list(INSERT CMAKE_MODULE_PATH 0 ${CMAKE_BINARY_DIR})
   list(INSERT CMAKE_PREFIX_PATH 0 ${CMAKE_BINARY_DIR})
