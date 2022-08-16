@@ -450,7 +450,7 @@ add_subdirectory(${FLATBUFFERS_SRC_DIR}
 
 if(ENABLE_CONAN)
   add_definitions(-DBOOST_ALL_NO_LIB)
-  add_definitions(-D__TBB_NO_IMPLICIT_LINKAGE)
+  add_definitions(-D__TBB_NO_IMPLICIT_LINKAGE=1)
   message(STATUS "Installing dependencies via Conan")
 
   # Conan will generate Find*.cmake files to build directory, so we use them with the highest priority 
@@ -463,7 +463,7 @@ if(ENABLE_CONAN)
   set(CONAN_BZIP2_VERSION 1.0.8)
   set(CONAN_EXPAT_VERSION 2.2.10)
   set(CONAN_LUA_VERSION 5.4.4)
-  set(CONAN_TBB_VERSION 2019_u9)
+  set(CONAN_TBB_VERSION 2020.3)
   
   set(CONAN_SYSTEM_INCLUDES ON)
   conan_cmake_run(
