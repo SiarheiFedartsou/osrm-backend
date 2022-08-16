@@ -34,6 +34,9 @@ msbuild OSRM.sln ^
 
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
+dir C:\Users\runneradmin\.conan\
+dir C:\Users\runneradmin\.conan\data\tbb\2020.3\_\_\package\e9a552ebe8f994398de9ceee972f0ad207df0658\lib\
+SET PATH=C:\Users\runneradmin\.conan\data\tbb\2020.3\_\_\package\e9a552ebe8f994398de9ceee972f0ad207df0658\lib\;%PATH%
 
 CD %PROJECT_DIR%\build
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
