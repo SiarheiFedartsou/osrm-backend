@@ -7,13 +7,13 @@ ECHO NUMBER_OF_PROCESSORS^: %NUMBER_OF_PROCESSORS%
 SET PROJECT_DIR=%CD%
 SET CONFIGURATION=Release
 
-SET PATH=C:\Program Files (x86)\MSBuild\15.0\Bin;%PATH%
-CALL "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
-CALL "C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe" -latest -prerelease -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
-ECHO cl.exe version
-cl
-ECHO msbuild version
-msbuild /version
+@REM SET PATH=C:\Program Files (x86)\MSBuild\15.0\Bin;%PATH%
+@REM CALL "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+@REM CALL "C:\Program Files\Microsoft Visual Studio\Installer\vswhere.exe" -latest -prerelease -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
+@REM ECHO cl.exe version
+@REM cl
+@REM ECHO msbuild version
+@REM msbuild /version
 
 mkdir build
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
