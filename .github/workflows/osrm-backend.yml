@@ -66,7 +66,7 @@ jobs:
           docker run -t -v "${PWD}:/data" osrm-backend-local osrm-customize /data/berlin-latest.osrm
           docker run -t -i -p 5000:5000 -v "${PWD}:/data" osrm/osrm-backend osrm-routed --algorithm mld /data/berlin-latest.osrm &
           PID=$!
-          curl "http://127.0.0.1:5000/route/v1/driving/13.388860,52.517037;13.385983,52.496891?steps=true"
+          curl --max-time 5 --retry 10 \ "http://127.0.0.1:5000/route/v1/driving/13.388860,52.517037;13.385983,52.496891?steps=true"
           kill $PID
 
   # build-test-publish:
