@@ -174,7 +174,7 @@ int main(int argc, char *argv[])
                 BOOST_ASSERT(source != SPECIAL_NODEID);
                 BOOST_ASSERT(target != SPECIAL_NODEID);
 
-                total_network_length += 100 * util::coordinate_calculation::greatCircleDistance(
+                total_network_length += 100 * util::coordinate_calculation::fccApproximateDistance(
                                                   coordinate_list[source], coordinate_list[target]);
 
                 auto source_component_id = tarjan.GetComponentID(source);

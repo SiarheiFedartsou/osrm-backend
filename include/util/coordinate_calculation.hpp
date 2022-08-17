@@ -48,8 +48,6 @@ double fccApproximateDistance(const Coordinate first_coordinate,
 
 double haversineDistance(const Coordinate first_coordinate, const Coordinate second_coordinate);
 
-double greatCircleDistance(const Coordinate first_coordinate, const Coordinate second_coordinate);
-
 // get the length of a full coordinate vector, using one of our basic functions to compute distances
 template <class BinaryOperation, typename iterator_type>
 double getLength(iterator_type begin, const iterator_type end, BinaryOperation op);

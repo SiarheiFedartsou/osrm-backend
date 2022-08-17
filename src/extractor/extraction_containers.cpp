@@ -429,7 +429,7 @@ void ExtractionContainers::PrepareEdges(ScriptingEnvironment &scripting_environm
                 std::swap(source_coord, target_coord);
 
             const auto distance =
-                util::coordinate_calculation::greatCircleDistance(source_coord, target_coord);
+                util::coordinate_calculation::fccApproximateDistance(source_coord, target_coord);
             const auto weight = edge_iterator->weight_data(distance);
             const auto duration = edge_iterator->duration_data(distance);
 

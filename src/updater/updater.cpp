@@ -219,7 +219,7 @@ updateSegmentData(const UpdaterConfig &config,
             segment_lengths.clear();
             segment_lengths.reserve(nodes_range.size() + 1);
             util::for_each_pair(nodes_range, [&](const auto &u, const auto &v) {
-                segment_lengths.push_back(util::coordinate_calculation::greatCircleDistance(
+                segment_lengths.push_back(util::coordinate_calculation::fccApproximateDistance(
                     coordinates[u], coordinates[v]));
             });
 

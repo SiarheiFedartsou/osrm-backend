@@ -78,7 +78,7 @@ std::uint64_t squaredEuclideanDistance(const Coordinate lhs, const Coordinate rh
 // Should be more faster and more precise than Haversine
 double fccApproximateDistance(const Coordinate coordinate_1, const Coordinate coordinate_2)
 {
-    const auto lon1 = static_cast<double>(util::toFloating(coordinate_1.lon));
+const auto lon1 = static_cast<double>(util::toFloating(coordinate_1.lon));
     const auto lat1 = static_cast<double>(util::toFloating(coordinate_1.lat));
     const auto lon2 = static_cast<double>(util::toFloating(coordinate_2.lon));
     const auto lat2 = static_cast<double>(util::toFloating(coordinate_2.lat));
@@ -88,52 +88,7 @@ double fccApproximateDistance(const Coordinate coordinate_1, const Coordinate co
 
 double haversineDistance(const Coordinate coordinate_1, const Coordinate coordinate_2)
 {
-    auto lon1 = static_cast<int>(coordinate_1.lon);
-    auto lat1 = static_cast<int>(coordinate_1.lat);
-    auto lon2 = static_cast<int>(coordinate_2.lon);
-    auto lat2 = static_cast<int>(coordinate_2.lat);
-    BOOST_ASSERT(lon1 != std::numeric_limits<int>::min());
-    BOOST_ASSERT(lat1 != std::numeric_limits<int>::min());
-    BOOST_ASSERT(lon2 != std::numeric_limits<int>::min());
-    BOOST_ASSERT(lat2 != std::numeric_limits<int>::min());
-    const double lt1 = lat1 / COORDINATE_PRECISION;
-    const double ln1 = lon1 / COORDINATE_PRECISION;
-    const double lt2 = lat2 / COORDINATE_PRECISION;
-    const double ln2 = lon2 / COORDINATE_PRECISION;
-
-    const double dlat1 = lt1 * detail::DEGREE_TO_RAD;
-    const double dlong1 = ln1 * detail::DEGREE_TO_RAD;
-    const double dlat2 = lt2 * detail::DEGREE_TO_RAD;
-    const double dlong2 = ln2 * detail::DEGREE_TO_RAD;
-
-    const double dlong = dlong1 - dlong2;
-    const double dlat = dlat1 - dlat2;
-
-    const double aharv = std::pow(std::sin(dlat / 2.0), 2.0) +
-                         std::cos(dlat1) * std::cos(dlat2) * std::pow(std::sin(dlong / 2.), 2);
-    const double charv = 2. * std::atan2(std::sqrt(aharv), std::sqrt(1.0 - aharv));
-    return detail::EARTH_RADIUS * charv;
-}
-
-double greatCircleDistance(const Coordinate coordinate_1, const Coordinate coordinate_2)
-{
-    auto lon1 = static_cast<int>(coordinate_1.lon);
-    auto lat1 = static_cast<int>(coordinate_1.lat);
-    auto lon2 = static_cast<int>(coordinate_2.lon);
-    auto lat2 = static_cast<int>(coordinate_2.lat);
-    BOOST_ASSERT(lat1 != std::numeric_limits<int>::min());
-    BOOST_ASSERT(lon1 != std::numeric_limits<int>::min());
-    BOOST_ASSERT(lat2 != std::numeric_limits<int>::min());
-    BOOST_ASSERT(lon2 != std::numeric_limits<int>::min());
-
-    const double float_lat1 = (lat1 / COORDINATE_PRECISION) * detail::DEGREE_TO_RAD;
-    const double float_lon1 = (lon1 / COORDINATE_PRECISION) * detail::DEGREE_TO_RAD;
-    const double float_lat2 = (lat2 / COORDINATE_PRECISION) * detail::DEGREE_TO_RAD;
-    const double float_lon2 = (lon2 / COORDINATE_PRECISION) * detail::DEGREE_TO_RAD;
-
-    const double x_value = (float_lon2 - float_lon1) * std::cos((float_lat1 + float_lat2) / 2.0);
-    const double y_value = float_lat2 - float_lat1;
-    return std::hypot(x_value, y_value) * detail::EARTH_RADIUS;
+    return fccApproximateDistance(coordinate_1, coordinate_2);
 }
 
 double perpendicularDistance(const Coordinate segment_source,
