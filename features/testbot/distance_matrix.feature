@@ -706,7 +706,7 @@ Feature: Basic Distance Matrix
         Given the node map
             """
             a   b   c   d   e   f   g   h  i  j
-                  1                   2
+                  1                   2       3
             """
 
         And the ways
@@ -716,10 +716,13 @@ Feature: Basic Distance Matrix
 
         When I route I should get
             | from | to | route              | distance |
-            | 1    | 2  | abcdef,fghij,fghij | 999.9m  |
+            | 1    | 2  | abcdef,fghij,fghij | 1000.7m  |
+            | 1    | 3  | abcdef,fghij,fghij | 1401m    |
+            | 2    | 3  | fghij,fghij        | 400.3m   |
+            
 
-        # TODO: this is "correct", but inconsistent with viaroute
         When I request a travel distance matrix I should get
-            |   |   1    | 2      |
-            | 1 |   0    | 1000.7 |
-            | 2 | 1000.7 | 0      |
+            |   |   1    | 2      | 3      |   
+            | 1 |   0    | 1000.7 | 1401   |
+            | 2 | 1000.7 | 0      | 400.3  |
+            | 3 | 1401   | 400.3  | 0      |
