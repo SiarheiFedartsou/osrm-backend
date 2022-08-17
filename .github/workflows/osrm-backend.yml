@@ -28,13 +28,13 @@ jobs:
   #     uses: actions/setup-node@v2
   #     with:
   #       node-version: 12
-  #   - name: Enable Node.js cache
-  #     uses: actions/cache@v2
-  #     with:
-  #       path: ~/.npm
-  #       key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-  #       restore-keys: |
-  #         ${{ runner.os }}-node-
+    # - name: Enable Node.js cache
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: ~/.npm
+    #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-node-
   #   - name: Prepare environment
   #     run: |
   #       npm ci --ignore-scripts
@@ -55,18 +55,27 @@ jobs:
     steps:       
       - name: Check out the repo
         uses: actions/checkout@v3
+      - name: Enable osm.pbf cache
+        uses: actions/cache@v2
+        with:
+          path: berlin-latest.osm.pbf
+          key: v1-berlin-osm-pbf
+          restore-keys: |
+            v1-berlin-osm-pbf
       - name: Docker build
         run: |
           docker build -t osrm-backend-local -f docker/Dockerfile . 
       - name: Test Docker image
         run: |
-          wget http://download.geofabrik.de/europe/germany/berlin-latest.osm.pbf
+          if [ ! -f "${PWD}/berlin-latest.osm.pbf" ]; then
+            wget http://download.geofabrik.de/europe/germany/berlin-latest.osm.pbf
+          fi
           docker run -t -v "${PWD}:/data" osrm-backend-local osrm-extract -p /opt/car.lua /data/berlin-latest.osm.pbf
           docker run -t -v "${PWD}:/data" osrm-backend-local osrm-partition /data/berlin-latest.osrm
           docker run -t -v "${PWD}:/data" osrm-backend-local osrm-customize /data/berlin-latest.osrm
           docker run -t -i -p 5000:5000 -v "${PWD}:/data" osrm/osrm-backend osrm-routed --algorithm mld /data/berlin-latest.osrm &
           PID=$!
-          curl --max-time 5 --retry 10 \ "http://127.0.0.1:5000/route/v1/driving/13.388860,52.517037;13.385983,52.496891?steps=true"
+          curl --max-time 5 --retry 10 "http://127.0.0.1:5000/route/v1/driving/13.388860,52.517037;13.385983,52.496891?steps=true"
           kill $PID
 
   # build-test-publish:
