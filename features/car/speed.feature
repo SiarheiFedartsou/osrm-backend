@@ -10,19 +10,19 @@ Feature: Car - speeds
         Then routability should be
             | highway        | oneway | bothw   |
             | motorway       | no     | 90 km/h |
-            | motorway_link  | no     | 44 km/h |
+            | motorway_link  | no     | 45 km/h |
             | trunk          | no     | 84 km/h |
-            | trunk_link     | no     | 39 km/h |
-            | primary        | no     | 65 km/h |
-            | primary_link   | no     | 29 km/h |
+            | trunk_link     | no     | 40 km/h |
+            | primary        | no     | 64 km/h |
+            | primary_link   | no     | 30 km/h |
             | secondary      | no     | 55 km/h |
             | secondary_link | no     | 25 km/h |
-            | tertiary       | no     | 39 km/h |
+            | tertiary       | no     | 40 km/h |
             | tertiary_link  | no     | 20 km/h |
             | unclassified   | no     | 25 km/h |
             | residential    | no     | 25 km/h |
             | living_street  | no     | 10 km/h  |
-            | service        | no     | 14 km/h |
+            | service        | no     | 15 km/h |
 
     # Alternating oneways scale rates but not speeds
     Scenario: Car - scaled speeds for oneway=alternating

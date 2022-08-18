@@ -712,12 +712,12 @@ Feature: Basic Map Matching
           | overview  | full |
           | steps     | true |
         When I match I should get
-          | trace | geometry                                   | turns                    | code |
-          | abc   | 1,0.99973,1.00027,0.99973,1.000539,0.99973 | depart,arrive            | Ok   |
-          | abd   | 1,0.99973,1.00027,0.99973,1.00027,0.999461 | depart,turn right,arrive | Ok   |
-          | abe   | 1,0.99973,1.00027,0.99973,1.00027,1        | depart,turn left,arrive  | Ok   |
-          | ahd   | 1,0.99973,1.00027,0.99973,1.00027,0.999461 | depart,turn right,arrive | Ok   |
-          | ahe   | 1,0.99973,1.00027,0.99973,1.00027,1        | depart,turn left,arrive  | Ok   |
+          | trace | geometry                                       | turns                    | code |
+          | abc   | 1,0.999729,1.000269,0.999729,1.000539,0.999729 | depart,arrive            | Ok   |
+          | abd   | 1,0.999729,1.000269,0.999729,1.000269,0.999457 | depart,turn right,arrive | Ok   |
+          | abe   | 1,0.999729,1.000269,0.999729,1.000269,1        | depart,turn left,arrive  | Ok   |
+          | ahd   | 1,0.999729,1.000269,0.999729,1.000269,0.999457 | depart,turn right,arrive | Ok   |
+          | ahe   | 1,0.999729,1.000269,0.999729,1.000269,1        | depart,turn left,arrive  | Ok   |
 
     @match @testbot
     Scenario: Regression test - add source phantoms properly (one phantom on one edge)
@@ -740,9 +740,9 @@ Feature: Basic Map Matching
           | annotations    | duration,weight |
           | generate_hints | false           |
         When I match I should get
-          | trace | geometry                                             | a:duration    | a:weight      | duration |
-          | 123   | 1.000135,1,1.000225,1,1.00036,1,1.000405,1,1.00045,1 | 1:1.5:0.5:0.5 | 1:1.5:0.5:0.5 | 3.5      |
-          | 321   | 1.00045,1,1.000405,1,1.00036,1,1.000225,1,1.000135,1 | 0.5:0.5:1.5:1 | 0.5:0.5:1.5:1 | 3.5      |
+          | trace | geometry                                               | a:duration    | a:weight      | duration |
+          | 123   | 1.000135,1,1.000225,1,1.000359,1,1.000404,1,1.000449,1 | 1:1.5:0.5:0.4 | 1:1.5:0.5:0.4 | 3.4      |
+          | 321   | 1.000449,1,1.000404,1,1.000359,1,1.000225,1,1.000135,1 | 0.4:0.5:1.5:1 | 0.4:0.5:1.5:1 | 3.4      |
 
     @match @testbot
     Scenario: Regression test - add source phantom properly (two phantoms on one edge)
@@ -765,9 +765,9 @@ Feature: Basic Map Matching
           | annotations    | duration,weight |
           | generate_hints | false           |
         When I match I should get
-          | trace | geometry                                   | a:duration | a:weight | duration |
-          | 1234  | 1.000135,1,1.000225,1,1.000405,1,1.00045,1 | 1:2:0.5    | 1:2:0.5  | 3.5      |
-          | 4321  | 1.00045,1,1.000405,1,1.000225,1,1.000135,1 | 0.5:2:1    | 0.5:2:1  | 3.5      |
+          | trace | geometry                                    | a:duration | a:weight | duration |
+          | 1234  | 1.000135,1,1.000225,1,1.000404,1,1.000449,1 | 1:2:0.4    | 1:2:0.4  | 3.4      |
+          | 4321  | 1.000449,1,1.000404,1,1.000225,1,1.000135,1 | 0.4:2:1    | 0.4:2:1  | 3.4      |
 
     @match @testbot
     Scenario: Regression test - add source phantom properly (two phantoms on one edge)
