@@ -279,8 +279,8 @@ Feature: Basic Map Matching
             | fb    | yes    |
 
         When I match I should get
-            | trace | matchings | geometry                                      |
-            | efbc  | efbc      | 1,0.99964,1.00036,0.99964,1.00036,1,1.000719,1 |
+            | trace | matchings | geometry                                           |
+            | efbc  | efbc      | 1,0.999638,1.000359,0.999638,1.000359,1,1.000719,1 |
 
     Scenario: Testbot - Geometry details using geojson
         Given the query options
@@ -356,7 +356,7 @@ Feature: Basic Map Matching
 
         When I match I should get
             | trace  | matchings | alternatives         |
-            | abcdef | abcde     | 0,0,0,0,1,1          |
+            | abcdef | abcde     | 0,0,0,1,1,1          |
 
     Scenario: Testbot - Speed greater than speed threshold
         Given a grid size of 100 meters
@@ -652,7 +652,7 @@ Feature: Basic Map Matching
 
         When I match I should get
             | trace    | geometry                           | code |
-            | defgh    | 1,1,1,0.999461,1.000674,0.999461   | Ok   |
+            | defgh    | 1,1,1,0.999457,1.000674,0.999457   | Ok   |
 
     @match @testbot
     Scenario: Regression test - waypoints trimming too much geometry

@@ -10,7 +10,7 @@ Feature: Testbot - speeds
             | primary   | 36 km/h |
             | unknown   | 24 km/h |
             | secondary | 18 km/h |
-            | tertiary  | 12 km/h |
+            | tertiary  | 11 km/h |
 
     Scenario: Testbot - Speed on rivers, table
         Then routability should be
