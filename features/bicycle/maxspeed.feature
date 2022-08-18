@@ -68,7 +68,7 @@ Feature: Bike - Max speed restrictions
             | 10       |                  |                   | 10 km/h | 10 km/h |
             |          | 10               |                   | 10 km/h | 15 km/h |
             |          |                  | 10                | 15 km/h | 10 km/h |
-            | 2        | 10               |                   | 9 km/h  | 2 km/h  |
+            | 2        | 10               |                   | 10 km/h | 2 km/h  |
             | 2        |                  | 10                | 2 km/h  | 10 km/h |
             | 2        | 5                | 10                | 5 km/h  | 10 km/h |
 

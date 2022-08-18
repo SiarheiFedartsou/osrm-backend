@@ -58,7 +58,7 @@ Feature: Car - weights
             """
         When I route I should get
             | from | to | route       | speed   | weight |
-            | a    | d  | ab,bc,cd,cd | 65 km/h | 44.3   |
+            | a    | d  | ab,bc,cd,cd | 65 km/h | 44.4   |
             | a    | e  | ab,be,be    | 14 km/h | 111.8  |
 
     Scenario: Distance weights
