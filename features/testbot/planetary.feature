@@ -83,4 +83,4 @@ Feature: Distance calculation
 
         When I route I should get
             | from | to | route | distance       |
-            | a    | b  | ab,ab | 8905559m ~0.1% |
+            | a    | b  | ab,ab | 8882574.6m ~0.1% |

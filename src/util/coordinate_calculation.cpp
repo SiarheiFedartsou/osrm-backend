@@ -72,23 +72,16 @@ std::uint64_t squaredEuclideanDistance(const Coordinate lhs, const Coordinate rh
     return result;
 }
 
-// Uses method described here:
-// https://www.gpo.gov/fdsys/pkg/CFR-2005-title47-vol4/pdf/CFR-2005-title47-vol4-sec73-208.pdf
-// should be within 0.1% or so of Vincenty method (assuming 19 buckets are enough)
-// Should be more faster and more precise than Haversine
-double fccApproximateDistance(const Coordinate coordinate_1, const Coordinate coordinate_2)
+double greatCircleDistance(const Coordinate coordinate_1, const Coordinate coordinate_2)
 {
-const auto lon1 = static_cast<double>(util::toFloating(coordinate_1.lon));
+    // Should be within 0.1% or so of Vincenty method (assuming 19 buckets are enough)
+    // Should be more faster and more precise than Haversine
+    const auto lon1 = static_cast<double>(util::toFloating(coordinate_1.lon));
     const auto lat1 = static_cast<double>(util::toFloating(coordinate_1.lat));
     const auto lon2 = static_cast<double>(util::toFloating(coordinate_2.lon));
     const auto lat2 = static_cast<double>(util::toFloating(coordinate_2.lat));
     return cheap_ruler_container.getRuler(coordinate_1.lat, coordinate_2.lat)
         .distance({lon1, lat1}, {lon2, lat2});
-}
-
-double haversineDistance(const Coordinate coordinate_1, const Coordinate coordinate_2)
-{
-    return fccApproximateDistance(coordinate_1, coordinate_2);
 }
 
 double perpendicularDistance(const Coordinate segment_source,
@@ -108,7 +101,7 @@ double perpendicularDistance(const Coordinate segment_source,
                               web_mercator::fromWGS84(query_location));
     nearest_location = web_mercator::toWGS84(projected_nearest);
 
-    const double approximate_distance = fccApproximateDistance(query_location, nearest_location);
+    const double approximate_distance = greatCircleDistance(query_location, nearest_location);
     BOOST_ASSERT(0.0 <= approximate_distance);
     return approximate_distance;
 }
@@ -277,7 +270,7 @@ double circleRadius(const Coordinate C1, const Coordinate C2, const Coordinate C
     // a circle by three points requires thee distinct points
     auto center = circleCenter(C1, C2, C3);
     if (center)
-        return haversineDistance(C1, *center);
+        return greatCircleDistance(C1, *center);
     else
         return std::numeric_limits<double>::infinity();
 }
@@ -327,7 +320,7 @@ double findClosestDistance(const Coordinate coordinate,
                            const Coordinate segment_begin,
                            const Coordinate segment_end)
 {
-    return haversineDistance(coordinate,
+    return greatCircleDistance(coordinate,
                              projectPointOnSegment(segment_begin, segment_end, coordinate).second);
 }
 
@@ -392,7 +385,7 @@ Coordinate difference(const Coordinate lhs, const Coordinate rhs)
 
 double computeArea(const std::vector<Coordinate> &polygon)
 {
-    using util::coordinate_calculation::haversineDistance;
+    using util::coordinate_calculation::greatCircleDistance;
 
     if (polygon.empty())
         return 0.;
@@ -413,15 +406,15 @@ double computeArea(const std::vector<Coordinate> &polygon)
     double area = 0.;
     auto first = polygon.begin();
     auto previous_base = util::Coordinate{first->lon, ref_latitude};
-    auto previous_y = haversineDistance(previous_base, *first);
+    auto previous_y = greatCircleDistance(previous_base, *first);
     for (++first; first != polygon.end(); ++first)
     {
         BOOST_ASSERT(first->lat >= ref_latitude);
 
         const auto current_base = util::Coordinate{first->lon, ref_latitude};
-        const auto current_y = haversineDistance(current_base, *first);
+        const auto current_y = greatCircleDistance(current_base, *first);
         const auto chunk_area =
-            haversineDistance(previous_base, current_base) * (previous_y + current_y);
+            greatCircleDistance(previous_base, current_base) * (previous_y + current_y);
 
         area += (current_base.lon >= previous_base.lon) ? chunk_area : -chunk_area;
 

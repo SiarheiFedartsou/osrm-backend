@@ -9,6 +9,7 @@ const classes = require('./data_classes');
 const tableDiff = require('../lib/table_diff');
 const ensureDecimal = require('../lib/utils').ensureDecimal;
 const errorReason = require('../lib/utils').errorReason;
+const CheapRuler = require('cheap-ruler');
 
 module.exports = function () {
     this.setGridSize = (meters) => {
@@ -16,6 +17,7 @@ module.exports = function () {
         // see ApproximateDistance() in ExtractorStructs.h
         // it's only accurate when measuring along the equator, or going exactly north-south
         this.zoom = parseFloat(meters) * 0.8990679362704610899694577444566908445396483347536032203503E-5;
+        this.gridSize = parseFloat(meters);
     };
 
     this.setOrigin = (origin) => {
@@ -35,9 +37,11 @@ module.exports = function () {
             // add some nodes
 
             var makeFakeNode = (namePrefix, offset) => {
+                const ruler = new CheapRuler(this.origin[1], 'meters');
+                const coord = ruler.offset(this.origin, offset + this.WAY_SPACING * ri, 0);
                 return new OSM.Node(this.makeOSMId(), this.OSM_USER, this.OSM_TIMESTAMP,
-                    this.OSM_UID, this.origin[0]+(offset + this.WAY_SPACING * ri) * this.zoom,
-                    this.origin[1], {name: util.format('%s%d', namePrefix, ri)});
+                    this.OSM_UID, coord[0],
+                    coord[1], {name: util.format('%s%d', namePrefix, ri)});
             };
 
             var nodes = ['a','b','c','d','e'].map((l, i) => makeFakeNode(l, i));
@@ -98,7 +102,9 @@ module.exports = function () {
     };
 
     this.tableCoordToLonLat = (ci, ri) => {
-        return [this.origin[0] + ci * this.zoom, this.origin[1] - ri * this.zoom].map(ensureDecimal);
+        const ruler = new CheapRuler(this.origin[1], 'meters');
+        return ruler.offset(this.origin, ci * this.gridSize, - ri * this.gridSize).map(ensureDecimal);
+        //return [this.origin[0] + ci * this.zoom, this.origin[1] - ri * this.zoom].map(ensureDecimal);
     };
 
     this.addOSMNode = (name, lon, lat, id) => {
