@@ -925,7 +925,7 @@ CoordinateExtractor::TrimCoordinatesToLength(std::vector<util::Coordinate> coord
             const auto new_distance =
                 distance_to_current_coordinate +
                 util::coordinate_calculation::greatCircleDistance(coordinates[coordinate_index - 1],
-                                                                coordinates[coordinate_index]);
+                                                                  coordinates[coordinate_index]);
             return new_distance;
         };
 
@@ -942,7 +942,7 @@ CoordinateExtractor::TrimCoordinatesToLength(std::vector<util::Coordinate> coord
 
         const auto distance_between_last_coordinates =
             util::coordinate_calculation::greatCircleDistance(*(coordinates.end() - 2),
-                                                            *(coordinates.end() - 1));
+                                                              *(coordinates.end() - 1));
 
         if (distance_between_last_coordinates > 0)
         {

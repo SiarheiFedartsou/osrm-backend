@@ -133,7 +133,7 @@ double bearing(const Coordinate coordinate_1, const Coordinate coordinate_2)
     const auto lat1 = static_cast<double>(util::toFloating(coordinate_1.lat));
     const auto lon2 = static_cast<double>(util::toFloating(coordinate_2.lon));
     const auto lat2 = static_cast<double>(util::toFloating(coordinate_2.lat));
-    const auto& ruler = cheap_ruler_container.getRuler(coordinate_1.lat, coordinate_2.lat);
+    const auto &ruler = cheap_ruler_container.getRuler(coordinate_1.lat, coordinate_2.lat);
     auto result = ruler.bearing({lon1, lat1}, {lon2, lat2});
     if (result < 0.0)
     {
@@ -314,8 +314,8 @@ double findClosestDistance(const Coordinate coordinate,
                            const Coordinate segment_begin,
                            const Coordinate segment_end)
 {
-    return greatCircleDistance(coordinate,
-                             projectPointOnSegment(segment_begin, segment_end, coordinate).second);
+    return greatCircleDistance(
+        coordinate, projectPointOnSegment(segment_begin, segment_end, coordinate).second);
 }
 
 // find the closes distance between two sets of coordinates

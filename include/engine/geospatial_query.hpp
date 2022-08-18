@@ -592,8 +592,8 @@ template <typename RTreeT, typename DataFacadeT> class GeospatialQuery
         Coordinate wsg84_coordinate =
             util::web_mercator::toWGS84(segment.fixed_projected_coordinate);
 
-        return util::coordinate_calculation::greatCircleDistance(input_coordinate, wsg84_coordinate) >
-               max_distance;
+        return util::coordinate_calculation::greatCircleDistance(input_coordinate,
+                                                                 wsg84_coordinate) > max_distance;
     }
 
     std::pair<bool, bool> CheckSegmentExclude(const CandidateSegment &segment) const

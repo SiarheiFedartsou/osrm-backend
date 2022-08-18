@@ -1,7 +1,6 @@
-var util = require('util');
-var d3 = require('d3-queue');
-var classes = require('../support/data_classes');
-const CheapRuler = require('cheap-ruler');
+const util = require('util');
+const d3 = require('d3-queue');
+const classes = require('../support/data_classes');
 
 module.exports = function () {
     this.Then(/^routability should be$/, (table, callback) => {
@@ -116,19 +115,12 @@ module.exports = function () {
         var result = {};
 
         var testDirection = (dir, callback) => {
-            const ruler = new CheapRuler(this.origin[1], 'meters');
-            const coord1 = ruler.offset(this.origin, (1+this.WAY_SPACING*i)*this.gridSize, 0);
-            const coord2 = ruler.offset(this.origin, (3+this.WAY_SPACING*i)*this.gridSize, 0);
+            const coordA = this.offsetOriginBy(1+this.WAY_SPACING*i, 0);
+            const coordB = this.offsetOriginBy(3+this.WAY_SPACING*i, 0);
 
-            var a = new classes.Location(coord1[0], coord1[1]),
-                b = new classes.Location(coord2[0], coord2[1]),
+            var a = new classes.Location(coordA[0], coordA[1]),
+                b = new classes.Location(coordB[0], coordB[1]),
                 r = {};
-
-           // console.log(`coord1 = ${coord1}, orig1 = ${[this.origin[0] + (1+this.WAY_SPACING*i) * this.zoom, this.origin[1]]}`);
-
-            // var a = new classes.Location(this.origin[0] + (1+this.WAY_SPACING*i) * this.zoom, this.origin[1]),
-            //     b = new classes.Location(this.origin[0] + (3+this.WAY_SPACING*i) * this.zoom, this.origin[1]),
-            //     r = {};
 
             r.which = dir;
 

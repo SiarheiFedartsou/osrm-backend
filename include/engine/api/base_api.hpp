@@ -57,7 +57,7 @@ class BaseAPI
             return json::makeWaypoint(
                 phantom.location,
                 util::coordinate_calculation::greatCircleDistance(phantom.location,
-                                                                     phantom.input_location),
+                                                                  phantom.input_location),
                 facade.GetNameForID(facade.GetNameIndex(phantom.forward_segment_id.id)).to_string(),
                 Hint{phantom, facade.GetCheckSum()});
         }
@@ -67,7 +67,7 @@ class BaseAPI
             return json::makeWaypoint(
                 phantom.location,
                 util::coordinate_calculation::greatCircleDistance(phantom.location,
-                                                                     phantom.input_location),
+                                                                  phantom.input_location),
                 facade.GetNameForID(facade.GetNameIndex(phantom.forward_segment_id.id))
                     .to_string());
         }

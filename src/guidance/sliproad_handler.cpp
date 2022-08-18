@@ -453,7 +453,7 @@ Intersection SliproadHandler::operator()(const NodeID /*nid*/,
             const constexpr auto MIN_LENGTH = 3.;
 
             const auto length = greatCircleDistance(node_coordinates[intersection_node_id],
-                                                  node_coordinates[main_road_intersection->node]);
+                                                    node_coordinates[main_road_intersection->node]);
 
             const double minimal_crossroad_angle_of_intersection = 40.;
 
