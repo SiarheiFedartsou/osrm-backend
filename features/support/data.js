@@ -37,8 +37,13 @@ module.exports = function () {
             // add some nodes
 
             var makeFakeNode = (namePrefix, offset) => {
+                // return new OSM.Node(this.makeOSMId(), this.OSM_USER, this.OSM_TIMESTAMP,
+                //     this.OSM_UID, this.origin[0]+(offset + this.WAY_SPACING * ri) * this.zoom,
+                //     this.origin[1], {name: util.format('%s%d', namePrefix, ri)});
+                
                 const ruler = new CheapRuler(this.origin[1], 'meters');
-                const coord = ruler.offset(this.origin, offset + this.WAY_SPACING * ri, 0);
+                const coord = ruler.offset(this.origin, (offset + this.WAY_SPACING * ri)*this.gridSize, 0);
+                //console.log(`makeFakeNode ${coord[0]} ${this.origin[0]+(offset + this.WAY_SPACING * ri) * this.zoom}`);
                 return new OSM.Node(this.makeOSMId(), this.OSM_USER, this.OSM_TIMESTAMP,
                     this.OSM_UID, coord[0],
                     coord[1], {name: util.format('%s%d', namePrefix, ri)});
@@ -104,7 +109,7 @@ module.exports = function () {
     this.tableCoordToLonLat = (ci, ri) => {
         const ruler = new CheapRuler(this.origin[1], 'meters');
         return ruler.offset(this.origin, ci * this.gridSize, - ri * this.gridSize).map(ensureDecimal);
-        //return [this.origin[0] + ci * this.zoom, this.origin[1] - ri * this.zoom].map(ensureDecimal);
+       // return [this.origin[0] + ci * this.zoom, this.origin[1] - ri * this.zoom].map(ensureDecimal);
     };
 
     this.addOSMNode = (name, lon, lat, id) => {
@@ -134,7 +139,8 @@ module.exports = function () {
 
     // find a node based on an array containing lon/lat
     this.findNodeByLocation = (node_location) => {
-        console.log('findNodeByLocation')
+       // console.log('findNodeByLocation');
+
         var searched_coordinate = new classes.Location(node_location[0],node_location[1]);
         for (var node in this.nameNodeHash)
         {

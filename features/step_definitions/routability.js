@@ -117,12 +117,18 @@ module.exports = function () {
 
         var testDirection = (dir, callback) => {
             const ruler = new CheapRuler(this.origin[1], 'meters');
-            const coord1 = ruler.offset(this.origin, (1+this.WAY_SPACING*i), 0);
-            const coord2 = ruler.offset(this.origin, (3+this.WAY_SPACING*i), 0);
+            const coord1 = ruler.offset(this.origin, (1+this.WAY_SPACING*i)*this.gridSize, 0);
+            const coord2 = ruler.offset(this.origin, (3+this.WAY_SPACING*i)*this.gridSize, 0);
 
             var a = new classes.Location(coord1[0], coord1[1]),
                 b = new classes.Location(coord2[0], coord2[1]),
                 r = {};
+
+           // console.log(`coord1 = ${coord1}, orig1 = ${[this.origin[0] + (1+this.WAY_SPACING*i) * this.zoom, this.origin[1]]}`);
+
+            // var a = new classes.Location(this.origin[0] + (1+this.WAY_SPACING*i) * this.zoom, this.origin[1]),
+            //     b = new classes.Location(this.origin[0] + (3+this.WAY_SPACING*i) * this.zoom, this.origin[1]),
+            //     r = {};
 
             r.which = dir;
 
