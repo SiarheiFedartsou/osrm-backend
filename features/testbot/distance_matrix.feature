@@ -468,14 +468,14 @@ Feature: Basic Distance Matrix
 
         When I request a travel distance matrix I should get
              |   | 1     | 2      | 3     | 4      | 5     | 6      | 7     | 8      |
-             | 1 | 0     | 1099.8 | 300   | 199.9  | 599.9 | 499.9  | 899.9 | 799.8  |
-             | 2 | 100.1 | 0      | 400   | 300    | 700   | 599.9  | 1000  | 899.9  |
-             | 3 | 899.9 | 799.8  | 0     | 1099.8 | 300   | 199.9  | 599.9 | 499.9  |
-             | 4 | 1000  | 899.9  | 100.1 | 0      | 400   | 300    | 700   | 599.9  |
-             | 5 | 599.9 | 499.9  | 899.9 | 799.8  | 0     | 1099.8 | 300   | 199.9  |
-             | 6 | 700   | 599.9  | 1000  | 899.9  | 100.1 | 0      | 400   | 300    |
-             | 7 | 300   | 199.9  | 599.9 | 499.9  | 899.9 | 799.8  | 0     | 1099.8 |
-             | 8 | 400   | 300    | 700   | 599.9  | 1000  | 899.9  | 100.1 | 0      |
+             | 1 | 0     | 1099.8 | 300   | 199.9  | 600   | 499.9  | 899.9 | 799.9  |
+             | 2 | 100.1 | 0      | 400   | 300    | 700   | 600    | 1000  | 899.9  |
+             | 3 | 899.9 | 799.9  | 0     | 1099.8 | 300   | 199.9  | 600   | 499.9  |
+             | 4 | 1000  | 899.9  | 100.1 | 0      | 400   | 300    | 700   | 600    |
+             | 5 | 600   | 499.9  | 899.9 | 799.9  | 0     | 1099.8 | 300   | 199.9  |
+             | 6 | 700   | 600    | 1000  | 899.9  | 100.1 | 0      | 400   | 300    |
+             | 7 | 300   | 199.9  | 600   | 499.9  | 899.9 | 799.9  | 0     | 1099.8 |
+             | 8 | 400   | 300    | 700   | 600    | 1000  | 899.9  | 100.1 | 0      |
 
         When I request a travel distance matrix I should get
              |   | 1     |
@@ -483,7 +483,7 @@ Feature: Basic Distance Matrix
              | 2 | 100.1 |
              | 3 | 899.9 |
              | 4 | 1000  |
-             | 5 | 599.9 |
+             | 5 | 600   |
              | 6 | 700   |
              | 7 | 300   |
              | 8 | 400   |
@@ -591,10 +591,10 @@ Feature: Basic Distance Matrix
             |   | a      | b     | c      | d      | e      | f      |
             | a | 0      | 100   | 300    | 650    | 1934.5 | 1534.6 |
             | b | 760.6  | 0     | 200    | 550.1  | 1834.6 | 1434.6 |
-            | c | 560.6  | 660.5 | 0      | 350.1  | 1634.5 | 1234.6 |
-            | d | 1484.5 | 1584.5| 1784.5 | 0      | 1284.5 | 884.6  |
+            | c | 560.6  | 660.5 | 0      | 350    | 1634.6 | 1234.6 |
+            | d | 1484.6 | 1584.5| 1784.5 | 0      | 1284.5 | 884.6  |
             | e | 200    | 300   | 500    | 710.6  | 0      | 1595.2 |
-            | f | 599.9  | 699.9 | 899.9  | 1110.5 | 399.9  | 0      |
+            | f | 600    | 699.9 | 899.9  | 1110.5 | 399.9  | 0      |
 
 
     Scenario: Testbot - Filling in noroutes with estimates (defaults to input coordinate location)
@@ -615,21 +615,21 @@ Feature: Basic Distance Matrix
 
         When I request a travel distance matrix I should get
             |   | a      | b      | f     | 1      |
-            | a | 0      | 300    | 900   | 1500.1 |
+            | a | 0      | 300    | 900   | 1500   |
             | b | 300    | 0      | 600   | 1200.1 |
             | f | 900    | 600    | 0     | 300    |
-            | 1 | 1500.1 | 1200.1 | 300   | 0      |
+            | 1 | 1500   | 1200.1 | 300   | 0      |
 
         When I request a travel distance matrix I should get
             |   | a      | b      | f     | 1      |
-            | a | 0      | 300    | 900   | 1500.1 |
+            | a | 0      | 300    | 900   | 1500   |
 
         When I request a travel distance matrix I should get
             |   | a      |
             | a | 0      |
             | b | 300    |
             | f | 900    |
-            | 1 | 1500.1 |
+            | 1 | 1500   |
 
     Scenario: Testbot - Fise input coordinate
         Given a grid size of 300 meters
@@ -650,21 +650,21 @@ Feature: Basic Distance Matrix
 
         When I request a travel distance matrix I should get
             |   | a      | b      | f     | 1      |
-            | a | 0      | 300    | 900   | 1500.1 |
+            | a | 0      | 300    | 900   | 1500   |
             | b | 300    | 0      | 600   | 1200.1 |
             | f | 900    | 600    | 0     | 300    |
-            | 1 | 1500.1 | 1200.1 | 300   | 0      |
+            | 1 | 1500   | 1200.1 | 300   | 0      |
 
         When I request a travel distance matrix I should get
             |   | a      | b     | f     | 1      |
-            | a | 0      | 300   | 900   | 1500.1 |
+            | a | 0      | 300   | 900   | 1500   |
 
         When I request a travel distance matrix I should get
             |   | a      |
             | a | 0      |
             | b | 300    |
             | f | 900    |
-            | 1 | 1500.1 |
+            | 1 | 1500   |
 
 
     Scenario: Testbot - Filling in noroutes with estimates - use snapped coordinate

@@ -50,7 +50,7 @@ Feature: Traffic - speeds
           | from | to | route       | speed   | weights              | a:datasources |
           | a    | b  | ad,de,eb,eb | 30 km/h | 1273.9,400.8,378.5,0 | 1:0:0         |
           | a    | c  | ad,dc,dc    | 31 km/h | 1273.9,955.4,0       | 1:0           |
-          | b    | c  | bc,bc       | 27 km/h | 737.1,0              | 1             |
+          | b    | c  | bc,bc       | 27 km/h | 737.2,0              | 1             |
           | a    | d  | ad,ad       | 27 km/h | 1273.9,0             | 1             |
           | d    | c  | dc,dc       | 36 km/h | 955.4,0              | 0             |
           | g    | b  | fb,fb       | 36 km/h | 164.4,0              | 0             |
@@ -76,11 +76,11 @@ Feature: Traffic - speeds
           | from | to | route       | speed   | weights              | a:datasources |
           | a    | b  | ad,de,eb,eb | 30 km/h | 1273.9,400.8,378.5,0 | 1:0:0         |
           | a    | c  | ad,dc,dc    | 31 km/h | 1273.9,955.4,0       | 1:0           |
-          | b    | c  | bc,bc       | 27 km/h | 737.1,0              | 1             |
+          | b    | c  | bc,bc       | 27 km/h | 737.2,0              | 1             |
           | a    | d  | ad,ad       | 27 km/h | 1273.9,0             | 1             |
           | d    | c  | dc,dc       | 36 km/h | 955.4,0              | 0             |
-          | g    | b  | ab,ab       | 1 km/h  | 9951.1,0             | 1             |
-          | a    | g  | ab,ab       | 1 km/h  | 9951,0               | 1             |
+          | g    | b  | ab,ab       | 1 km/h  | 9951.7,0             | 1             |
+          | a    | g  | ab,ab       | 1 km/h  | 9951.7,0             | 1             |
 
 
     Scenario: Weighting based on speed file weights, ETA based on file durations
@@ -106,14 +106,14 @@ Feature: Traffic - speeds
 
         When I route I should get
           | from | to | route       | speed   | weights                  | a:datasources |
-          | a    | b  | ab,ab       | 1 km/h  | 19902.1,0                | 1             |
-          | a    | c  | ab,bc,bc    | 2 km/h  | 19902.1,737.11,0         | 1:1           |
-          | b    | c  | bc,bc       | 27 km/h | 737.11,0                 | 1             |
-          | a    | d  | ab,eb,de,de | 2 km/h  | 19902.1,378.49,400.75,0  | 1:0:0         |
-          | d    | c  | dc,dc       | 36 km/h | 955.43,0                 | 0             |
-          | g    | b  | ab,ab       | 1 km/h  | 9951.05,0                | 1             |
-          | a    | g  | ab,ab       | 1 km/h  | 9951.05,0                | 1             |
-          | g    | a  | ab,ab       | 1 km/h  | 9951.05,0                | 1             |
+          | a    | b  | ab,ab       | 1 km/h  | 19903.37,0               | 1             |
+          | a    | c  | ab,bc,bc    | 2 km/h  | 19903.37,737.16,0        | 1:1           |
+          | b    | c  | bc,bc       | 27 km/h | 737.16,0                 | 1             |
+          | a    | d  | ab,eb,de,de | 2 km/h  | 19903.37,378.49,400.75,0 | 1:0:0         |
+          | d    | c  | dc,dc       | 36 km/h | 955.45,0                 | 0             |
+          | g    | b  | ab,ab       | 1 km/h  | 9951.69,0                | 1             |
+          | a    | g  | ab,ab       | 1 km/h  | 9951.68,0                | 1             |
+          | g    | a  | ab,ab       | 1 km/h  | 9951.68,0                | 1             |
 
 
     Scenario: Speeds that isolate a single node (a)
@@ -137,8 +137,8 @@ Feature: Traffic - speeds
         When I route I should get
           | from | to | route    | speed   | weights       | a:datasources | a:speed | a:nodes|
           | a    | b  | fb,fb    | 36 km/h | 328.9,0       | 0             | 10      | 6:2    |
-          | a    | c  | fb,bc,bc | 30 km/h | 328.9,737.1,0 | 0:1           | 10:7.5  | 6:2:3  |
-          | b    | c  | bc,bc    | 27 km/h | 737.1,0       | 1             | 7.5     | 2:3    |
+          | a    | c  | fb,bc,bc | 30 km/h | 328.9,737.2,0 | 0:1           | 10:7.5  | 6:2:3  |
+          | b    | c  | bc,bc    | 27 km/h | 737.2,0       | 1             | 7.5     | 2:3    |
           | a    | d  | fb,df,df | 36 km/h | 139.8,486.8,0 | 0:0           | 10:10   | 2:6:4  |
           | d    | c  | dc,dc    | 36 km/h | 955.4,0       | 0             | 10      | 4:3    |
           | g    | b  | fb,fb    | 36 km/h | 164.4,0       | 0             | 10      | 6:2    |

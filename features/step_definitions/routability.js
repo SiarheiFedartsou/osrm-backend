@@ -1,6 +1,7 @@
 var util = require('util');
 var d3 = require('d3-queue');
 var classes = require('../support/data_classes');
+const CheapRuler = require('cheap-ruler');
 
 module.exports = function () {
     this.Then(/^routability should be$/, (table, callback) => {
@@ -115,8 +116,12 @@ module.exports = function () {
         var result = {};
 
         var testDirection = (dir, callback) => {
-            var a = new classes.Location(this.origin[0] + (1+this.WAY_SPACING*i) * this.zoom, this.origin[1]),
-                b = new classes.Location(this.origin[0] + (3+this.WAY_SPACING*i) * this.zoom, this.origin[1]),
+            const ruler = new CheapRuler(this.origin[1], 'meters');
+            const coord1 = ruler.offset(this.origin, (1+this.WAY_SPACING*i), 0);
+            const coord2 = ruler.offset(this.origin, (3+this.WAY_SPACING*i), 0);
+
+            var a = new classes.Location(coord1[0], coord1[1]),
+                b = new classes.Location(coord2[0], coord2[1]),
                 r = {};
 
             r.which = dir;

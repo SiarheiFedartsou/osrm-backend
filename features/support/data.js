@@ -134,6 +134,7 @@ module.exports = function () {
 
     // find a node based on an array containing lon/lat
     this.findNodeByLocation = (node_location) => {
+        console.log('findNodeByLocation')
         var searched_coordinate = new classes.Location(node_location[0],node_location[1]);
         for (var node in this.nameNodeHash)
         {
