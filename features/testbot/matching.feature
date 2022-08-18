@@ -682,8 +682,8 @@ Feature: Basic Map Matching
           | waypoints | 0;3  |
           | overview  | full |
         When I match I should get
-          | trace | geometry                                      | code |
-          | bgkj  | 1.000135,1,1.000135,0.99964,1.000387,0.999137 | Ok   |
+          | trace | geometry                                       | code |
+          | bgkj  | 1.000135,1,1.000135,0.999638,1.000386,0.999132 | Ok   |
 
 
     @match @testbot
@@ -791,5 +791,5 @@ Feature: Basic Map Matching
         # These should have the same weights/duration in either direction
         When I match I should get
           | trace | geometry             | a:distance | a:duration | a:weight | duration |
-          | 2345  | 1.00018,1,1.000315,1 | 15.013264  | 1.5        | 1.5      | 1.5      |
-          | 4321  | 1.00027,1,1.000135,1 | 15.013264  | 1.5        | 1.5      | 1.5      |
+          | 2345  | 1.00018,1,1.000314,1 | 14.914829  | 1.4        | 1.4      | 1.4      |
+          | 4321  | 1.00027,1,1.000135,1 | 15.026133  | 1.5        | 1.5      | 1.5      |

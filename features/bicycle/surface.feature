@@ -25,12 +25,12 @@ Feature: Bike - Surfaces
 
     Scenario: Bicycle - Good surfaces on small paths
         Then routability should be
-        | highway  | surface | bothw |
-        | cycleway |         | 48 s  |
-        | path     |         | 60 s  |
-        | track    |         | 60 s  |
-        | track    | asphalt | 60 s  |
-        | path     | asphalt | 60 s  |
+        | highway  | surface | bothw  |
+        | cycleway |         | 48 s   |
+        | path     |         | 60 s   |
+        | track    |         | 60 s   |
+        | track    | asphalt | 60.1 s |
+        | path     | asphalt | 60 s   |
 
     Scenario: Bicycle - Surfaces should not make unknown ways routable
         Then routability should be

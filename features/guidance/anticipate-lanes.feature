@@ -103,7 +103,7 @@ Feature: Turn Lane Guidance
 
        When I route I should get
             | waypoints | route          | turns                                           | lanes                                                                 |
-            | a,d       | On,Hwy,Off,Off | depart,merge slight right,off ramp right,arrive | ,slight left:false slight left:true,straight:false slight right:true, |
+            | a,d       | On,Hwy,Off,Off | depart,merge slight right,off ramp right,arrive | ,slight left:true slight left:true,straight:false slight right:true,  |
 
 
     @anticipate
@@ -364,8 +364,8 @@ Feature: Turn Lane Guidance
 
           When I route I should get
                | waypoints | route            | turns                           | lanes                                                                                                                                                         |
-               | a,d       | main,left,left   | depart,end of road left,arrive  | ;left:false straight:false straight:true straight:false straight:false right:false;left:false straight:true straight:false right:false,left:true right:false, |
-               | a,e       | main,right,right | depart,end of road right,arrive | ;left:false straight:false straight:false straight:true straight:false right:false;left:false straight:false straight:true right:false,left:false right:true, |
+               | a,d       | main,left,left   | depart,end of road left,arrive  | ;left:false straight:true straight:true straight:true straight:true right:false;left:false straight:true straight:true right:false,left:true right:false,     |
+               | a,e       | main,right,right | depart,end of road right,arrive | ;left:false straight:true straight:true straight:true straight:true right:false;left:false straight:true straight:true right:false,left:false right:true,     |
 
        @anticipate
        Scenario: Anticipate Lanes for through with turn before / after

@@ -281,11 +281,11 @@ Feature: Weight tests
 
         When I route I should get
             | waypoints | route | distance | weights      | times          |
-            | a,c       | ,     | 40m +-.1 | 5.119,0      | 289.9s,0s      |
-            | a,e       | ,,    | 60m +-.1 | 5.119,1.11,0 | 289.9s,100s,0s |
-            | e,a       | ,,    | 60m +-.1 | 2.21,2.22,0  | 10.1s,200s,0s  |
-            | e,d       | ,,    | 40m +-.1 | 4.009,1.11,0 | 189.9s,100s,0s |
-            | d,e       | ,,    | 40m +-.1 | 2.21,1.11,0  | 10.1s,100s,0s  |
+            | a,c       | ,     | 40m +-.1 | 5.12,0       | 290s,0s        |
+            | a,e       | ,,    | 60m +-.1 | 5.12,1.11,0  | 290s,100s,0s   |
+            | e,a       | ,,    | 60m +-.1 | 2.21,2.22,0  | 10s,200s,0s    |
+            | e,d       | ,,    | 40m +-.1 | 4.01,1.11,0  | 190s,100s,0s   |
+            | d,e       | ,,    | 40m +-.1 | 2.21,1.11,0  | 10s,100s,0s    |
 
     @traffic @speed
     Scenario: Step weights -- segment_function with speed and turn updates

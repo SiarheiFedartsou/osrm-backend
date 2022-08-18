@@ -127,25 +127,17 @@ Coordinate centroid(const Coordinate lhs, const Coordinate rhs)
     return centroid;
 }
 
-double bearing(const Coordinate first_coordinate, const Coordinate second_coordinate)
+double bearing(const Coordinate coordinate_1, const Coordinate coordinate_2)
 {
-    const double lon_diff =
-        static_cast<double>(toFloating(second_coordinate.lon - first_coordinate.lon));
-    const double lon_delta = detail::degToRad(lon_diff);
-    const double lat1 = detail::degToRad(static_cast<double>(toFloating(first_coordinate.lat)));
-    const double lat2 = detail::degToRad(static_cast<double>(toFloating(second_coordinate.lat)));
-    const double y = std::sin(lon_delta) * std::cos(lat2);
-    const double x =
-        std::cos(lat1) * std::sin(lat2) - std::sin(lat1) * std::cos(lat2) * std::cos(lon_delta);
-    double result = detail::radToDeg(std::atan2(y, x));
+    const auto lon1 = static_cast<double>(util::toFloating(coordinate_1.lon));
+    const auto lat1 = static_cast<double>(util::toFloating(coordinate_1.lat));
+    const auto lon2 = static_cast<double>(util::toFloating(coordinate_2.lon));
+    const auto lat2 = static_cast<double>(util::toFloating(coordinate_2.lat));
+    auto& ruler = cheap_ruler_container.getRuler(coordinate_1.lat, coordinate_2.lat);
+    auto result = ruler.bearing({lon1, lat1}, {lon2, lat2});
     while (result < 0.0)
     {
         result += 360.0;
-    }
-
-    while (result >= 360.0)
-    {
-        result -= 360.0;
     }
     // If someone gives us two identical coordinates, then the concept of a bearing
     // makes no sense.  However, because it sometimes happens, we'll at least
