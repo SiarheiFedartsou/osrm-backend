@@ -13,11 +13,12 @@ const CheapRuler = require('cheap-ruler');
 
 module.exports = function () {
     this.setGridSize = (meters) => {
+        this.gridSize = parseFloat(meters);
+
         // the constant is calculated (with BigDecimal as: 1.0/(DEG_TO_RAD*EARTH_RADIUS_IN_METERS
         // see ApproximateDistance() in ExtractorStructs.h
         // it's only accurate when measuring along the equator, or going exactly north-south
-        this.zoom = parseFloat(meters) * 0.8990679362704610899694577444566908445396483347536032203503E-5;
-        this.gridSize = parseFloat(meters);
+        this.zoom = this.gridSize * 0.8990679362704610899694577444566908445396483347536032203503E-5;
     };
 
     this.setOrigin = (origin) => {

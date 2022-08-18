@@ -33,7 +33,7 @@ Feature: Bicycle - Adds penalties to unsafe roads
             | tertiary_link  | track       | 15 km/h | 15 km/h |       4.2 |        4.2 |
             | residential    | track       | 15 km/h | 15 km/h |       4.2 |        4.2 |
             | cycleway       | track       | 15 km/h | 15 km/h |       4.2 |        4.2 |
-            | footway        | track       | 15 km/h | 15 km/h |       4.2 |        4.2 |
+            | footway        | track       | 14 km/h | 14 km/h |       4.2 |        4.2 |
             | motorway       | lane        | 15 km/h |         |       4.2 |            |
             | primary        | lane        | 15 km/h | 15 km/h |       4.2 |        4.2 |
             | secondary      | lane        | 15 km/h | 15 km/h |       4.2 |        4.2 |
@@ -41,7 +41,7 @@ Feature: Bicycle - Adds penalties to unsafe roads
             | primary_link   | lane        | 15 km/h | 15 km/h |       4.2 |        4.2 |
             | secondary_link | lane        | 15 km/h | 15 km/h |       4.2 |        4.2 |
             | tertiary_link  | lane        | 15 km/h | 15 km/h |       4.2 |        4.2 |
-            | residential    | lane        | 15 km/h | 15 km/h |       4.2 |        4.2 |
+            | residential    | lane        | 14 km/h | 14 km/h |       4.2 |        4.2 |
             | cycleway       | lane        | 15 km/h | 15 km/h |       4.2 |        4.2 |
             | footway        | lane        | 15 km/h | 15 km/h |       4.2 |        4.2 |
             | motorway       | shared_lane | 15 km/h |         |       4.2 |            |

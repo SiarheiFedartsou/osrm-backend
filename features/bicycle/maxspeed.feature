@@ -8,14 +8,14 @@ Feature: Bike - Max speed restrictions
     Scenario: Bicycle - Respect maxspeeds when lower that way type speed
         Then routability should be
             | highway     | maxspeed | bothw   |
-            | residential |          | 14 km/h |
+            | residential |          | 15 km/h |
             | residential | 10       | 10 km/h |
 
     Scenario: Bicycle - Ignore maxspeed when higher than way speed
         Then routability should be
             | highway     | maxspeed | bothw   |
-            | residential |          | 14 km/h |
-            | residential | 80       | 14 km/h |
+            | residential |          | 15 km/h |
+            | residential | 80       | 15 km/h |
 
     @todo
     Scenario: Bicycle - Maxspeed formats
@@ -66,11 +66,11 @@ Feature: Bike - Max speed restrictions
             | maxspeed | maxspeed:forward | maxspeed:backward | forw    | backw   |
             |          |                  |                   | 15 km/h | 15 km/h |
             | 10       |                  |                   | 10 km/h | 10 km/h |
-            |          | 10               |                   | 10 km/h | 14 km/h |
-            |          |                  | 10                | 14 km/h | 9 km/h  |
+            |          | 10               |                   | 10 km/h | 15 km/h |
+            |          |                  | 10                | 15 km/h | 10 km/h |
             | 2        | 10               |                   | 9 km/h  | 2 km/h  |
-            | 2        |                  | 10                | 2 km/h  | 9 km/h  |
-            | 2        | 5                | 10                | 5 km/h  | 9 km/h  |
+            | 2        |                  | 10                | 2 km/h  | 10 km/h |
+            | 2        | 5                | 10                | 5 km/h  | 10 km/h |
 
     Scenario: Bike - Maxspeed should not allow routing on unroutable ways
         Then routability should be

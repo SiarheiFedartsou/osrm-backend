@@ -791,5 +791,5 @@ Feature: Basic Map Matching
         # These should have the same weights/duration in either direction
         When I match I should get
           | trace | geometry             | a:distance | a:duration | a:weight | duration |
-          | 2345  | 1.00018,1,1.000314,1 | 14.914829  | 1.4        | 1.4      | 1.4      |
-          | 4321  | 1.00027,1,1.000135,1 | 15.026133  | 1.5        | 1.5      | 1.5      |
+          | 2345  | 1.00018,1,1.000314,1 | 14.914666  | 1.4        | 1.4      | 1.4      |
+          | 4321  | 1.00027,1,1.000135,1 | 15.02597   | 1.5        | 1.5      | 1.5      |
