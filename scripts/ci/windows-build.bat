@@ -48,26 +48,26 @@ ECHO running util-tests.exe ...
 unit_tests\%CONFIGURATION%\util-tests.exe
 IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
-ECHO running server-tests.exe ...
-unit_tests\%CONFIGURATION%\server-tests.exe
-IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+@REM ECHO running server-tests.exe ...
+@REM unit_tests\%CONFIGURATION%\server-tests.exe
+@REM IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
-ECHO running partitioner-tests.exe ...
-unit_tests\%CONFIGURATION%\partitioner-tests.exe
-IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+@REM ECHO running partitioner-tests.exe ...
+@REM unit_tests\%CONFIGURATION%\partitioner-tests.exe
+@REM IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
-ECHO running customizer-tests.exe ...
-unit_tests\%CONFIGURATION%\customizer-tests.exe
-IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+@REM ECHO running customizer-tests.exe ...
+@REM unit_tests\%CONFIGURATION%\customizer-tests.exe
+@REM IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
-SET test_region=monaco
-SET test_region_ch=ch\monaco
-SET test_region_corech=corech\monaco
-SET test_region_mld=mld\monaco
-SET test_osm=%test_region%.osm.pbf
-COPY %PROJECT_DIR%\test\data\%test_region%.osm.pbf %test_osm% 
-%CONFIGURATION%\osrm-extract.exe -p %PROJECT_DIR%\profiles\car.lua %test_osm%
-IF %ERRORLEVEL% NEQ 0 GOTO ERROR
+@REM SET test_region=monaco
+@REM SET test_region_ch=ch\monaco
+@REM SET test_region_corech=corech\monaco
+@REM SET test_region_mld=mld\monaco
+@REM SET test_osm=%test_region%.osm.pbf
+@REM COPY %PROJECT_DIR%\test\data\%test_region%.osm.pbf %test_osm% 
+@REM %CONFIGURATION%\osrm-extract.exe -p %PROJECT_DIR%\profiles\car.lua %test_osm%
+@REM IF %ERRORLEVEL% NEQ 0 GOTO ERROR
 
 MKDIR ch
 XCOPY %test_region%.osrm.* ch\
