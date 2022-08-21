@@ -43,39 +43,39 @@ BOOST_AUTO_TEST_CASE(tar_serialize_range_table)
     }
 }
 
-// BOOST_AUTO_TEST_CASE(tar_serialize_packed_vector)
-// {
-//     TemporaryFile tmp;
-//     {
-//         using TestPackedVector = PackedVector<std::uint64_t, 33>;
+BOOST_AUTO_TEST_CASE(tar_serialize_packed_vector)
+{
+    TemporaryFile tmp;
+    {
+        using TestPackedVector = PackedVector<std::uint64_t, 33>;
 
-//         std::vector<TestPackedVector> data = {{1597322404,
-//                                                1939964443,
-//                                                2112255763,
-//                                                1432114613,
-//                                                1067854538,
-//                                                352118606,
-//                                                1782436840,
-//                                                1909002904,
-//                                                165344818},
-//                                               {0, 1, 2, 3}};
+        std::vector<TestPackedVector> data = {{1597322404,
+                                               1939964443,
+                                               2112255763,
+                                               1432114613,
+                                               1067854538,
+                                               352118606,
+                                               1782436840,
+                                               1909002904,
+                                               165344818},
+                                              {0, 1, 2, 3}};
 
-//         for (const auto &v : data)
-//         {
-//             {
-//                 storage::tar::FileWriter writer(tmp.path,
-//                                                 storage::tar::FileWriter::GenerateFingerprint);
-//                 util::serialization::write(writer, "my_packed_vector", v);
-//             }
+        for (const auto &v : data)
+        {
+            {
+                storage::tar::FileWriter writer(tmp.path,
+                                                storage::tar::FileWriter::GenerateFingerprint);
+                util::serialization::write(writer, "my_packed_vector", v);
+            }
 
-//             TestPackedVector result;
-//             storage::tar::FileReader reader(tmp.path, storage::tar::FileReader::VerifyFingerprint);
-//             util::serialization::read(reader, "my_packed_vector", result);
+            TestPackedVector result;
+            storage::tar::FileReader reader(tmp.path, storage::tar::FileReader::VerifyFingerprint);
+            util::serialization::read(reader, "my_packed_vector", result);
 
-//             CHECK_EQUAL_COLLECTIONS(result, v);
-//         }
-//     }
-// }
+            CHECK_EQUAL_COLLECTIONS(result, v);
+        }
+    }
+}
 
 // BOOST_AUTO_TEST_CASE(tar_serialize_variable_indexed_data)
 // {
