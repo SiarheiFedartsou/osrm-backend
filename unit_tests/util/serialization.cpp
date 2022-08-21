@@ -1,47 +1,47 @@
-// #include "util/serialization.hpp"
+#include "util/serialization.hpp"
 
-// #include "../common/range_tools.hpp"
-// #include "../common/temporary_file.hpp"
+#include "../common/range_tools.hpp"
+#include "../common/temporary_file.hpp"
 
-// #include <boost/filesystem.hpp>
-// #include <boost/test/unit_test.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/test/unit_test.hpp>
 
-// BOOST_AUTO_TEST_SUITE(serialization)
+BOOST_AUTO_TEST_SUITE(serialization)
 
-// using namespace osrm;
-// using namespace osrm::util;
+using namespace osrm;
+using namespace osrm::util;
 
-// BOOST_AUTO_TEST_CASE(tar_serialize_range_table)
-// {
-//     TemporaryFile tmp;
-//     {
-//         constexpr unsigned BLOCK_SIZE = 16;
-//         using TestRangeTable = RangeTable<BLOCK_SIZE, osrm::storage::Ownership::Container>;
+BOOST_AUTO_TEST_CASE(tar_serialize_range_table)
+{
+    TemporaryFile tmp;
+    {
+        constexpr unsigned BLOCK_SIZE = 16;
+        using TestRangeTable = RangeTable<BLOCK_SIZE, osrm::storage::Ownership::Container>;
 
-//         std::vector<std::vector<unsigned>> data = {std::vector<unsigned>{0, 10, 24, 100, 2, 100},
-//                                                    std::vector<unsigned>{1, 12, 15},
-//                                                    std::vector<unsigned>{10, 10, 10}};
+        std::vector<std::vector<unsigned>> data = {std::vector<unsigned>{0, 10, 24, 100, 2, 100},
+                                                   std::vector<unsigned>{1, 12, 15},
+                                                   std::vector<unsigned>{10, 10, 10}};
 
-//         for (const auto &v : data)
-//         {
-//             TestRangeTable reference{v};
-//             {
-//                 storage::tar::FileWriter writer(tmp.path,
-//                                                 storage::tar::FileWriter::GenerateFingerprint);
-//                 util::serialization::write(writer, "my_range_table", reference);
-//             }
+        for (const auto &v : data)
+        {
+            TestRangeTable reference{v};
+            {
+                storage::tar::FileWriter writer(tmp.path,
+                                                storage::tar::FileWriter::GenerateFingerprint);
+                util::serialization::write(writer, "my_range_table", reference);
+            }
 
-//             TestRangeTable result;
-//             storage::tar::FileReader reader(tmp.path, storage::tar::FileReader::VerifyFingerprint);
-//             util::serialization::read(reader, "my_range_table", result);
+            TestRangeTable result;
+            storage::tar::FileReader reader(tmp.path, storage::tar::FileReader::VerifyFingerprint);
+            util::serialization::read(reader, "my_range_table", result);
 
-//             for (auto index : util::irange<std::size_t>(0, v.size()))
-//             {
-//                 CHECK_EQUAL_COLLECTIONS(result.GetRange(index), reference.GetRange(index));
-//             }
-//         }
-//     }
-// }
+            for (auto index : util::irange<std::size_t>(0, v.size()))
+            {
+                CHECK_EQUAL_COLLECTIONS(result.GetRange(index), reference.GetRange(index));
+            }
+        }
+    }
+}
 
 // BOOST_AUTO_TEST_CASE(tar_serialize_packed_vector)
 // {
@@ -115,4 +115,4 @@
 //     }
 // }
 
-// BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_SUITE_END()
