@@ -25,242 +25,242 @@
 #include <vector>
 
 // explicit TBB scheduler init to register resources cleanup at exit
-#include <tbb/global_control.h>
-tbb::global_control scheduler(tbb::global_control::max_allowed_parallelism, 2);
+// #include <tbb/global_control.h>
+// tbb::global_control scheduler(tbb::global_control::max_allowed_parallelism, 2);
 
-BOOST_AUTO_TEST_SUITE(static_rtree)
+// BOOST_AUTO_TEST_SUITE(static_rtree)
 
-using namespace osrm;
-using namespace osrm::util;
-using namespace osrm::test;
+// using namespace osrm;
+// using namespace osrm::util;
+// using namespace osrm::test;
 
-constexpr uint32_t TEST_BRANCHING_FACTOR = 8;
-constexpr uint32_t TEST_LEAF_NODE_SIZE = 64;
+// constexpr uint32_t TEST_BRANCHING_FACTOR = 8;
+// constexpr uint32_t TEST_LEAF_NODE_SIZE = 64;
 
-using TestData = extractor::EdgeBasedNodeSegment;
-using TestStaticRTree = StaticRTree<TestData,
-                                    osrm::storage::Ownership::Container,
-                                    TEST_BRANCHING_FACTOR,
-                                    TEST_LEAF_NODE_SIZE>;
-using MiniStaticRTree = StaticRTree<TestData, osrm::storage::Ownership::Container, 2, 128>;
-using TestDataFacade = MockDataFacade<osrm::engine::routing_algorithms::ch::Algorithm>;
+// using TestData = extractor::EdgeBasedNodeSegment;
+// using TestStaticRTree = StaticRTree<TestData,
+//                                     osrm::storage::Ownership::Container,
+//                                     TEST_BRANCHING_FACTOR,
+//                                     TEST_LEAF_NODE_SIZE>;
+// using MiniStaticRTree = StaticRTree<TestData, osrm::storage::Ownership::Container, 2, 128>;
+// using TestDataFacade = MockDataFacade<osrm::engine::routing_algorithms::ch::Algorithm>;
 
-// Choosen by a fair W20 dice roll (this value is completely arbitrary)
-constexpr unsigned RANDOM_SEED = 42;
-static const int32_t WORLD_MIN_LAT = -85 * COORDINATE_PRECISION;
-static const int32_t WORLD_MAX_LAT = 85 * COORDINATE_PRECISION;
-static const int32_t WORLD_MIN_LON = -180 * COORDINATE_PRECISION;
-static const int32_t WORLD_MAX_LON = 180 * COORDINATE_PRECISION;
+// // Choosen by a fair W20 dice roll (this value is completely arbitrary)
+// constexpr unsigned RANDOM_SEED = 42;
+// static const int32_t WORLD_MIN_LAT = -85 * COORDINATE_PRECISION;
+// static const int32_t WORLD_MAX_LAT = 85 * COORDINATE_PRECISION;
+// static const int32_t WORLD_MIN_LON = -180 * COORDINATE_PRECISION;
+// static const int32_t WORLD_MAX_LON = 180 * COORDINATE_PRECISION;
 
-template <typename DataT> class LinearSearchNN
-{
-  public:
-    LinearSearchNN(const std::vector<Coordinate> &coords, const std::vector<DataT> &edges)
-        : coords(coords), edges(edges)
-    {
-    }
+// template <typename DataT> class LinearSearchNN
+// {
+//   public:
+//     LinearSearchNN(const std::vector<Coordinate> &coords, const std::vector<DataT> &edges)
+//         : coords(coords), edges(edges)
+//     {
+//     }
 
-    std::vector<DataT> Nearest(const Coordinate &input_coordinate, const unsigned num_results)
-    {
-        std::vector<DataT> local_edges(edges);
+//     std::vector<DataT> Nearest(const Coordinate &input_coordinate, const unsigned num_results)
+//     {
+//         std::vector<DataT> local_edges(edges);
 
-        auto projected_input = web_mercator::fromWGS84(input_coordinate);
-        const auto segment_comparator = [this, &projected_input](const DataT &lhs,
-                                                                 const DataT &rhs) {
-            using web_mercator::fromWGS84;
-            const auto lhs_result = coordinate_calculation::projectPointOnSegment(
-                fromWGS84(coords[lhs.u]), fromWGS84(coords[lhs.v]), projected_input);
-            const auto rhs_result = coordinate_calculation::projectPointOnSegment(
-                fromWGS84(coords[rhs.u]), fromWGS84(coords[rhs.v]), projected_input);
-            const auto lhs_squared_dist = coordinate_calculation::squaredEuclideanDistance(
-                lhs_result.second, projected_input);
-            const auto rhs_squared_dist = coordinate_calculation::squaredEuclideanDistance(
-                rhs_result.second, projected_input);
-            return lhs_squared_dist < rhs_squared_dist;
-        };
+//         auto projected_input = web_mercator::fromWGS84(input_coordinate);
+//         const auto segment_comparator = [this, &projected_input](const DataT &lhs,
+//                                                                  const DataT &rhs) {
+//             using web_mercator::fromWGS84;
+//             const auto lhs_result = coordinate_calculation::projectPointOnSegment(
+//                 fromWGS84(coords[lhs.u]), fromWGS84(coords[lhs.v]), projected_input);
+//             const auto rhs_result = coordinate_calculation::projectPointOnSegment(
+//                 fromWGS84(coords[rhs.u]), fromWGS84(coords[rhs.v]), projected_input);
+//             const auto lhs_squared_dist = coordinate_calculation::squaredEuclideanDistance(
+//                 lhs_result.second, projected_input);
+//             const auto rhs_squared_dist = coordinate_calculation::squaredEuclideanDistance(
+//                 rhs_result.second, projected_input);
+//             return lhs_squared_dist < rhs_squared_dist;
+//         };
 
-        std::nth_element(local_edges.begin(),
-                         local_edges.begin() + num_results,
-                         local_edges.end(),
-                         segment_comparator);
-        local_edges.resize(num_results);
+//         std::nth_element(local_edges.begin(),
+//                          local_edges.begin() + num_results,
+//                          local_edges.end(),
+//                          segment_comparator);
+//         local_edges.resize(num_results);
 
-        return local_edges;
-    }
+//         return local_edges;
+//     }
 
-  private:
-    const std::vector<Coordinate> &coords;
-    const std::vector<TestData> &edges;
-};
+//   private:
+//     const std::vector<Coordinate> &coords;
+//     const std::vector<TestData> &edges;
+// };
 
-template <unsigned NUM_NODES, unsigned NUM_EDGES> struct RandomGraphFixture
-{
-    struct TupleHash
-    {
-        typedef std::pair<unsigned, unsigned> argument_type;
-        typedef std::size_t result_type;
+// template <unsigned NUM_NODES, unsigned NUM_EDGES> struct RandomGraphFixture
+// {
+//     struct TupleHash
+//     {
+//         typedef std::pair<unsigned, unsigned> argument_type;
+//         typedef std::size_t result_type;
 
-        result_type operator()(const argument_type &t) const
-        {
-            std::size_t val{0};
-            boost::hash_combine(val, t.first);
-            boost::hash_combine(val, t.second);
-            return val;
-        }
-    };
+//         result_type operator()(const argument_type &t) const
+//         {
+//             std::size_t val{0};
+//             boost::hash_combine(val, t.first);
+//             boost::hash_combine(val, t.second);
+//             return val;
+//         }
+//     };
 
-    RandomGraphFixture()
-    {
-        std::mt19937 g(RANDOM_SEED);
+//     RandomGraphFixture()
+//     {
+//         std::mt19937 g(RANDOM_SEED);
 
-        std::uniform_int_distribution<> lat_udist(WORLD_MIN_LAT, WORLD_MAX_LAT);
-        std::uniform_int_distribution<> lon_udist(WORLD_MIN_LON, WORLD_MAX_LON);
+//         std::uniform_int_distribution<> lat_udist(WORLD_MIN_LAT, WORLD_MAX_LAT);
+//         std::uniform_int_distribution<> lon_udist(WORLD_MIN_LON, WORLD_MAX_LON);
 
-        for (unsigned i = 0; i < NUM_NODES; i++)
-        {
-            int lon = lon_udist(g);
-            int lat = lat_udist(g);
-            coords.emplace_back(Coordinate(FixedLongitude{lon}, FixedLatitude{lat}));
-        }
+//         for (unsigned i = 0; i < NUM_NODES; i++)
+//         {
+//             int lon = lon_udist(g);
+//             int lat = lat_udist(g);
+//             coords.emplace_back(Coordinate(FixedLongitude{lon}, FixedLatitude{lat}));
+//         }
 
-        std::uniform_int_distribution<> edge_udist(0, coords.size() - 1);
+//         std::uniform_int_distribution<> edge_udist(0, coords.size() - 1);
 
-        std::unordered_set<std::pair<unsigned, unsigned>, TupleHash> used_edges;
+//         std::unordered_set<std::pair<unsigned, unsigned>, TupleHash> used_edges;
 
-        while (edges.size() < NUM_EDGES)
-        {
-            TestData data;
-            data.u = edge_udist(g);
-            data.v = edge_udist(g);
-            data.is_startpoint = true;
-            if (used_edges.find(std::pair<unsigned, unsigned>(
-                    std::min(data.u, data.v), std::max(data.u, data.v))) == used_edges.end())
-            {
-                edges.emplace_back(data);
-                used_edges.emplace(std::min(data.u, data.v), std::max(data.u, data.v));
-            }
-        }
-    }
+//         while (edges.size() < NUM_EDGES)
+//         {
+//             TestData data;
+//             data.u = edge_udist(g);
+//             data.v = edge_udist(g);
+//             data.is_startpoint = true;
+//             if (used_edges.find(std::pair<unsigned, unsigned>(
+//                     std::min(data.u, data.v), std::max(data.u, data.v))) == used_edges.end())
+//             {
+//                 edges.emplace_back(data);
+//                 used_edges.emplace(std::min(data.u, data.v), std::max(data.u, data.v));
+//             }
+//         }
+//     }
 
-    std::vector<Coordinate> coords;
-    std::vector<TestData> edges;
-};
+//     std::vector<Coordinate> coords;
+//     std::vector<TestData> edges;
+// };
 
-struct GraphFixture
-{
-    GraphFixture(const std::vector<std::pair<FloatLongitude, FloatLatitude>> &input_coords,
-                 const std::vector<std::tuple<unsigned, unsigned, bool>> &input_edges)
-    {
+// struct GraphFixture
+// {
+//     GraphFixture(const std::vector<std::pair<FloatLongitude, FloatLatitude>> &input_coords,
+//                  const std::vector<std::tuple<unsigned, unsigned, bool>> &input_edges)
+//     {
 
-        for (unsigned i = 0; i < input_coords.size(); i++)
-        {
-            coords.emplace_back(input_coords[i].first, input_coords[i].second);
-        }
+//         for (unsigned i = 0; i < input_coords.size(); i++)
+//         {
+//             coords.emplace_back(input_coords[i].first, input_coords[i].second);
+//         }
 
-        for (const auto &pair : input_edges)
-        {
-            TestData d;
-            d.u = std::get<0>(pair);
-            d.v = std::get<1>(pair);
-            // We set the forward nodes to the target node-based-node IDs, just
-            // so we have something to test against.  Because this isn't a real
-            // graph, the actual values aren't important, we just need something
-            // to examine during tests.
-            d.forward_segment_id = {std::get<1>(pair), true};
-            d.reverse_segment_id = {std::get<0>(pair), true};
-            d.fwd_segment_position = 0;
-            d.is_startpoint = std::get<2>(pair);
-            edges.emplace_back(d);
-        }
-    }
+//         for (const auto &pair : input_edges)
+//         {
+//             TestData d;
+//             d.u = std::get<0>(pair);
+//             d.v = std::get<1>(pair);
+//             // We set the forward nodes to the target node-based-node IDs, just
+//             // so we have something to test against.  Because this isn't a real
+//             // graph, the actual values aren't important, we just need something
+//             // to examine during tests.
+//             d.forward_segment_id = {std::get<1>(pair), true};
+//             d.reverse_segment_id = {std::get<0>(pair), true};
+//             d.fwd_segment_position = 0;
+//             d.is_startpoint = std::get<2>(pair);
+//             edges.emplace_back(d);
+//         }
+//     }
 
-    std::vector<Coordinate> coords;
-    std::vector<TestData> edges;
-};
+//     std::vector<Coordinate> coords;
+//     std::vector<TestData> edges;
+// };
 
-typedef RandomGraphFixture<TEST_LEAF_NODE_SIZE * 3, TEST_LEAF_NODE_SIZE / 2>
-    TestRandomGraphFixture_LeafHalfFull;
-typedef RandomGraphFixture<TEST_LEAF_NODE_SIZE * 5, TEST_LEAF_NODE_SIZE>
-    TestRandomGraphFixture_LeafFull;
-typedef RandomGraphFixture<TEST_LEAF_NODE_SIZE * 10, TEST_LEAF_NODE_SIZE * 2>
-    TestRandomGraphFixture_TwoLeaves;
-typedef RandomGraphFixture<TEST_LEAF_NODE_SIZE * TEST_BRANCHING_FACTOR * 3,
-                           TEST_LEAF_NODE_SIZE * TEST_BRANCHING_FACTOR>
-    TestRandomGraphFixture_Branch;
-typedef RandomGraphFixture<TEST_LEAF_NODE_SIZE * TEST_BRANCHING_FACTOR * 3,
-                           TEST_LEAF_NODE_SIZE * TEST_BRANCHING_FACTOR * 2>
-    TestRandomGraphFixture_MultipleLevels;
-typedef RandomGraphFixture<10, 30> TestRandomGraphFixture_10_30;
+// typedef RandomGraphFixture<TEST_LEAF_NODE_SIZE * 3, TEST_LEAF_NODE_SIZE / 2>
+//     TestRandomGraphFixture_LeafHalfFull;
+// typedef RandomGraphFixture<TEST_LEAF_NODE_SIZE * 5, TEST_LEAF_NODE_SIZE>
+//     TestRandomGraphFixture_LeafFull;
+// typedef RandomGraphFixture<TEST_LEAF_NODE_SIZE * 10, TEST_LEAF_NODE_SIZE * 2>
+//     TestRandomGraphFixture_TwoLeaves;
+// typedef RandomGraphFixture<TEST_LEAF_NODE_SIZE * TEST_BRANCHING_FACTOR * 3,
+//                            TEST_LEAF_NODE_SIZE * TEST_BRANCHING_FACTOR>
+//     TestRandomGraphFixture_Branch;
+// typedef RandomGraphFixture<TEST_LEAF_NODE_SIZE * TEST_BRANCHING_FACTOR * 3,
+//                            TEST_LEAF_NODE_SIZE * TEST_BRANCHING_FACTOR * 2>
+//     TestRandomGraphFixture_MultipleLevels;
+// typedef RandomGraphFixture<10, 30> TestRandomGraphFixture_10_30;
 
-template <typename RTreeT>
-void simple_verify_rtree(RTreeT &rtree,
-                         const std::vector<Coordinate> &coords,
-                         const std::vector<TestData> &edges)
-{
-    for (const auto &e : edges)
-    {
-        const Coordinate &pu = coords[e.u];
-        const Coordinate &pv = coords[e.v];
-        auto result_u = rtree.Nearest(pu, 1);
-        auto result_v = rtree.Nearest(pv, 1);
-        BOOST_CHECK(result_u.size() == 1 && result_v.size() == 1);
-        BOOST_CHECK(result_u.front().u == e.u || result_u.front().v == e.u);
-        BOOST_CHECK(result_v.front().u == e.v || result_v.front().v == e.v);
-    }
-}
+// template <typename RTreeT>
+// void simple_verify_rtree(RTreeT &rtree,
+//                          const std::vector<Coordinate> &coords,
+//                          const std::vector<TestData> &edges)
+// {
+//     for (const auto &e : edges)
+//     {
+//         const Coordinate &pu = coords[e.u];
+//         const Coordinate &pv = coords[e.v];
+//         auto result_u = rtree.Nearest(pu, 1);
+//         auto result_v = rtree.Nearest(pv, 1);
+//         BOOST_CHECK(result_u.size() == 1 && result_v.size() == 1);
+//         BOOST_CHECK(result_u.front().u == e.u || result_u.front().v == e.u);
+//         BOOST_CHECK(result_v.front().u == e.v || result_v.front().v == e.v);
+//     }
+// }
 
-template <typename RTreeT>
-void sampling_verify_rtree(RTreeT &rtree,
-                           LinearSearchNN<TestData> &lsnn,
-                           const std::vector<Coordinate> &coords,
-                           unsigned num_samples)
-{
-    std::mt19937 g(RANDOM_SEED);
-    std::uniform_int_distribution<> lat_udist(WORLD_MIN_LAT, WORLD_MAX_LAT);
-    std::uniform_int_distribution<> lon_udist(WORLD_MIN_LON, WORLD_MAX_LON);
-    std::vector<Coordinate> queries;
-    for (unsigned i = 0; i < num_samples; i++)
-    {
-        queries.emplace_back(FixedLongitude{lon_udist(g)}, FixedLatitude{lat_udist(g)});
-    }
+// template <typename RTreeT>
+// void sampling_verify_rtree(RTreeT &rtree,
+//                            LinearSearchNN<TestData> &lsnn,
+//                            const std::vector<Coordinate> &coords,
+//                            unsigned num_samples)
+// {
+//     std::mt19937 g(RANDOM_SEED);
+//     std::uniform_int_distribution<> lat_udist(WORLD_MIN_LAT, WORLD_MAX_LAT);
+//     std::uniform_int_distribution<> lon_udist(WORLD_MIN_LON, WORLD_MAX_LON);
+//     std::vector<Coordinate> queries;
+//     for (unsigned i = 0; i < num_samples; i++)
+//     {
+//         queries.emplace_back(FixedLongitude{lon_udist(g)}, FixedLatitude{lat_udist(g)});
+//     }
 
-    for (const auto &q : queries)
-    {
-        auto result_rtree = rtree.Nearest(q, 1);
-        auto result_lsnn = lsnn.Nearest(q, 1);
-        BOOST_CHECK(result_rtree.size() == 1);
-        BOOST_CHECK(result_lsnn.size() == 1);
-        auto rtree_u = result_rtree.back().u;
-        auto rtree_v = result_rtree.back().v;
-        auto lsnn_u = result_lsnn.back().u;
-        auto lsnn_v = result_lsnn.back().v;
+//     for (const auto &q : queries)
+//     {
+//         auto result_rtree = rtree.Nearest(q, 1);
+//         auto result_lsnn = lsnn.Nearest(q, 1);
+//         BOOST_CHECK(result_rtree.size() == 1);
+//         BOOST_CHECK(result_lsnn.size() == 1);
+//         auto rtree_u = result_rtree.back().u;
+//         auto rtree_v = result_rtree.back().v;
+//         auto lsnn_u = result_lsnn.back().u;
+//         auto lsnn_v = result_lsnn.back().v;
 
-        const double rtree_dist =
-            coordinate_calculation::perpendicularDistance(coords[rtree_u], coords[rtree_v], q);
-        const double lsnn_dist =
-            coordinate_calculation::perpendicularDistance(coords[lsnn_u], coords[lsnn_v], q);
+//         const double rtree_dist =
+//             coordinate_calculation::perpendicularDistance(coords[rtree_u], coords[rtree_v], q);
+//         const double lsnn_dist =
+//             coordinate_calculation::perpendicularDistance(coords[lsnn_u], coords[lsnn_v], q);
 
-        BOOST_CHECK_CLOSE(rtree_dist, lsnn_dist, 0.0001);
-    }
-}
+//         BOOST_CHECK_CLOSE(rtree_dist, lsnn_dist, 0.0001);
+//     }
+// }
 
-template <typename RTreeT, typename FixtureT>
-auto make_rtree(const boost::filesystem::path &path, FixtureT &fixture)
-{
-    return RTreeT(fixture.edges, fixture.coords, path);
-}
+// template <typename RTreeT, typename FixtureT>
+// auto make_rtree(const boost::filesystem::path &path, FixtureT &fixture)
+// {
+//     return RTreeT(fixture.edges, fixture.coords, path);
+// }
 
-template <typename RTreeT = TestStaticRTree, typename FixtureT>
-void construction_test(const std::string &path, FixtureT &fixture)
-{
-    std::string leaves_path;
-    std::string nodes_path;
-    auto rtree = make_rtree<RTreeT>(path, fixture);
-    LinearSearchNN<TestData> lsnn(fixture.coords, fixture.edges);
+// template <typename RTreeT = TestStaticRTree, typename FixtureT>
+// void construction_test(const std::string &path, FixtureT &fixture)
+// {
+//     std::string leaves_path;
+//     std::string nodes_path;
+//     auto rtree = make_rtree<RTreeT>(path, fixture);
+//     LinearSearchNN<TestData> lsnn(fixture.coords, fixture.edges);
 
-    simple_verify_rtree(rtree, fixture.coords, fixture.edges);
-    sampling_verify_rtree(rtree, lsnn, fixture.coords, 100);
-}
+//     simple_verify_rtree(rtree, fixture.coords, fixture.edges);
+//     sampling_verify_rtree(rtree, lsnn, fixture.coords, 100);
+// }
 
 // BOOST_FIXTURE_TEST_CASE(construct_tiny, TestRandomGraphFixture_10_30)
 // {
@@ -498,4 +498,4 @@ void construction_test(const std::string &path, FixtureT &fixture)
 //     }
 // }
 
-BOOST_AUTO_TEST_SUITE_END()
+// BOOST_AUTO_TEST_SUITE_END()
