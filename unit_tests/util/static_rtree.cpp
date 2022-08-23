@@ -262,240 +262,240 @@ void construction_test(const std::string &path, FixtureT &fixture)
     sampling_verify_rtree(rtree, lsnn, fixture.coords, 100);
 }
 
-BOOST_FIXTURE_TEST_CASE(construct_tiny, TestRandomGraphFixture_10_30)
-{
-    using TinyTestTree = StaticRTree<TestData, osrm::storage::Ownership::Container, 2, 64>;
-    construction_test<TinyTestTree>("test_tiny", *this);
-}
+// BOOST_FIXTURE_TEST_CASE(construct_tiny, TestRandomGraphFixture_10_30)
+// {
+//     using TinyTestTree = StaticRTree<TestData, osrm::storage::Ownership::Container, 2, 64>;
+//     construction_test<TinyTestTree>("test_tiny", *this);
+// }
 
-BOOST_FIXTURE_TEST_CASE(construct_half_leaf_test, TestRandomGraphFixture_LeafHalfFull)
-{
-    construction_test("test_1", *this);
-}
+// BOOST_FIXTURE_TEST_CASE(construct_half_leaf_test, TestRandomGraphFixture_LeafHalfFull)
+// {
+//     construction_test("test_1", *this);
+// }
 
-BOOST_FIXTURE_TEST_CASE(construct_full_leaf_test, TestRandomGraphFixture_LeafFull)
-{
-    construction_test("test_2", *this);
-}
+// BOOST_FIXTURE_TEST_CASE(construct_full_leaf_test, TestRandomGraphFixture_LeafFull)
+// {
+//     construction_test("test_2", *this);
+// }
 
-BOOST_FIXTURE_TEST_CASE(construct_two_leaves_test, TestRandomGraphFixture_TwoLeaves)
-{
-    construction_test("test_3", *this);
-}
+// BOOST_FIXTURE_TEST_CASE(construct_two_leaves_test, TestRandomGraphFixture_TwoLeaves)
+// {
+//     construction_test("test_3", *this);
+// }
 
-BOOST_FIXTURE_TEST_CASE(construct_branch_test, TestRandomGraphFixture_Branch)
-{
-    construction_test("test_4", *this);
-}
+// BOOST_FIXTURE_TEST_CASE(construct_branch_test, TestRandomGraphFixture_Branch)
+// {
+//     construction_test("test_4", *this);
+// }
 
-BOOST_FIXTURE_TEST_CASE(construct_multiple_levels_test, TestRandomGraphFixture_MultipleLevels)
-{
-    construction_test("test_5", *this);
-}
+// BOOST_FIXTURE_TEST_CASE(construct_multiple_levels_test, TestRandomGraphFixture_MultipleLevels)
+// {
+//     construction_test("test_5", *this);
+// }
 
-// Bug: If you querry a point that lies between two BBs that have a gap,
-// one BB will be pruned, even if it could contain a nearer match.
-BOOST_AUTO_TEST_CASE(regression_test)
-{
-    using Coord = std::pair<FloatLongitude, FloatLatitude>;
-    using Edge = std::tuple<unsigned, unsigned, bool>;
-    GraphFixture fixture(
-        {
-            Coord{FloatLongitude{0.0}, FloatLatitude{40.0}},   //
-            Coord{FloatLongitude{5.0}, FloatLatitude{35.0}},   //
-            Coord{FloatLongitude{5.0}, FloatLatitude{5.0}},    //
-            Coord{FloatLongitude{10.0}, FloatLatitude{0.0}},   //
-            Coord{FloatLongitude{10.0}, FloatLatitude{20.0}},  //
-            Coord{FloatLongitude{5.0}, FloatLatitude{20.0}},   //
-            Coord{FloatLongitude{100.0}, FloatLatitude{40.0}}, //
-            Coord{FloatLongitude{105.0}, FloatLatitude{35.0}}, //
-            Coord{FloatLongitude{105.0}, FloatLatitude{5.0}},  //
-            Coord{FloatLongitude{110.0}, FloatLatitude{0.0}},  //
-        },
-        {Edge(0, 1, true), Edge(2, 3, true), Edge(4, 5, true), Edge(6, 7, true), Edge(8, 9, true)});
+// // Bug: If you querry a point that lies between two BBs that have a gap,
+// // one BB will be pruned, even if it could contain a nearer match.
+// BOOST_AUTO_TEST_CASE(regression_test)
+// {
+//     using Coord = std::pair<FloatLongitude, FloatLatitude>;
+//     using Edge = std::tuple<unsigned, unsigned, bool>;
+//     GraphFixture fixture(
+//         {
+//             Coord{FloatLongitude{0.0}, FloatLatitude{40.0}},   //
+//             Coord{FloatLongitude{5.0}, FloatLatitude{35.0}},   //
+//             Coord{FloatLongitude{5.0}, FloatLatitude{5.0}},    //
+//             Coord{FloatLongitude{10.0}, FloatLatitude{0.0}},   //
+//             Coord{FloatLongitude{10.0}, FloatLatitude{20.0}},  //
+//             Coord{FloatLongitude{5.0}, FloatLatitude{20.0}},   //
+//             Coord{FloatLongitude{100.0}, FloatLatitude{40.0}}, //
+//             Coord{FloatLongitude{105.0}, FloatLatitude{35.0}}, //
+//             Coord{FloatLongitude{105.0}, FloatLatitude{5.0}},  //
+//             Coord{FloatLongitude{110.0}, FloatLatitude{0.0}},  //
+//         },
+//         {Edge(0, 1, true), Edge(2, 3, true), Edge(4, 5, true), Edge(6, 7, true), Edge(8, 9, true)});
 
-    TemporaryFile tmp;
-    auto rtree = make_rtree<MiniStaticRTree>(tmp.path, fixture);
-    LinearSearchNN<TestData> lsnn(fixture.coords, fixture.edges);
+//     TemporaryFile tmp;
+//     auto rtree = make_rtree<MiniStaticRTree>(tmp.path, fixture);
+//     LinearSearchNN<TestData> lsnn(fixture.coords, fixture.edges);
 
-    // query a node just right of the center of the gap
-    Coordinate input(FloatLongitude{55.1}, FloatLatitude{20.0});
-    auto result_rtree = rtree.Nearest(input, 1);
-    auto result_ls = lsnn.Nearest(input, 1);
+//     // query a node just right of the center of the gap
+//     Coordinate input(FloatLongitude{55.1}, FloatLatitude{20.0});
+//     auto result_rtree = rtree.Nearest(input, 1);
+//     auto result_ls = lsnn.Nearest(input, 1);
 
-    BOOST_CHECK(result_rtree.size() == 1);
-    BOOST_CHECK(result_ls.size() == 1);
+//     BOOST_CHECK(result_rtree.size() == 1);
+//     BOOST_CHECK(result_ls.size() == 1);
 
-    BOOST_CHECK_EQUAL(result_ls.front().u, result_rtree.front().u);
-    BOOST_CHECK_EQUAL(result_ls.front().v, result_rtree.front().v);
-}
+//     BOOST_CHECK_EQUAL(result_ls.front().u, result_rtree.front().u);
+//     BOOST_CHECK_EQUAL(result_ls.front().v, result_rtree.front().v);
+// }
 
-// Bug: If you querry a point with a narrow radius, no result should be returned
-BOOST_AUTO_TEST_CASE(radius_regression_test)
-{
-    using Coord = std::pair<FloatLongitude, FloatLatitude>;
-    using Edge = std::tuple<unsigned, unsigned, bool>;
-    GraphFixture fixture(
-        {
-            Coord(FloatLongitude{0.0}, FloatLatitude{0.0}),
-            Coord(FloatLongitude{10.0}, FloatLatitude{10.0}),
-        },
-        {Edge(0, 1, true), Edge(1, 0, true)});
+// // Bug: If you querry a point with a narrow radius, no result should be returned
+// BOOST_AUTO_TEST_CASE(radius_regression_test)
+// {
+//     using Coord = std::pair<FloatLongitude, FloatLatitude>;
+//     using Edge = std::tuple<unsigned, unsigned, bool>;
+//     GraphFixture fixture(
+//         {
+//             Coord(FloatLongitude{0.0}, FloatLatitude{0.0}),
+//             Coord(FloatLongitude{10.0}, FloatLatitude{10.0}),
+//         },
+//         {Edge(0, 1, true), Edge(1, 0, true)});
 
-    TemporaryFile tmp;
-    auto rtree = make_rtree<MiniStaticRTree>(tmp.path, fixture);
-    TestDataFacade mockfacade;
-    engine::GeospatialQuery<MiniStaticRTree, TestDataFacade> query(
-        rtree, fixture.coords, mockfacade);
+//     TemporaryFile tmp;
+//     auto rtree = make_rtree<MiniStaticRTree>(tmp.path, fixture);
+//     TestDataFacade mockfacade;
+//     engine::GeospatialQuery<MiniStaticRTree, TestDataFacade> query(
+//         rtree, fixture.coords, mockfacade);
 
-    Coordinate input(FloatLongitude{5.2}, FloatLatitude{5.0});
+//     Coordinate input(FloatLongitude{5.2}, FloatLatitude{5.0});
 
-    {
-        auto results = query.NearestPhantomNodesInRange(
-            input, 0.01, osrm::engine::Approach::UNRESTRICTED, true);
-        BOOST_CHECK_EQUAL(results.size(), 0);
-    }
-}
+//     {
+//         auto results = query.NearestPhantomNodesInRange(
+//             input, 0.01, osrm::engine::Approach::UNRESTRICTED, true);
+//         BOOST_CHECK_EQUAL(results.size(), 0);
+//     }
+// }
 
-BOOST_AUTO_TEST_CASE(permissive_edge_snapping)
-{
-    using Coord = std::pair<FloatLongitude, FloatLatitude>;
-    using Edge = std::tuple<unsigned, unsigned, bool>;
-    GraphFixture fixture(
-        {
-            Coord(FloatLongitude{0.0}, FloatLatitude{0.0}),
-            Coord(FloatLongitude{0.001}, FloatLatitude{0.001}),
-        },
-        {Edge(0, 1, true), Edge(1, 0, false)});
+// BOOST_AUTO_TEST_CASE(permissive_edge_snapping)
+// {
+//     using Coord = std::pair<FloatLongitude, FloatLatitude>;
+//     using Edge = std::tuple<unsigned, unsigned, bool>;
+//     GraphFixture fixture(
+//         {
+//             Coord(FloatLongitude{0.0}, FloatLatitude{0.0}),
+//             Coord(FloatLongitude{0.001}, FloatLatitude{0.001}),
+//         },
+//         {Edge(0, 1, true), Edge(1, 0, false)});
 
-    TemporaryFile tmp;
-    auto rtree = make_rtree<MiniStaticRTree>(tmp.path, fixture);
-    TestDataFacade mockfacade;
-    engine::GeospatialQuery<MiniStaticRTree, TestDataFacade> query(
-        rtree, fixture.coords, mockfacade);
+//     TemporaryFile tmp;
+//     auto rtree = make_rtree<MiniStaticRTree>(tmp.path, fixture);
+//     TestDataFacade mockfacade;
+//     engine::GeospatialQuery<MiniStaticRTree, TestDataFacade> query(
+//         rtree, fixture.coords, mockfacade);
 
-    Coordinate input(FloatLongitude{0.0005}, FloatLatitude{0.0005});
+//     Coordinate input(FloatLongitude{0.0005}, FloatLatitude{0.0005});
 
-    {
-        auto results = query.NearestPhantomNodesInRange(
-            input, 1000, osrm::engine::Approach::UNRESTRICTED, false);
-        BOOST_CHECK_EQUAL(results.size(), 1);
-    }
+//     {
+//         auto results = query.NearestPhantomNodesInRange(
+//             input, 1000, osrm::engine::Approach::UNRESTRICTED, false);
+//         BOOST_CHECK_EQUAL(results.size(), 1);
+//     }
 
-    {
-        auto results = query.NearestPhantomNodesInRange(
-            input, 1000, osrm::engine::Approach::UNRESTRICTED, true);
-        BOOST_CHECK_EQUAL(results.size(), 2);
-    }
-}
+//     {
+//         auto results = query.NearestPhantomNodesInRange(
+//             input, 1000, osrm::engine::Approach::UNRESTRICTED, true);
+//         BOOST_CHECK_EQUAL(results.size(), 2);
+//     }
+// }
 
-BOOST_AUTO_TEST_CASE(bearing_tests)
-{
-    using Coord = std::pair<FloatLongitude, FloatLatitude>;
-    using Edge = std::tuple<unsigned, unsigned, bool>;
-    GraphFixture fixture(
-        {
-            Coord(FloatLongitude{0.0}, FloatLatitude{0.0}),
-            Coord(FloatLongitude{10.0}, FloatLatitude{10.0}),
-        },
-        {Edge(0, 1, true), Edge(1, 0, true)});
+// BOOST_AUTO_TEST_CASE(bearing_tests)
+// {
+//     using Coord = std::pair<FloatLongitude, FloatLatitude>;
+//     using Edge = std::tuple<unsigned, unsigned, bool>;
+//     GraphFixture fixture(
+//         {
+//             Coord(FloatLongitude{0.0}, FloatLatitude{0.0}),
+//             Coord(FloatLongitude{10.0}, FloatLatitude{10.0}),
+//         },
+//         {Edge(0, 1, true), Edge(1, 0, true)});
 
-    TemporaryFile tmp;
-    auto rtree = make_rtree<MiniStaticRTree>(tmp.path, fixture);
-    TestDataFacade mockfacade;
-    engine::GeospatialQuery<MiniStaticRTree, TestDataFacade> query(
-        rtree, fixture.coords, mockfacade);
+//     TemporaryFile tmp;
+//     auto rtree = make_rtree<MiniStaticRTree>(tmp.path, fixture);
+//     TestDataFacade mockfacade;
+//     engine::GeospatialQuery<MiniStaticRTree, TestDataFacade> query(
+//         rtree, fixture.coords, mockfacade);
 
-    Coordinate input(FloatLongitude{5.1}, FloatLatitude{5.0});
+//     Coordinate input(FloatLongitude{5.1}, FloatLatitude{5.0});
 
-    {
-        auto results = query.NearestPhantomNodes(input, 5, osrm::engine::Approach::UNRESTRICTED);
-        BOOST_CHECK_EQUAL(results.size(), 2);
-        BOOST_CHECK_EQUAL(results.back().phantom_node.forward_segment_id.id, 0);
-        BOOST_CHECK_EQUAL(results.back().phantom_node.reverse_segment_id.id, 1);
-    }
+//     {
+//         auto results = query.NearestPhantomNodes(input, 5, osrm::engine::Approach::UNRESTRICTED);
+//         BOOST_CHECK_EQUAL(results.size(), 2);
+//         BOOST_CHECK_EQUAL(results.back().phantom_node.forward_segment_id.id, 0);
+//         BOOST_CHECK_EQUAL(results.back().phantom_node.reverse_segment_id.id, 1);
+//     }
 
-    {
-        auto results =
-            query.NearestPhantomNodes(input, 5, 270, 10, osrm::engine::Approach::UNRESTRICTED);
-        BOOST_CHECK_EQUAL(results.size(), 0);
-    }
+//     {
+//         auto results =
+//             query.NearestPhantomNodes(input, 5, 270, 10, osrm::engine::Approach::UNRESTRICTED);
+//         BOOST_CHECK_EQUAL(results.size(), 0);
+//     }
 
-    {
-        auto results =
-            query.NearestPhantomNodes(input, 5, 45, 10, osrm::engine::Approach::UNRESTRICTED);
-        BOOST_CHECK_EQUAL(results.size(), 2);
+//     {
+//         auto results =
+//             query.NearestPhantomNodes(input, 5, 45, 10, osrm::engine::Approach::UNRESTRICTED);
+//         BOOST_CHECK_EQUAL(results.size(), 2);
 
-        BOOST_CHECK(results[0].phantom_node.forward_segment_id.enabled);
-        BOOST_CHECK(!results[0].phantom_node.reverse_segment_id.enabled);
-        BOOST_CHECK_EQUAL(results[0].phantom_node.forward_segment_id.id, 1);
+//         BOOST_CHECK(results[0].phantom_node.forward_segment_id.enabled);
+//         BOOST_CHECK(!results[0].phantom_node.reverse_segment_id.enabled);
+//         BOOST_CHECK_EQUAL(results[0].phantom_node.forward_segment_id.id, 1);
 
-        BOOST_CHECK(!results[1].phantom_node.forward_segment_id.enabled);
-        BOOST_CHECK(results[1].phantom_node.reverse_segment_id.enabled);
-        BOOST_CHECK_EQUAL(results[1].phantom_node.reverse_segment_id.id, 1);
-    }
+//         BOOST_CHECK(!results[1].phantom_node.forward_segment_id.enabled);
+//         BOOST_CHECK(results[1].phantom_node.reverse_segment_id.enabled);
+//         BOOST_CHECK_EQUAL(results[1].phantom_node.reverse_segment_id.id, 1);
+//     }
 
-    {
-        auto results = query.NearestPhantomNodesInRange(
-            input, 11000, osrm::engine::Approach::UNRESTRICTED, true);
-        BOOST_CHECK_EQUAL(results.size(), 2);
-    }
+//     {
+//         auto results = query.NearestPhantomNodesInRange(
+//             input, 11000, osrm::engine::Approach::UNRESTRICTED, true);
+//         BOOST_CHECK_EQUAL(results.size(), 2);
+//     }
 
-    {
-        auto results = query.NearestPhantomNodesInRange(
-            input, 11000, 270, 10, osrm::engine::Approach::UNRESTRICTED, true);
-        BOOST_CHECK_EQUAL(results.size(), 0);
-    }
+//     {
+//         auto results = query.NearestPhantomNodesInRange(
+//             input, 11000, 270, 10, osrm::engine::Approach::UNRESTRICTED, true);
+//         BOOST_CHECK_EQUAL(results.size(), 0);
+//     }
 
-    {
-        auto results = query.NearestPhantomNodesInRange(
-            input, 11000, 45, 10, osrm::engine::Approach::UNRESTRICTED, true);
-        BOOST_CHECK_EQUAL(results.size(), 2);
+//     {
+//         auto results = query.NearestPhantomNodesInRange(
+//             input, 11000, 45, 10, osrm::engine::Approach::UNRESTRICTED, true);
+//         BOOST_CHECK_EQUAL(results.size(), 2);
 
-        BOOST_CHECK(results[0].phantom_node.forward_segment_id.enabled);
-        BOOST_CHECK(!results[0].phantom_node.reverse_segment_id.enabled);
-        BOOST_CHECK_EQUAL(results[0].phantom_node.forward_segment_id.id, 1);
+//         BOOST_CHECK(results[0].phantom_node.forward_segment_id.enabled);
+//         BOOST_CHECK(!results[0].phantom_node.reverse_segment_id.enabled);
+//         BOOST_CHECK_EQUAL(results[0].phantom_node.forward_segment_id.id, 1);
 
-        BOOST_CHECK(!results[1].phantom_node.forward_segment_id.enabled);
-        BOOST_CHECK(results[1].phantom_node.reverse_segment_id.enabled);
-        BOOST_CHECK_EQUAL(results[1].phantom_node.reverse_segment_id.id, 1);
-    }
-}
+//         BOOST_CHECK(!results[1].phantom_node.forward_segment_id.enabled);
+//         BOOST_CHECK(results[1].phantom_node.reverse_segment_id.enabled);
+//         BOOST_CHECK_EQUAL(results[1].phantom_node.reverse_segment_id.id, 1);
+//     }
+// }
 
-BOOST_AUTO_TEST_CASE(bbox_search_tests)
-{
-    using Coord = std::pair<FloatLongitude, FloatLatitude>;
-    using Edge = std::tuple<unsigned, unsigned, bool>;
+// BOOST_AUTO_TEST_CASE(bbox_search_tests)
+// {
+//     using Coord = std::pair<FloatLongitude, FloatLatitude>;
+//     using Edge = std::tuple<unsigned, unsigned, bool>;
 
-    GraphFixture fixture(
-        {
-            Coord(FloatLongitude{0.0}, FloatLatitude{0.0}),
-            Coord(FloatLongitude{1.0}, FloatLatitude{1.0}),
-            Coord(FloatLongitude{2.0}, FloatLatitude{2.0}),
-            Coord(FloatLongitude{3.0}, FloatLatitude{3.0}),
-            Coord(FloatLongitude{4.0}, FloatLatitude{4.0}),
-        },
-        {Edge(0, 1, true), Edge(1, 2, true), Edge(2, 3, true), Edge(3, 4, true)});
+//     GraphFixture fixture(
+//         {
+//             Coord(FloatLongitude{0.0}, FloatLatitude{0.0}),
+//             Coord(FloatLongitude{1.0}, FloatLatitude{1.0}),
+//             Coord(FloatLongitude{2.0}, FloatLatitude{2.0}),
+//             Coord(FloatLongitude{3.0}, FloatLatitude{3.0}),
+//             Coord(FloatLongitude{4.0}, FloatLatitude{4.0}),
+//         },
+//         {Edge(0, 1, true), Edge(1, 2, true), Edge(2, 3, true), Edge(3, 4, true)});
 
-    TemporaryFile tmp;
-    auto rtree = make_rtree<MiniStaticRTree>(tmp.path, fixture);
-    TestDataFacade mockfacade;
-    engine::GeospatialQuery<MiniStaticRTree, TestDataFacade> query(
-        rtree, fixture.coords, mockfacade);
+//     TemporaryFile tmp;
+//     auto rtree = make_rtree<MiniStaticRTree>(tmp.path, fixture);
+//     TestDataFacade mockfacade;
+//     engine::GeospatialQuery<MiniStaticRTree, TestDataFacade> query(
+//         rtree, fixture.coords, mockfacade);
 
-    {
-        RectangleInt2D bbox = {
-            FloatLongitude{0.5}, FloatLongitude{1.5}, FloatLatitude{0.5}, FloatLatitude{1.5}};
-        auto results = query.Search(bbox);
-        BOOST_CHECK_EQUAL(results.size(), 2);
-    }
+//     {
+//         RectangleInt2D bbox = {
+//             FloatLongitude{0.5}, FloatLongitude{1.5}, FloatLatitude{0.5}, FloatLatitude{1.5}};
+//         auto results = query.Search(bbox);
+//         BOOST_CHECK_EQUAL(results.size(), 2);
+//     }
 
-    {
-        RectangleInt2D bbox = {
-            FloatLongitude{1.5}, FloatLongitude{3.5}, FloatLatitude{1.5}, FloatLatitude{3.5}};
-        auto results = query.Search(bbox);
-        BOOST_CHECK_EQUAL(results.size(), 3);
-    }
-}
+//     {
+//         RectangleInt2D bbox = {
+//             FloatLongitude{1.5}, FloatLongitude{3.5}, FloatLatitude{1.5}, FloatLatitude{3.5}};
+//         auto results = query.Search(bbox);
+//         BOOST_CHECK_EQUAL(results.size(), 3);
+//     }
+// }
 
 BOOST_AUTO_TEST_SUITE_END()
