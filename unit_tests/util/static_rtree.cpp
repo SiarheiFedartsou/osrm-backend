@@ -28,7 +28,7 @@
 #include <tbb/global_control.h>
 tbb::global_control scheduler(tbb::global_control::max_allowed_parallelism, 2);
 
-BOOST_AUTO_TEST_SUITE(static_rtree)
+// BOOST_AUTO_TEST_SUITE(static_rtree)
 
 // using namespace osrm;
 // using namespace osrm::util;
