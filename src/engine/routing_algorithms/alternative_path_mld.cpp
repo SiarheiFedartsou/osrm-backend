@@ -137,7 +137,7 @@ Parameters parametersFromRequest(const PhantomNodes &phantom_node_pair)
 {
     Parameters parameters;
 
-    const auto distance = util::coordinate_calculation::haversineDistance(
+    const auto distance = util::coordinate_calculation::greatCircleDistance(
         phantom_node_pair.source_phantom.location, phantom_node_pair.target_phantom.location);
 
     // 10km
@@ -851,7 +851,7 @@ InternalManyRoutesResult alternativePathSearch(SearchEngineData<Algorithm> &sear
     const auto extract_packed_path_from_heaps = [&](WeightedViaNode via) {
         auto packed_path = retrievePackedPathFromHeap(forward_heap, reverse_heap, via.node);
 
-        return WeightedViaNodePackedPath{std::move(via), std::move(packed_path)};
+        return WeightedViaNodePackedPath{via, std::move(packed_path)};
     };
 
     std::vector<WeightedViaNodePackedPath> weighted_packed_paths;

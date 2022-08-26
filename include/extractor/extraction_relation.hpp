@@ -94,6 +94,10 @@ class ExtractionRelationContainer
     using RelationIDList = std::vector<ExtractionRelation::OsmIDTyped>;
     using RelationRefMap = std::unordered_map<std::uint64_t, RelationIDList>;
 
+    ExtractionRelationContainer() = default;
+    ExtractionRelationContainer(ExtractionRelationContainer &&) = default;
+    ExtractionRelationContainer(const ExtractionRelationContainer &) = delete;
+
     void AddRelation(ExtractionRelation &&rel)
     {
         std::lock_guard<std::mutex> lock(mu);
