@@ -13,11 +13,11 @@
 #include "extractor/name_table.hpp"
 #include "extractor/node_based_graph_factory.hpp"
 #include "extractor/node_restriction_map.hpp"
-#include "extractor/restriction_filter.hpp"
 #include "extractor/restriction_graph.hpp"
 #include "extractor/restriction_parser.hpp"
 #include "extractor/scripting_environment.hpp"
 #include "extractor/tarjan_scc.hpp"
+#include "extractor/turn_path_filter.hpp"
 #include "extractor/way_restriction_map.hpp"
 
 #include "guidance/files.hpp"
@@ -44,13 +44,8 @@
 #include <osmium/io/any_input.hpp>
 #include <osmium/thread/pool.hpp>
 #include <osmium/visitor.hpp>
-
-#if TBB_VERSION_MAJOR == 2020
 #include <tbb/global_control.h>
-#else
-#include <tbb/task_scheduler_init.h>
-#endif
-#include <tbb/pipeline.h>
+#include <tbb/parallel_pipeline.h>
 
 #include <algorithm>
 #include <atomic>
@@ -207,13 +202,8 @@ int Extractor::run(ScriptingEnvironment &scripting_environment)
     const unsigned recommended_num_threads = std::thread::hardware_concurrency();
     const auto number_of_threads = std::min(recommended_num_threads, config.requested_num_threads);
 
-#if TBB_VERSION_MAJOR == 2020
     tbb::global_control gc(tbb::global_control::max_allowed_parallelism,
                            config.requested_num_threads);
-#else
-    tbb::task_scheduler_init init(config.requested_num_threads);
-    BOOST_ASSERT(init.is_active());
-#endif
 
     LaneDescriptionMap turn_lane_map;
     std::vector<TurnRestriction> turn_restrictions;
@@ -280,7 +270,9 @@ int Extractor::run(ScriptingEnvironment &scripting_environment)
     edge_based_nodes_container =
         EdgeBasedNodeDataContainer({}, std::move(node_based_graph_factory.GetAnnotationData()));
 
-    turn_restrictions = removeInvalidRestrictions(std::move(turn_restrictions), node_based_graph);
+    turn_restrictions = removeInvalidTurnPaths(std::move(turn_restrictions), node_based_graph);
+    unresolved_maneuver_overrides =
+        removeInvalidTurnPaths(std::move(unresolved_maneuver_overrides), node_based_graph);
     auto restriction_graph = constructRestrictionGraph(turn_restrictions);
 
     const auto number_of_node_based_nodes = node_based_graph.GetNumberOfNodes();
@@ -454,11 +446,10 @@ std::
 
     ExtractionRelationContainer relations;
 
-    std::mutex reader_mutex;
-    const auto buffer_reader = [&reader_mutex](osmium::io::Reader &reader) {
-        return tbb::filter_t<void, SharedBuffer>(
-            tbb::filter::serial_in_order, [&reader, &reader_mutex](tbb::flow_control &fc) {
-                std::lock_guard<std::mutex> lock(reader_mutex);
+
+    const auto buffer_reader = [](osmium::io::Reader &reader) {
+        return tbb::filter<void, SharedBuffer>(
+            tbb::filter_mode::serial_in_order, [&reader](tbb::flow_control &fc) {
                 if (auto buffer = reader.read())
                 {
                     return std::make_shared<osmium::memory::Buffer>(std::move(buffer));
@@ -479,15 +470,15 @@ std::
     osmium_index_type location_cache;
     osmium_location_handler_type location_handler(location_cache);
 
-    tbb::filter_t<SharedBuffer, SharedBuffer> location_cacher(
-        tbb::filter::serial_in_order, [&location_handler](SharedBuffer buffer) {
+    tbb::filter<SharedBuffer, SharedBuffer> location_cacher(
+        tbb::filter_mode::serial_in_order, [&location_handler](SharedBuffer buffer) {
             osmium::apply(buffer->begin(), buffer->end(), location_handler);
             return buffer;
         });
 
     // OSM elements Lua parser
-    tbb::filter_t<SharedBuffer, ParsedBuffer> buffer_transformer(
-        tbb::filter::parallel,
+    tbb::filter<SharedBuffer, ParsedBuffer> buffer_transformer(
+        tbb::filter_mode::parallel,
         // NOLINTNEXTLINE(performance-unnecessary-value-param)
         [&](const SharedBuffer buffer) {
             ParsedBuffer parsed_buffer;
@@ -508,8 +499,8 @@ std::
     unsigned number_of_ways = 0;
     unsigned number_of_restrictions = 0;
     unsigned number_of_maneuver_overrides = 0;
-    tbb::filter_t<ParsedBuffer, void> buffer_storage(
-        tbb::filter::serial_in_order, [&](const ParsedBuffer &parsed_buffer) {
+    tbb::filter<ParsedBuffer, void> buffer_storage(
+        tbb::filter_mode::serial_in_order, [&](const ParsedBuffer &parsed_buffer) {
             number_of_nodes += parsed_buffer.resulting_nodes.size();
             // put parsed objects thru extractor callbacks
             for (const auto &result : parsed_buffer.resulting_nodes)
@@ -535,8 +526,8 @@ std::
             }
         });
 
-    tbb::filter_t<SharedBuffer, std::shared_ptr<ExtractionRelationContainer>> buffer_relation_cache(
-        tbb::filter::parallel,
+    tbb::filter<SharedBuffer, std::shared_ptr<ExtractionRelationContainer>> buffer_relation_cache(
+        tbb::filter_mode::parallel,
         // NOLINTNEXTLINE(performance-unnecessary-value-param)
         [&](const SharedBuffer buffer) {
             if (!buffer)
@@ -574,8 +565,8 @@ std::
 
 std::mutex mu2;
     unsigned number_of_relations = 0;
-    tbb::filter_t<std::shared_ptr<ExtractionRelationContainer>, void> buffer_storage_relation(
-        tbb::filter::serial_in_order,
+    tbb::filter<std::shared_ptr<ExtractionRelationContainer>, void> buffer_storage_relation(
+        tbb::filter_mode::serial_in_order,
         // NOLINTNEXTLINE(performance-unnecessary-value-param)
         [&](const std::shared_ptr<ExtractionRelationContainer> parsed_relations) {
         std::lock_guard<std::mutex> lock(mu2);
