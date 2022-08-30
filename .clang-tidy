@@ -12,6 +12,7 @@ Checks: >
     -bugprone-unhandled-self-assignment,
     -bugprone-forward-declaration-namespace,
     -bugprone-sizeof-expression,
+    -bugprone-throw-keyword-missing,
     -clang-analyzer-*,
     -clang-diagnostic-deprecated-declarations,
     -clang-diagnostic-constant-conversion,
