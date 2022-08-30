@@ -13,7 +13,6 @@
 #include <cstddef>
 
 using EdgeData = osrm::util::NodeBasedDynamicGraph::EdgeData;
-using osrm::guidance::getTurnDirection;
 using osrm::util::angularDeviation;
 
 namespace osrm
