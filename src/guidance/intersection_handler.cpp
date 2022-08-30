@@ -7,7 +7,6 @@
 #include "util/log.hpp"
 
 #include "util/bearing.hpp"
-#include "util/coordinate_calculation.hpp"
 
 #include <algorithm>
 #include <cstddef>
