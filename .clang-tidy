@@ -3,7 +3,6 @@ Checks: >
     bugprone-*,
     -bugprone-narrowing-conversions,
     -bugprone-easily-swappable-parameters,
-    -bugprone-branch-clone,
     -bugprone-misplaced-widening-cast,
     -bugprone-exception-escape,
     -bugprone-implicit-widening-of-multiplication-result,

@@ -32,8 +32,8 @@ namespace api
 class TableAPI final : public BaseAPI
 {
   public:
-  virtual ~TableAPI() = default;
-  
+    virtual ~TableAPI() = default;
+
     struct TableCellRef
     {
         TableCellRef(const std::size_t &row, const std::size_t &column) : row{row}, column{column}
