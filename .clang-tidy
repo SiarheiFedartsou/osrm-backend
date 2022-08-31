@@ -18,7 +18,7 @@ Checks: >
     -clang-diagnostic-constant-conversion,
     cppcoreguidelines-avoid-goto,
     cppcoreguidelines-no-malloc,
-    cppcoreguidelines-virtual-class-destructor,
+    -cppcoreguidelines-virtual-class-destructor,
     google-*,
     -google-build-explicit-make-pair,
     -google-build-using-namespace,
