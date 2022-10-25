@@ -671,8 +671,8 @@ jobs:
     - name: Build and install OSRM
       run: |
         mkdir build
-        docker run --rm -t $(docker build -q .) > linux-armv7                ## Creates a helper script named linux-armv7.
-        chmod +x linux-armv7                          ## Gives the script execution permission.
+        docker run --rm $(docker build -q .) > linux-armv7
+        chmod +x linux-armv7 
         ./linux-armv7 cmake -Bbuild -S. -GNinja -DENABLE_CONAN=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_NODE_BINDINGS=ON
         ./linux-armv7 ninja
     - name: Build example
