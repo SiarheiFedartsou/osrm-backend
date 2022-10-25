@@ -674,8 +674,7 @@ jobs:
         docker build -t my_cool_image .                   ## Builds the dockcross image.
         docker run my_cool_image > linux-armv7                ## Creates a helper script named linux-armv7.
         chmod +x linux-armv7                          ## Gives the script execution permission.
-        export DOCKCROSS_IMAGE=my_cool_image
-        ./linux-armv7 cmake -Bbuild -S. -GNinja -DENABLE_CONAN=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_NODE_BINDINGS=ON
+        ./linux-armv7 --image my_cool_image cmake -Bbuild -S. -GNinja -DENABLE_CONAN=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_NODE_BINDINGS=ON
         ./linux-armv7 ninja
     - name: Build example
       if: ${{ matrix.NODE_PACKAGE_TESTS_ONLY != 'ON' && matrix.ENABLE_APPLE_SILICON != 'ON' }}
