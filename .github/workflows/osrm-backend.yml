@@ -671,8 +671,8 @@ jobs:
     - name: Build and install OSRM
       run: |
         mkdir build
-        docker build -t my_cool_image .                   ## Builds the dockcross image.
-        docker run my_cool_image > linux-armv7                ## Creates a helper script named linux-armv7.
+        docker build -t docker.io/my_cool_image .                   ## Builds the dockcross image.
+        docker run docker.io/my_cool_image > linux-armv7                ## Creates a helper script named linux-armv7.
         chmod +x linux-armv7                          ## Gives the script execution permission.
         ./linux-armv7 cmake -Bbuild -S. -GNinja -DENABLE_CONAN=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_NODE_BINDINGS=ON
         ./linux-armv7 ninja
