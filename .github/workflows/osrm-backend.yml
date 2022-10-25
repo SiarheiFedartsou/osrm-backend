@@ -671,8 +671,9 @@ jobs:
     - name: Build and install OSRM
       run: |
         mkdir build
-        docker run -t dockcross/linux-arm64-lts cmake -Bbuild -S. -GNinja -DCMAKE_BUILD_TYPE=Release -DENABLE_NODE_BINDINGS=ON
-        docker run -t dockcross/linux-arm64-lts ninja
+        DOCKER="docker run -v \"${PWD}:/work\" -t dockcross/linux-arm64-lts"
+        $DOCKER cmake -Bbuild -S. -GNinja -DCMAKE_BUILD_TYPE=Release -DENABLE_NODE_BINDINGS=ON
+        $DOCKER ninja
     - name: Build example
       if: ${{ matrix.NODE_PACKAGE_TESTS_ONLY != 'ON' && matrix.ENABLE_APPLE_SILICON != 'ON' }}
       run: |
