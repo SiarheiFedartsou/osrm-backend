@@ -671,11 +671,20 @@ jobs:
     - name: Build and install OSRM
       run: |
         mkdir build
-        docker run bash -c "apt-get update -y && apt-get install -y python3 python3-pip nodejs npm"
-        #apt-get update -y && apt-get install -y python3 python3-pip nodejs npm cmake build-essential
-        docker run bash -c "pip3 install conan==1.53.0"
-        docker run -v "${PWD}:/work" -t dockcross/linux-arm64-lts cmake -Bbuild -S. -GNinja -DENABLE_CONAN=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_NODE_BINDINGS=ON
-        docker run -v "${PWD}:/work" -t dockcross/linux-arm64-lts ninja
+        docker build -t my_cool_image .                   ## Builds the dockcross image.
+        docker run my_cool_image > linux-armv7                ## Creates a helper script named linux-armv7.
+        chmod +x linux-armv7                          ## Gives the script execution permission.
+        #./linux-armv7 bash
+        ./linux-armv7 cmake -Bbuild -S. -GNinja -DENABLE_CONAN=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_NODE_BINDINGS=ON
+        ./linux-armv7 ninja
+        # docker run --rm dockcross/linux-arm64-lts > ./dockcross
+        # chmod +x ./dockcross
+
+        # docker run -t dockcross/linux-arm64-lts bash -c "apt-get update -y && apt-get install -y python3 python3-pip nodejs npm"
+        # #apt-get update -y && apt-get install -y python3 python3-pip nodejs npm cmake build-essential
+        # docker run -t dockcross/linux-arm64-lts bash -c "pip3 install conan==1.53.0"
+        # docker run -v "${PWD}:/work" -t dockcross/linux-arm64-lts cmake -Bbuild -S. -GNinja -DENABLE_CONAN=ON -DCMAKE_BUILD_TYPE=Release -DENABLE_NODE_BINDINGS=ON
+        # docker run -v "${PWD}:/work" -t dockcross/linux-arm64-lts ninja
     - name: Build example
       if: ${{ matrix.NODE_PACKAGE_TESTS_ONLY != 'ON' && matrix.ENABLE_APPLE_SILICON != 'ON' }}
       run: |
