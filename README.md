@@ -1,10 +1,9 @@
 ## Open Source Routing Machine
 
-| Linux / macOS / Windows | Code Coverage |
-| ----------------------- | ------------- |
-| [![osrm-backend CI](https://github.com/Project-OSRM/osrm-backend/actions/workflows/osrm-backend.yml/badge.svg)](https://github.com/Project-OSRM/osrm-backend/actions/workflows/osrm-backend.yml) | [![Codecov](https://codecov.io/gh/Project-OSRM/osrm-backend/branch/master/graph/badge.svg)](https://codecov.io/gh/Project-OSRM/osrm-backend) |
 
-High performance routing engine written in C++14 designed to run on OpenStreetMap data.
+[![osrm-backend CI](https://github.com/Project-OSRM/osrm-backend/actions/workflows/osrm-backend.yml/badge.svg)](https://github.com/Project-OSRM/osrm-backend/actions/workflows/osrm-backend.yml) [![Codecov](https://codecov.io/gh/Project-OSRM/osrm-backend/branch/master/graph/badge.svg)](https://codecov.io/gh/Project-OSRM/osrm-backend) [![Discord](https://img.shields.io/discord/1034487840219860992)](https://discord.gg/es9CdcCXcb)
+
+High performance routing engine written in C++ designed to run on OpenStreetMap data.
 
 The following services are available via HTTP API, C++ library interface and NodeJs wrapper:
 - Nearest - Snaps coordinates to the street network and returns the nearest matches
@@ -33,6 +32,7 @@ Related [Project-OSRM](https://github.com/Project-OSRM) repositories:
 
 ## Contact
 
+- Discord: [https://discord.gg/es9CdcCXcb](join)
 - IRC: `irc.oftc.net`, channel: `#osrm` ([Webchat](https://webchat.oftc.net))
 - Mailinglist: `https://lists.openstreetmap.org/listinfo/osrm-talk`
 

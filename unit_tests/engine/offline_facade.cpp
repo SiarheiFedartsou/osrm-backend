@@ -87,14 +87,11 @@ struct ExternalCellStorage
             return boost::make_iterator_range((EdgeWeight *)0, (EdgeWeight *)0);
         }
 
-        auto GetSourceNodes() const
-        {
-            return boost::make_iterator_range((EdgeWeight *)0, (EdgeWeight *)0);
-        }
+        auto GetSourceNodes() const { return boost::make_iterator_range((NodeID *)0, (NodeID *)0); }
 
         auto GetDestinationNodes() const
         {
-            return boost::make_iterator_range((EdgeWeight *)0, (EdgeWeight *)0);
+            return boost::make_iterator_range((NodeID *)0, (NodeID *)0);
         }
     };
 
@@ -206,7 +203,10 @@ class ContiguousInternalMemoryDataFacade<routing_algorithms::offline::Algorithm>
         return DatasourceReverseRange(DatasourceForwardRange());
     }
 
-    StringView GetDatasourceName(const DatasourceID /*id*/) const override { return StringView{}; }
+    std::string_view GetDatasourceName(const DatasourceID /*id*/) const override
+    {
+        return std::string_view{};
+    }
 
     guidance::TurnInstruction GetTurnInstructionForEdgeID(const EdgeID /*id*/) const override
     {
@@ -265,7 +265,7 @@ class ContiguousInternalMemoryDataFacade<routing_algorithms::offline::Algorithm>
         return {};
     }
 
-    EdgeWeight GetNodeWeight(const NodeID /*node*/) const { return 0; }
+    EdgeWeight GetNodeWeight(const NodeID /*node*/) const { return {0}; }
 
     bool IsForwardEdge(const NodeID /*edge*/) const { return true; }
 
@@ -273,11 +273,20 @@ class ContiguousInternalMemoryDataFacade<routing_algorithms::offline::Algorithm>
 
     bool HasLaneData(const EdgeID /*id*/) const override { return false; }
     NameID GetNameIndex(const NodeID /*nodeID*/) const override { return EMPTY_NAMEID; }
-    StringView GetNameForID(const NameID /*id*/) const override { return StringView{}; }
-    StringView GetRefForID(const NameID /*id*/) const override { return StringView{}; }
-    StringView GetPronunciationForID(const NameID /*id*/) const override { return StringView{}; }
-    StringView GetDestinationsForID(const NameID /*id*/) const override { return StringView{}; }
-    StringView GetExitsForID(const NameID /*id*/) const override { return StringView{}; }
+    std::string_view GetNameForID(const NameID /*id*/) const override { return std::string_view{}; }
+    std::string_view GetRefForID(const NameID /*id*/) const override { return std::string_view{}; }
+    std::string_view GetPronunciationForID(const NameID /*id*/) const override
+    {
+        return std::string_view{};
+    }
+    std::string_view GetDestinationsForID(const NameID /*id*/) const override
+    {
+        return std::string_view{};
+    }
+    std::string_view GetExitsForID(const NameID /*id*/) const override
+    {
+        return std::string_view{};
+    }
     bool GetContinueStraightDefault() const override { return false; }
     std::string GetTimestamp() const override { return ""; }
     double GetMapMatchingMaxSpeed() const override { return 0; }
