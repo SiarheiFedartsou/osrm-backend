@@ -569,7 +569,10 @@ jobs:
         fi
 
         export CONAN_CMAKE_SYSTEM_PROCESSOR=aarch64
-        TARGET=aarch64-linux-gnu
+        #TARGET=aarch64-linux-gnuset(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM BOTH)
+        #set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+        #set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+        #set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
         #CMAKE_FIND_ROOT_PATH=/usr/aarch64-linux-gnu -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER
         AARCH64_FLAGS=(-DCMAKE_C_COMPILER_TARGET="$TARGET" -DCMAKE_CXX_COMPILER_TARGET="$TARGET" -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64 -DCMAKE_FIND_ROOT_PATH=/usr/aarch64-linux-gnu -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER)
 
@@ -585,8 +588,7 @@ jobs:
                  -DBUILD_TOOLS=${BUILD_TOOLS:-OFF} \
                  -DENABLE_CCACHE=ON \
                  -DCMAKE_INSTALL_PREFIX=${OSRM_INSTALL_DIR} \
-                 "${APPLE_SILICON_FLAGS[@]}" \
-                 "${AARCH64_FLAGS[@]}"
+                 -DCMAKE_TOOLCHAIN_FILE=Toolchain.cmake
 
         make --jobs=${JOBS}
 
